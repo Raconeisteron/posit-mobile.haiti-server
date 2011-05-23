@@ -1,0 +1,14 @@
+fn=firstName
+ln=lastName
+c=commune
+cs=communeSection
+a=age
+n=numberInHome
+ic=infantCategory
+mc=motherCategory
+
+
+
+
+
+
