@@ -34,76 +34,76 @@ public class TextManager implements ClipboardOwner {
     private static String appletClip = null;
 
     public static void copyText(boolean cut) {
-    	DataEntryFrame cf = (DataEntryFrame)WindowManager.getActiveCipherFrame();
-        DataEntryGUI ctj = WindowManager.getCryptoTool();
-    	
-    	TextArea tf = null;
-    	String selection = null;
-    	if (cf != null) {    	    
-            tf = cf.getTextAreaWithFocus();
-            if (tf == null) 
-                return;
-        }
-        else if (cut) {     // Don't cut text from DatEntryGUI     
-            ctj.showStatus("Cuts not allowed in DatEntryGUI");
-            return;
-        }
-        else {
-            boolean isActiveWindow = ctj.getFocusOwner()!=null;
-            if (!isActiveWindow) {
-                ctj.showStatus("CTJ not in focus");
-                return;
-            }
-            tf = ctj.display;
-        }
-
-    	Clipboard clip = ctj.getToolkit().getSystemClipboard();
-    	if (clip==null) {
-    		ctj.showStatus("Clipboard null");            
-    		return;
-    	}
-    	selection = tf.getSelectedText();
-    	StringSelection cont = new StringSelection(selection);
-    	clip.setContents(cont, ctj);
-  
-        if (selection.length() > 0) {
-            ctj.showStatus(selection.length() + " characters copied to clipboard");
-        }
-        if (cut) 
-            tf.replaceRange("", tf.getSelectionStart(), tf.getSelectionEnd());
+//    	DataEntryFrame cf = (DataEntryFrame)WindowManager.getActiveCipherFrame();
+//        DataEntryGUI ctj = WindowManager.getCryptoTool();
+//    	
+//    	TextArea tf = null;
+//    	String selection = null;
+//    	if (cf != null) {    	    
+//            tf = cf.getTextAreaWithFocus();
+//            if (tf == null) 
+//                return;
+//        }
+//        else if (cut) {     // Don't cut text from DatEntryGUI     
+//            ctj.showStatus("Cuts not allowed in DatEntryGUI");
+//            return;
+//        }
+//        else {
+//            boolean isActiveWindow = ctj.getFocusOwner()!=null;
+//            if (!isActiveWindow) {
+//                ctj.showStatus("CTJ not in focus");
+//                return;
+//            }
+//            tf = ctj.display;
+//        }
+//
+//    	Clipboard clip = ctj.getToolkit().getSystemClipboard();
+//    	if (clip==null) {
+//    		ctj.showStatus("Clipboard null");            
+//    		return;
+//    	}
+//    	selection = tf.getSelectedText();
+//    	StringSelection cont = new StringSelection(selection);
+//    	clip.setContents(cont, ctj);
+//  
+//        if (selection.length() > 0) {
+//            ctj.showStatus(selection.length() + " characters copied to clipboard");
+//        }
+//        if (cut) 
+//            tf.replaceRange("", tf.getSelectionStart(), tf.getSelectionEnd());
     }
         
     public static void pasteText() {
-    	DataEntryFrame cf = (DataEntryFrame)WindowManager.getActiveCipherFrame();
-        DataEntryGUI ctj = WindowManager.getCryptoTool();
-        String text;
-        TextArea tf = null; 
-        if (cf != null)
-            tf = cf.getTextAreaWithFocus();
-        else
-            tf = ctj.display;
-        if (tf == null) return;
- 
-        Clipboard clip = ctj.getToolkit().getSystemClipboard();
-        if (clip==null) return;
-        Transferable contents = clip.getContents(ctj);
-        try {
-        	text = (String)(contents.getTransferData(DataFlavor.stringFlavor));
-        	tf.replaceRange(text, tf.getSelectionStart(), tf.getSelectionEnd());
-        } 
-        catch (Exception e) {}
+//    	DataEntryFrame cf = (DataEntryFrame)WindowManager.getActiveCipherFrame();
+//        DataEntryGUI ctj = WindowManager.getCryptoTool();
+//        String text;
+//        TextArea tf = null; 
+//        if (cf != null)
+//            tf = cf.getTextAreaWithFocus();
+//        else
+//            tf = ctj.display;
+//        if (tf == null) return;
+// 
+//        Clipboard clip = ctj.getToolkit().getSystemClipboard();
+//        if (clip==null) return;
+//        Transferable contents = clip.getContents(ctj);
+//        try {
+//        	text = (String)(contents.getTransferData(DataFlavor.stringFlavor));
+//        	tf.replaceRange(text, tf.getSelectionStart(), tf.getSelectionEnd());
+//        } 
+//        catch (Exception e) {}
     }
 
     public static void selectAll() {
-        TextArea tf = null;
-    	DataEntryFrame cf = (DataEntryFrame)WindowManager.getActiveCipherFrame();
-        DataEntryGUI ctj = WindowManager.getCryptoTool();
-        if (cf != null)
-            tf = cf.getTextAreaWithFocus();
-        else
-            tf = ctj.display;
-        if (tf == null) return;
-        tf.selectAll();
+//        TextArea tf = null;
+//    	DataEntryFrame cf = (DataEntryFrame)WindowManager.getActiveCipherFrame();
+//        DataEntryGUI ctj = WindowManager.getCryptoTool();
+//        if (cf != null)
+//            tf = cf.getTextAreaWithFocus();
+//        else
+//            tf = ctj.display;
+//        if (tf == null) return;
+//        tf.selectAll();
     }
 
     public void lostOwnership (Clipboard clip, Transferable cont) {}

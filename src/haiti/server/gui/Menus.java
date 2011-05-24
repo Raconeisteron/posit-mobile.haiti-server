@@ -1,7 +1,7 @@
 /*
  * File: Menus.java
  * 
- * Copyright (C) 2009 R. Morelli
+ * Copyright (C) 2011 The Humanitarian FOSS Project (http://hfoss.org)
  * 
  * This file is part of DataEntryGUI.
  *
@@ -36,27 +36,26 @@ public class Menus {
 	private static final int STATIC_WINDOW_MENU_ITEMS = 2;
 
 	private static MenuBar mbar;
-	private static DataEntryGUI guie;
-	private static Applet applet;    
-
 	public static Menu windowMenu;
+	
+	private static DataEntryGUI gui;
+	
 
 	public Menus(DataEntryGUI gui) {
-		this.guie = gui;
-		this.applet = applet;
+		this.gui = gui;
 	}
 
 	public void addMenuBar() {
 		Menu fileMenu = new Menu("File");
-		addMenuItem(fileMenu, "New ...", KeyEvent.VK_N, false);
+//		addMenuItem(fileMenu, "New ...", KeyEvent.VK_N, false);
 		addMenuItem(fileMenu, "Open File...", KeyEvent.VK_O, false);
 		addMenuItem(fileMenu, "Close ...", KeyEvent.VK_W, false);
 		fileMenu.addSeparator();
 		addMenuItem(fileMenu, "Save", KeyEvent.VK_S, false);
 		addMenuItem(fileMenu, "Save As", KeyEvent.VK_A, false);
 		fileMenu.addSeparator();
-		addMenuItem(fileMenu, "Print", KeyEvent.VK_P, false);
-		fileMenu.addSeparator();
+//		addMenuItem(fileMenu, "Print", KeyEvent.VK_P, false);
+//		fileMenu.addSeparator();
 		addMenuItem(fileMenu, "Quit", KeyEvent.VK_Q, false);
 
 		Menu editMenu = new Menu("Edit");
@@ -69,7 +68,7 @@ public class Menus {
 		CheckboxMenuItem item = new CheckboxMenuItem("DataEntryGUI");
 		windowMenu.add(item);
 		item.setState(true);
-		item.addActionListener(guie);    
+		item.addActionListener(gui);    
 		windowMenu.addSeparator();
 
 		Menu helpMenu = new Menu("Help");
@@ -80,7 +79,7 @@ public class Menus {
 		mbar.add(editMenu);
 		mbar.add(windowMenu);
 		mbar.setHelpMenu(helpMenu);
-		guie.setMenuBar(mbar);
+		gui.setMenuBar(mbar);
 	}
 
 	void addMenuItem(Menu menu, String label, int shortcut, boolean shift) {
@@ -98,41 +97,41 @@ public class Menus {
 		}
 		item.setActionCommand(label);
 		menu.add(item);
-		item.addActionListener(guie);
+		item.addActionListener(gui);
 	}
 
 	public static MenuBar getMenuBar() {
 		return mbar;
 	}
 
-	public static void updateMenus() {
-		CheckboxMenuItem item = null;  
-		int nItems = windowMenu.getItemCount();  
-		DataEntryFrame cf = WindowManager.getActiveCipherFrame();
-
-		if (cf != null) {           // Mark one Frame active                              
-			item = (CheckboxMenuItem)windowMenu.getItem(0);
-			item.setState(false);            
-			for (int i= STATIC_WINDOW_MENU_ITEMS; i < nItems; i++) {
-				item = (CheckboxMenuItem)windowMenu.getItem(i) ;
-				item.setState( item.getLabel().indexOf(cf.getWindowId()) != -1);
-			}
-			return;
-		}
-		// Mark GUI active
-		item = (CheckboxMenuItem)windowMenu.getItem(0);
-		item.setState(true);
-		for (int i= STATIC_WINDOW_MENU_ITEMS; i < nItems; i++) {
-			item = (CheckboxMenuItem)windowMenu.getItem(i);
-			item.setState(false);
-		}
-		return;
-	}
+//	public static void updateMenus() {
+//		CheckboxMenuItem item = null;  
+//		int nItems = windowMenu.getItemCount();  
+//		DataEntryFrame cf = WindowManager.getActiveCipherFrame();
+//
+//		if (cf != null) {           // Mark one Frame active                              
+//			item = (CheckboxMenuItem)windowMenu.getItem(0);
+//			item.setState(false);            
+//			for (int i= STATIC_WINDOW_MENU_ITEMS; i < nItems; i++) {
+//				item = (CheckboxMenuItem)windowMenu.getItem(i) ;
+//				item.setState( item.getLabel().indexOf(cf.getWindowId()) != -1);
+//			}
+//			return;
+//		}
+//		// Mark GUI active
+//		item = (CheckboxMenuItem)windowMenu.getItem(0);
+//		item.setState(true);
+//		for (int i= STATIC_WINDOW_MENU_ITEMS; i < nItems; i++) {
+//			item = (CheckboxMenuItem)windowMenu.getItem(i);
+//			item.setState(false);
+//		}
+//		return;
+//	}
 
 	public static void extendWindowMenu(String name) {
-		if (guie == null) return;
+		if (gui == null) return;
 		CheckboxMenuItem item = new CheckboxMenuItem(name);
-		item.addActionListener(guie);  
+		item.addActionListener(gui);  
 		item.setState(true);
 		windowMenu.add(item);
 		item = (CheckboxMenuItem)windowMenu.getItem(0);

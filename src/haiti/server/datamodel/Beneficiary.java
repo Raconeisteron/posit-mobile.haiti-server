@@ -22,6 +22,8 @@
 
 package haiti.server.datamodel;
 
+import sun.tools.tree.ThisExpression;
+
 public class Beneficiary {
 	
 	public enum Sex {MALE, FEMALE};
@@ -89,11 +91,10 @@ public class Beneficiary {
 		String temp[] = s.split(outerDelim);
 		for (int k = 0; k < temp.length; k++) {
 			String temp2[] = temp[k].split(innerDelim);
-			
-			
-			if (temp2[0].equals("firstName"))
+								
+			if (temp2[0].equals("firstName") || temp2[0].equals("f"))
 				firstName=temp2[1];
-			else if (temp2[0].equals("lastName"))
+			else if (temp2[0].equals("lastName") || temp2[0].equals("l"))
 				lastName=temp2[1];
 			else if (temp2[0].equals("commune"))
 				commune=temp2[1];

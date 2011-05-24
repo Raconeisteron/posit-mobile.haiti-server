@@ -20,7 +20,8 @@
  */
 package haiti.server.gui;
 
-
+import haiti.server.datamodel.Beneficiary;
+import haiti.server.datamodel.Beneficiary.Abbreviated;
 
 import java.io.*;
 import java.awt.*;
@@ -28,140 +29,169 @@ import java.awt.event.*;
 import java.util.*;
 import java.awt.datatransfer.*;
 
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
+import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
+import javax.swing.border.TitledBorder;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+
 
 /** 
  * <p>Top-level window for the DataEntryGUI application. 
  *
  *  <P>This class implements the main window and menu system for the
- *  application.  When the user creates a new file or opens an existing
- *  file, DataEntryGUI opens a separate window, which is implemented by
- *  the <A href="DataEntryFrame.html">DataEntryFrame</A> class.
- *
- * <P>See also
- *  <BLOCKQUOTE>
- *     <BR><A href="DataEntryFrame.html">DataEntryFrame</A>
- *     <BR><A href="Menus.html">Menus</A>
- * </BLOCKQUOTE>
+ *  application.  
  */
 
 
-public class DataEntryGUI extends Frame implements ActionListener, WindowListener,
-ClipboardOwner
-{
+public class DataEntryGUI extends JFrame implements ActionListener, 
+	WindowListener, ClipboardOwner, ItemListener, ListSelectionListener   {
 
 	private Menus menus;
-	private DataEntryFrame cf;         // Current CipherFrame
-
+	
+	//private TextAreaPlus messagesField, outputField;
+	private JTextField firstNameJText, lastNameJText;
+	private JButton button2, button3, button1;
+	
+	private JPanel welcomePanel, messagesPanel, buttonPanel, formPanel;
+	private String windowId = "";
+	
+	private JSplitPane splitPane;
+	private JList messageList;
+	private String[] messagesArray;
+	private JScrollPane listScrollPane = new JScrollPane(); // Where the messages go
+    private JScrollPane formScrollPane = new JScrollPane();	// Where the data entry form goes
+    
+    private String messageFileName;
+    
 	public TextArea display;// = new TextArea();
 
 	/**
-	 * Creates a DataEntryGUI. Set applet to null to run as an application.
-	 *  This constructor method sets up the user interface and installs
-	 *  the various built-in and plug-in ciphers.
-	 * @param applet, a reference to an applet.
+	 * Creates a DataEntryGUI and sets up the user interface.
 	 */
 	public DataEntryGUI() { 
 		super("DataEntryGUI");
 
-		display = new TextArea();
-		display.setEditable(false);
-		add("Center", display);
-		display.setText("Starting DataEntryGUI v0.1\n");
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		addWindowListener(this);
+		WindowManager.init(this);
 
 		menus = new Menus(this);
 		menus.addMenuBar();
-		WindowManager.init(this);
+		setMenuBar(Menus.getMenuBar());	    
 
-		//        setResizable(true);
-		Point loc = getPreferredLocation();
-		//		Dimension tbSize = toolbar.getPreferredSize();
-		setBounds(loc.x, loc.y, 400, 200);
+		this.setupFrame();
+		this.setMinimumSize(new Dimension(500,300));
+
+		setResizable(true);
+		setSize(WIDTH, HEIGHT);
+		setSize(900,700);
+		pack();
 		setVisible(true);
+		Tools.centerWindow(this);
 		requestFocus();
 	} 
 
-
 	/**
-	 * Calculates a preferred location for the main application window
-	 *  based on the screen size.
-	 */
-	public Point getPreferredLocation() {
-		int screenWidth = Toolkit.getDefaultToolkit().getScreenSize().width;
-		int windowWidth = 500;//tbsize.width+10;
-		double percent;
-		if (screenWidth > 832)
-			percent = 0.8;
-		else
-			percent = 0.9;
-		int windowX = (int)(percent * (screenWidth - windowWidth));
-		if (windowX < 10)
-			windowX = 10;
-		int windowY = 32;
-		return new Point(windowX, windowY);
+	 *  Manages the detailed operations of setting up the user interface.
+	 */ 
+	private void setupFrame() {
+		welcomePanel = new JPanel();
+		welcomePanel.setBorder(BorderFactory.createTitledBorder("Data Entry"));
+		JLabel label = new JLabel("Welcome");
+		label.setSize(new Dimension(300,300));
+		welcomePanel.add(label);
+		this.getContentPane().add(welcomePanel);
 	}
 
+	/**
+	 * Sets up the panel that used for Beneficiary registration.
+	 * @return
+	 */
+	private JPanel setUpDataEntryPanel() {
+		formPanel = new JPanel();
+		formPanel.setBorder(BorderFactory.createTitledBorder("Data Entry Form"));
+		
+		firstNameJText = new JTextField();
+		firstNameJText.setColumns(15);
+		lastNameJText = new JTextField();
+		lastNameJText.setColumns(15);
+		
+		formPanel.add(new JLabel("First Name:"));
+		formPanel.add(firstNameJText);
+		formPanel.add(new JLabel("Last Name:"));
+		formPanel.add(lastNameJText);
+
+		button1 = new JButton("Button1");
+		button2 = new JButton("Button2");
+		button3 = new JButton("Button3");
+		button1.addActionListener(this);
+		button2.addActionListener(this);
+		button3.addActionListener(this);  
+		formPanel.add(button1);
+		formPanel.add(button2);
+		formPanel.add(button3);
+
+		return formPanel;
+	}
+	
+	
 	/** 
 	 * Handles all menu events whenever the user selects a menu item.
 	 */
 	public void actionPerformed(ActionEvent e) {
-		//        System.out.println("Action Event" + e.paramString());
 		if ((e.getSource() instanceof MenuItem)) {
 			MenuItem item = (MenuItem)e.getSource();
 			String cmd = e.getActionCommand();
 			doCommand(cmd);
 		}
 	}
+	
+//	/**
+//	 *  Closes this window, first saving the text in the TextAreas if necessary.
+//	 */  
+//	public boolean close() {
+//		if (!saveTextInTextAreas(false))
+//			return false;
+//		setVisible(false);
+//		WindowManager.removeWindow(this);
+//		dispose();
+//		return true;    
+//	}
+
 
 	/** 
 	 * Executes the command given by its parameter.
 	 * @param a String that specifies the desired command.
 	 */
 	public void doCommand(String cmd) {   
-		DataEntryFrame cf = (DataEntryFrame)WindowManager.getActiveCipherFrame();
 		//    	showStatus("doCommand " + cmd);
 		if (cmd.equals("About DataEntryGUI...")) 
 			showAboutBox();
-		if (cmd.equals("New ...")) {
-			//            showStatus("New Cipher...");
-			cf = new DataEntryFrame(this);
-			WindowManager.addWindow(cf);
-		}
 		else if (cmd.equals("Open File..."))  {
-			//            showStatus("Open File...");
-			if (cf == null) {
-				cf = new DataEntryFrame(this);
-				WindowManager.addWindow(cf);
-			}
-//			String filename = cf.openFile();
-//			SmsReader reader = new SmsReader(filename);
-//			try {
-//				reader.readFile();
-//			} catch (IOException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
-//			reader.getMessages().toArray();
-//			
+			readMessagesIntoGUI();
 		} 
 		else if (cmd.equals("Close ...")) {   
-			//            showStatus("Close Cipher...");
-			if (cf != null) {
-				cf.close();
-			}
+			this.close();
 		}
 		else if (cmd.equals("Save")) {
-			//            showStatus("Save Cipher...");
-			if (cf != null) 
-				cf.save(false);
+			this.save(false);
 		}
 		else if (cmd.equals("Save As")) {
-			//            showStatus("Save As Cipher...");
-			if (cf != null) 
-				cf.save(true);
+			this.save(false);
+
 		}
 		else if (cmd.equals("Print"))
-			showStatus("PrintCipher... not yet implemented");
+			;
+//			showStatus("PrintCipher... not yet implemented");
 		else if (cmd.equals("Cut")) {
 			//            showStatus("Cut");
 			TextManager.copyText(true);
@@ -181,12 +211,79 @@ ClipboardOwner
 		else if (cmd.equals("DataEntryGUI")) {
 			activate();
 		}
-		else if (cmd.indexOf("CipherFrame") != -1) {
-			WindowManager.activateWindow(cmd);
-		} 
 		else if (cmd.equals("Quit"))
 			this.quit();
-	}    
+	}   
+	
+
+/**
+ *  Closes this window, first saving the text in the TextAreas if necessary.
+ */  
+public boolean close() {
+	setVisible(false);
+	dispose();
+	return true;    
+}
+	/**
+	 * Sets up a split pane with messages on top and the data entry form on the bottom.
+	 * @param messages
+	 * @param formPanel
+	 * @return
+	 */
+	private JSplitPane setUpSplitPane (String messages[], JPanel formPanel) {
+		// Set up the ListScrollPane
+		messageList = new JList(messages);
+        messageList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        messageList.setSelectedIndex(0);
+        messageList.addListSelectionListener(this);
+        this.listScrollPane = new JScrollPane(messageList);
+
+        this.formScrollPane = new JScrollPane(formPanel);
+
+		//Provide minimum sizes for the two components in the split pane
+		Dimension minimumSize = new Dimension(800, 100);
+		//listScrollPane.setMinimumSize(minimumSize);
+		//formScrollPane.setMinimumSize(minimumSize);
+		
+        // See http://download.oracle.com/javase/tutorial/uiswing/components/splitpane.html
+		//Create a split pane with the two scroll panes in it.
+		splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT,
+		                           listScrollPane, formScrollPane);
+		splitPane.setOneTouchExpandable(true);
+		splitPane.setDividerLocation(100);
+		return splitPane;
+	}
+	
+	/**
+	 * Uses a FileDialog to pick a file and read its messages into the data
+	 * entry form, choosing the first message in the file.
+	 * TODO: Error checking that this is a messages file.
+	 */
+	private void readMessagesIntoGUI () {
+		FileDialog fd = new FileDialog(this, "Open File", FileDialog.LOAD);
+		fd.show();
+		
+		messageFileName = fd.getDirectory() + fd.getFile();
+		SmsReader reader = new SmsReader(messageFileName);
+
+		try {
+			reader.readFile();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		messagesArray = reader.getMessagesAsArray();
+		
+		formPanel = setUpDataEntryPanel();
+		Beneficiary beneficiary = new Beneficiary(messagesArray[0], Abbreviated.TRUE);
+		fillInDataEntryForm(beneficiary);
+		
+		this.getContentPane().remove(welcomePanel);
+		this.getContentPane().add(setUpSplitPane(messagesArray, formPanel));
+		this.pack();
+		this.repaint();
+		
+		//splitPane.setMinimumSize(minimumSize);		
+	}
 
 	/**
 	 *  Displays the "About DataEntryGUI" blurb.
@@ -203,18 +300,50 @@ ClipboardOwner
 	}
 
 	/**
+	 *  Implementation of the Save and SaveAs commands.
+	 */  
+	public void save(boolean rename) {
+	}
+
+	/**
+	 *  Sets this window's id number.
+	 */  
+	public void setWindowId( int n ) {
+		windowId = "" + n;
+	}
+	/**
+	 *  Gets this window's id number.
+	 */  
+	public String getWindowId() { return windowId; }
+
+	
+	/**
+	 * Listens to the messages list.
+	 * TODO:  Figure out why it appears to be called twice on each click.
+	 */
+	public void valueChanged(ListSelectionEvent e) {
+		JList list = (JList) e.getSource();
+		System.out.println("Clicked on  list item " + list.getSelectedValue());
+		Beneficiary beneficiary = new Beneficiary(list.getSelectedValue().toString(), Abbreviated.TRUE);
+		fillInDataEntryForm(beneficiary);	
+	}
+	
+	/**
+	 * Fills in the Data Entry Form.
+	 * @param beneficiary 
+	 */
+	private void fillInDataEntryForm(Beneficiary beneficiary) {
+		this.firstNameJText.setText(beneficiary.getFirstName());
+		this.lastNameJText.setText(beneficiary.getLastName());
+	}
+	
+	/**
 	 *  Provides a controlled quit of the program for either
 	 *   its applet or application versions.
 	 */
 	private void quit() {  
-		display.append("Quitting\n"); 
-		if (!WindowManager.closeAllWindows()) {
-			display.append("Canceled\n"); 
-			return;            // If any FileSave dialog is canceled, don't quit
-		}
-
-		display.append("Setting invisible\n"); 
 		setVisible(false);  
+		dispose();
 	}
 
 	/**
@@ -228,10 +357,10 @@ ClipboardOwner
 	 *  Brings the top-level DataEntryGUI frame to the front.
 	 */
 	private void activate() {
-		//       showStatus("DataEntryGUI Window activated");
-		this.toFront();	
-		this.setMenuBar(menus.getMenuBar());
-		Menus.updateMenus();
+//		//       showStatus("DataEntryGUI Window activated");
+//		this.toFront();	
+//		this.setMenuBar(menus.getMenuBar());
+//		Menus.updateMenus();
 	}
 
 	/**
@@ -241,10 +370,10 @@ ClipboardOwner
 		quit();
 	}
 	public void windowActivated(WindowEvent e) { 
-		this.toFront();
-		this.setMenuBar(menus.getMenuBar());
-		Menus.updateMenus();
-		//	activate(); 
+//		this.toFront();
+//		this.setMenuBar(menus.getMenuBar());
+//		Menus.updateMenus();
+//		//	activate(); 
 	}
 	public void windowClosed(WindowEvent e) {}
 	public void windowDeactivated(WindowEvent e) {}
@@ -261,11 +390,17 @@ ClipboardOwner
 
 	public void lostOwnership (Clipboard clip, Transferable cont) {}
 
-
+	
+	public void itemStateChanged(ItemEvent arg0) {
+		// TODO Auto-generated method stu
+	}
+	
 	/**
 	 *  Creates an instance of DataEntryGUI and when run in application mode.
 	 */
 	public static void main(String args[]) {  //main method
 		DataEntryGUI gui = new DataEntryGUI(); 
 	}  //end main()
+
+
 }

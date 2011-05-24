@@ -46,60 +46,60 @@ public class WindowManager {
         return gui;
     }
     
-    public static DataEntryFrame getActiveCipherFrame() {
-	for (int k = 0; k < windowList.size(); k++) {
-	    DataEntryFrame cf = (DataEntryFrame) windowList.elementAt(k);
-	    if (cf.isActivated) {
-		return cf;
-	    }
-	}
-	return null;
-    }	
-
-    public static int getWindowCount() {
-	return windowList.size();
-    }
-
-    public synchronized static void addWindow(DataEntryFrame win) {
-	windowList.addElement(win);
-	win.setWindowId(id);
-	String idStr = "" + id;
-	id++;
-        Menus.extendWindowMenu("CipherFrame " + idStr);
-        win.renameWithWindowId(idStr);
-    }
-
-
-    /** Closes the current window and removes it from the window list. */
-    public synchronized static void removeWindow(DataEntryFrame win) {
-	int index = windowList.indexOf(win);
-	if (index == -1)
-	    return;  // not on the window list
-	Menus.trimWindowMenu(win.getWindowId());
-	windowList.removeElementAt(index);
-    }
-
-    /** Closes all CipherFrame windows. Stops and returns false if any "save changes" dialog is canceled. */
-    public synchronized static boolean closeAllWindows() {
-	for (int k = 0; k < windowList.size(); k++) {
-	    DataEntryFrame cf = (DataEntryFrame)windowList.elementAt(k);
-	    if (!cf.close())
-		return false;
-	}
-	return true;
-    }
-
-    /** Activates a window selected from the Window menu. */
-    synchronized static void activateWindow(String menuItemLabel) {
-	for (int i=0; i < windowList.size(); i++) {
-	    DataEntryFrame win = (DataEntryFrame)windowList.elementAt(i);
-	    String id = win.getWindowId();
-	    if (menuItemLabel.indexOf(id) != -1) {
-		win.activate();
-		break;
-	    }
-	}
-    }
+//    public static DataEntryFrame getActiveCipherFrame() {
+//	for (int k = 0; k < windowList.size(); k++) {
+//	    DataEntryFrame cf = (DataEntryFrame) windowList.elementAt(k);
+//	    if (cf.isActivated) {
+//		return cf;
+//	    }
+//	}
+//	return null;
+//    }	
+//
+//    public static int getWindowCount() {
+//	return windowList.size();
+//    }
+//
+//    public synchronized static void addWindow(DataEntryFrame win) {
+//	windowList.addElement(win);
+//	win.setWindowId(id);
+//	String idStr = "" + id;
+//	id++;
+//        Menus.extendWindowMenu("CipherFrame " + idStr);
+//        win.renameWithWindowId(idStr);
+//    }
+//
+//
+//    /** Closes the current window and removes it from the window list. */
+//    public synchronized static void removeWindow(DataEntryFrame win) {
+//	int index = windowList.indexOf(win);
+//	if (index == -1)
+//	    return;  // not on the window list
+//	Menus.trimWindowMenu(win.getWindowId());
+//	windowList.removeElementAt(index);
+//    }
+//
+//    /** Closes all CipherFrame windows. Stops and returns false if any "save changes" dialog is canceled. */
+//    public synchronized static boolean closeAllWindows() {
+//	for (int k = 0; k < windowList.size(); k++) {
+//	    DataEntryFrame cf = (DataEntryFrame)windowList.elementAt(k);
+//	    if (!cf.close())
+//		return false;
+//	}
+//	return true;
+//    }
+//
+//    /** Activates a window selected from the Window menu. */
+//    synchronized static void activateWindow(String menuItemLabel) {
+//	for (int i=0; i < windowList.size(); i++) {
+//	    DataEntryFrame win = (DataEntryFrame)windowList.elementAt(i);
+//	    String id = win.getWindowId();
+//	    if (menuItemLabel.indexOf(id) != -1) {
+//		win.activate();
+//		break;
+//	    }
+//	}
+//    }
         
 }
 
