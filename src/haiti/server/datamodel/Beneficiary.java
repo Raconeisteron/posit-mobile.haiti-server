@@ -22,8 +22,6 @@
 
 package haiti.server.datamodel;
 
-import sun.tools.tree.ThisExpression;
-
 public class Beneficiary {
 	
 	public enum Sex {MALE, FEMALE};
@@ -90,25 +88,29 @@ public class Beneficiary {
 	private void split(String s, String outerDelim, String innerDelim, Abbreviated abbreviated) {
 		String temp[] = s.split(outerDelim);
 		for (int k = 0; k < temp.length; k++) {
-			String temp2[] = temp[k].split(innerDelim);
-								
-			if (temp2[0].equals("firstName") || temp2[0].equals("f"))
+			String temp2[] = temp[k].split(innerDelim);	
+			
+			AttributeManager am = new AttributeManager();
+			String ss = am.mapToLong(abbreviated, temp2[0]);
+			System.out.println("Attribute = " + ss);
+			
+			if (ss.equals("firstName"))
 				firstName=temp2[1];
-			else if (temp2[0].equals("lastName") || temp2[0].equals("l"))
+			else if (ss.equals("lastName"))
 				lastName=temp2[1];
-			else if (temp2[0].equals("commune"))
+			else if (ss.equals("commune"))
 				commune=temp2[1];
-			else if (temp2[0].equals("communeSection"))
+			else if (ss.equals("communeSection"))
 				communeSection=temp2[1];
-			else if (temp2[0].equals("infantCategory"))
+			else if (ss.equals("infantCategory"))
 				infantCategory=InfantCategory.valueOf(temp2[1]);
-			else if (temp2[0].equals("motherCategory"))
+			else if (ss.equals("motherCategory"))
 				motherCategory=MotherCategory.valueOf(temp2[1]);
-			else if (temp2[0].equals("sex"))
+			else if (ss.equals("sex"))
 				sex=Sex.valueOf(temp2[1]);
-			else if (temp2[0].equals("age"))
+			else if (ss.equals("age"))
 				age=Integer.parseInt(temp2[1]);
-			else if (temp2[0].equals("numberInHome"))
+			else if (ss.equals("numberInHome"))
 				numberInHome=Integer.parseInt(temp2[1]);
 		}
 		
