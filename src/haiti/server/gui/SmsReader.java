@@ -69,7 +69,12 @@ public class SmsReader {
 	public SmsReader(){
 		
 	}
-	
+	/**
+	 * Details for implementing the DataBase can be found on the below link
+	 * http://www.xerial.org/trac/Xerial/wiki/SQLiteJDBC#Usage
+	 * @param dbName
+	 * @throws ClassNotFoundException
+	 */
 	public void readMsgsFromDb(String dbName) throws ClassNotFoundException {
 		Class.forName("org.sqlite.JDBC");
 		Connection connection = null;
@@ -173,6 +178,81 @@ public class SmsReader {
 	
 	public void readSMS(String s){
 		messages.add(s);
+	}
+	
+	public String[] getCommune(){
+		String[] commune = {"Anse a Pitres","Bainet","Belle Anse","Cote de fer","Grand Gosier","La vallee","Thiotte"};
+		return commune;
+		
+	} 
+	
+	public String[] getCommuneSection(String commune){
+		String[] communeSection;
+		if (commune.equals("Anse a Pitres")) {
+			communeSection = new String[5];
+			communeSection[0] = "Anse a Pitres";
+			communeSection[1] = "Bois d_Orme";
+			communeSection[2] = "BoucanGuillaume";
+			communeSection[3] = "Centre de Sante Anse a Pitres";
+			communeSection[4] = "Platon Cedre";
+		}
+		else if (commune.equals("Bainet")) {
+			communeSection = new String[12];
+			communeSection[0] = "11eme La vallee";
+			communeSection[1] = "3eme La vallee";
+			communeSection[2] = "4eme La vallee";
+			communeSection[3] = "5eme Haut Gandou";
+			communeSection[4] = "6eme Bas de la croix";
+			communeSection[5] = "8eme orangers";
+			communeSection[6] = "9eme Bas gris gris";
+			communeSection[7] = "Bas Grandou";
+			communeSection[8] = "Bras de gauche";
+			communeSection[9] = "Bresilienne";
+			communeSection[10] = "Haut Grandou";
+			communeSection[11] = "Tou mahot";
+		}
+		else if (commune.equals("Belle Anse")) {
+			communeSection = new String[7];
+			communeSection[0] = "Baie d_Orange";
+			communeSection[1] = "BelAir";
+			communeSection[2] = "Callumette";
+			communeSection[3] = "CorailLamothe";
+			communeSection[4] = "Mabriole";
+			communeSection[5] = "Mapou";
+			communeSection[6] = "Pichon";
+		}
+		else if (commune.equals("Cote de fer")) {
+			communeSection = new String[8];
+			communeSection[0] = "3eme Bras de gauche";
+			communeSection[1] = "6eme Jamais-Vu";
+			communeSection[2] = "Amazone";
+			communeSection[3] = "Boucan Belier";
+			communeSection[4] = "Cote de fer";
+			communeSection[5] = "Gris-Gris";
+			communeSection[6] = "Jamais vus";
+			communeSection[7] = "Labich";
+		}
+		else if (commune.equals("Grand Gosier")) {
+			communeSection = new String[3];
+			communeSection[0] = "Bodarie";
+			communeSection[1] = "CollinedesChaines";
+			communeSection[2] = "Grand Gosier";
+		}		
+		else if (commune.equals("La vallee")) {
+			communeSection = new String[2];
+			communeSection[0] = "1ere Musac";
+			communeSection[1] = "Morne a Brule";
+		}		
+		else if (commune.equals("Thiotte")) {
+			communeSection = new String[2];
+			communeSection[0] = "Pot de Chambre/2eMareMirande";
+			communeSection[1] = "Thiotte 1ereColombier";
+		}
+		else {
+			communeSection = new String[0];
+		}
+		return communeSection;
+		
 	}
 	 
    
