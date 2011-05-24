@@ -22,8 +22,6 @@
 
 package haiti.server.datamodel;
 
-import sun.tools.tree.ThisExpression;
-
 public class Beneficiary {
 	
 	public enum Sex {MALE, FEMALE};

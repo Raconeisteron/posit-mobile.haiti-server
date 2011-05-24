@@ -43,6 +43,8 @@ import javax.swing.border.TitledBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import sun.tools.tree.ThisExpression;
+
 
 /** 
  * <p>Top-level window for the DataEntryGUI application. 
@@ -130,7 +132,7 @@ public class DataEntryGUI extends JFrame implements ActionListener,
 		formPanel.add(new JLabel("Last Name:"));
 		formPanel.add(lastNameJText);
 
-		button1 = new JButton("Button1");
+		button1 = new JButton("Save");
 		button2 = new JButton("Button2");
 		button3 = new JButton("Button3");
 		button1.addActionListener(this);
@@ -152,7 +154,13 @@ public class DataEntryGUI extends JFrame implements ActionListener,
 			MenuItem item = (MenuItem)e.getSource();
 			String cmd = e.getActionCommand();
 			doCommand(cmd);
+		} else if (e.getSource() instanceof JButton){
+			JButton button = (JButton)e.getSource();
+			if (button.getText().equals("Save")) {
+				System.out.println("Saving beneficiary data");
+			}
 		}
+
 	}
 	
 //	/**
@@ -279,10 +287,17 @@ public boolean close() {
 		
 		this.getContentPane().remove(welcomePanel);
 		this.getContentPane().add(setUpSplitPane(messagesArray, formPanel));
+		this.centerThisFrame();
 		this.pack();
-		this.repaint();
-		
-		//splitPane.setMinimumSize(minimumSize);		
+	}
+	
+	private void centerThisFrame() {
+		Toolkit tk = Toolkit.getDefaultToolkit();
+	    Dimension screenSize = tk.getScreenSize();
+	    int screenHeight = screenSize.height;
+	    int screenWidth = screenSize.width;
+	    setSize(screenWidth / 2, screenHeight / 2);
+	    setLocation(screenWidth / 4, screenHeight / 4);
 	}
 
 	/**
