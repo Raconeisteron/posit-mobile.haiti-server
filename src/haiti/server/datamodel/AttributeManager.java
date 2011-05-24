@@ -22,21 +22,47 @@
 
 package haiti.server.datamodel;
 
+import java.util.*;
+
 /**
  * Manages attributes.
  *
  */
 public class AttributeManager {
-
 	
+	private HashMap<String,String> abbreviations;
 	
+	public AttributeManager() {
+		abbreviations = new HashMap<String, String>();
+		abbreviations.put("f", "firstName");
+		abbreviations.put("l", "lastName");
+		abbreviations.put("c", "commune");
+		abbreviations.put("cs", "communeSection");
+		abbreviations.put("a", "age");
+		abbreviations.put("n", "numberInHome");
+		abbreviations.put("ic", "infantCategory");
+		abbreviations.put("mc", "motherCategory");
+	}
+	
+	public String mapToLong(Beneficiary.Abbreviated abbreviatedAttributes, String s){
+		if (abbreviatedAttributes == Beneficiary.Abbreviated.TRUE) {
+			String str = abbreviations.get(s);
+			if (str != null)
+				return str;
+			else 
+				return "";
+		}
+		else
+			return s;
+	}
 	
 	/**
 	 * @param args
 	 */
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-
+		AttributeManager am = new AttributeManager();
+		System.out.print(am.mapToLong(Beneficiary.Abbreviated.FALSE, "f"));
 	}
 
 }

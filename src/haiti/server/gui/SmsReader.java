@@ -22,9 +22,18 @@
 
 package haiti.server.gui;
 
-import java.io.*;
+import haiti.server.datamodel.Beneficiary;
+
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Scanner;
+
 
 /**  
  * A command-line program to read a SMS message file, one message per line.
@@ -35,11 +44,17 @@ import java.util.Scanner;
  */
 
 public class SmsReader {
+	
+	
 	public static final String TAG = "SmsReader";
 	
 	private String filename;
 	private String encoding;
-	private ArrayList<String> messages;
+	private ArrayList<String> messages = new ArrayList<String>();;
+
+	
+	
+	
 	
 	public SmsReader(String filename) { 
 		this(filename, System.getProperty("file.encoding"));
@@ -51,12 +66,53 @@ public class SmsReader {
 		this.encoding = encoding;
 	}
 	
+	public SmsReader(){
+		
+	}
+	
+	public void readMsgsFromDb(String dbName) throws ClassNotFoundException {
+		Class.forName("org.sqlite.JDBC");
+		Connection connection = null;
+		try{
+		   connection = DriverManager.getConnection(dbName);
+		   Statement statement = connection.createStatement();
+		   statement.setQueryTimeout(60);  // set timeout to 30 sec.
+		   statement.executeUpdate("drop table if exists beneficiary");
+		   statement.executeUpdate("create table beneficiary (sms string)");
+		   statement.executeUpdate("insert into  beneficiary values('f=tom&l=jones&a=11 Main Street&c=Hartford&z=06106')");
+		   statement.executeUpdate("insert into beneficiary values('f=sarah&l=smith&a=12 Main Street&c=Hartford&z=06106')");
+		   ResultSet rs = statement.executeQuery("select * from beneficiary");
+		   while(rs.next())
+		   {
+		     readSMS(rs.getString("sms"));
+		      }
+			}
+		catch(SQLException e)
+	    {
+	      // if the error message is "out of memory", 
+	      // it probably means no database file is found
+	      System.err.println(e.getMessage());
+	    }
+	    finally
+	    {
+	      try
+	      {
+	        if(connection != null)
+	          connection.close();
+	      }
+	      catch(SQLException e)
+	      {
+	        // connection close failed.
+	        System.err.println(e);
+	      }
+	    }
+	}
+	
 	  /** 
 	   * Reads the file line by line into the arraylist. 
 	   */
 	public void readFile() throws IOException {
 	    log("Reading from file.");
-	    messages = new ArrayList<String>();
 	    Scanner scanner = new Scanner(new FileInputStream(filename), encoding);
 	    //Scanner scanner = new Scanner(new FileInputStream(filename));
 
@@ -109,22 +165,33 @@ public class SmsReader {
 		return sb.toString();
 	}
 	
+	
+	
 	private void log(String s) {
 		System.out.println(TAG + " " + s);
 	}
+	
+	public void readSMS(String s){
+		messages.add(s);
+	}
+	 
    
     public static void main (String args[]) throws Exception {
     	SmsReader reader = null;
-    	
-        if (args.length < 1) {
-            System.out.println("Usage: java SmsReader </path/to/smsfile.txt> [encoding]");
-           return;
+    	if (args.length < 1) {
+    		reader = new SmsReader();
+            reader.readMsgsFromDb("jdbc:sqlite:sample.db");
+            String[] arr = reader.getMessagesAsArray();
+            for (int i = 0; i < arr.length; i ++) {
+            	System.out.println(arr[i]);
+            }
         } else if (args.length < 2) {
         	reader = new SmsReader(args[0]);  // Uses default encoding
+            reader.readFile();
         } else {
             reader = new SmsReader(args[0], args[1]);
+            reader.readFile();
         }
-        reader.readFile();
         
     }
 }
