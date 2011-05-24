@@ -29,12 +29,18 @@ import java.awt.event.*;
 import java.util.*;
 import java.awt.datatransfer.*;
 
+import javax.swing.AbstractButton;
 import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
+import javax.swing.ButtonGroup;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTextField;
@@ -58,10 +64,17 @@ public class DataEntryGUI extends JFrame implements ActionListener,
 	private Menus menus;
 	
 	//private TextAreaPlus messagesField, outputField;
-	private JTextField firstNameJText, lastNameJText;
+	private JTextField firstNameJText, lastNameJText, addressJText, ageJText;
+	private JRadioButton maleJRadioButton, femaleJRadioButton;
+	private JRadioButton infantMal,infantPrev,motherExp,motherNurs;
 	private JButton button2, button3, button1;
+//	private String[] communeNames
+//	private String[] communeSectionNames= {"Names"};
+	private JComboBox communeBox, communeSectionBox;
+	private SmsReader reader;
 	
 	private JPanel welcomePanel, messagesPanel, buttonPanel, formPanel;
+	private JPanel geninfoPanel, geninfoGrid, benPanel, mchnPanel;
 	private String windowId = "";
 	
 	private JSplitPane splitPane;
@@ -119,26 +132,97 @@ public class DataEntryGUI extends JFrame implements ActionListener,
 	private JPanel setUpDataEntryPanel() {
 		formPanel = new JPanel();
 		formPanel.setBorder(BorderFactory.createTitledBorder("Data Entry Form"));
+		formPanel.setLayout(new BorderLayout());
+		
+		geninfoPanel = new JPanel();
+		geninfoPanel.setBorder(BorderFactory.createTitledBorder("General Information"));
+		geninfoPanel.setLayout(new BoxLayout(geninfoPanel, BoxLayout.Y_AXIS));
+		
+		geninfoGrid = new JPanel();
+		geninfoGrid.setLayout(new GridLayout(3,2));
+		geninfoPanel.add(geninfoGrid);
+		
+		benPanel = new JPanel();
+		benPanel.setBorder(BorderFactory.createTitledBorder("Beneficiary"));
+		
+		mchnPanel = new JPanel();
+		mchnPanel.setBorder(BorderFactory.createTitledBorder("MCHN Information"));
+		
+		buttonPanel = new JPanel();
+		buttonPanel.setBorder(BorderFactory.createTitledBorder("Controls"));
 		
 		firstNameJText = new JTextField();
 		firstNameJText.setColumns(15);
 		lastNameJText = new JTextField();
 		lastNameJText.setColumns(15);
 		
-		formPanel.add(new JLabel("First Name:"));
-		formPanel.add(firstNameJText);
-		formPanel.add(new JLabel("Last Name:"));
-		formPanel.add(lastNameJText);
+		communeBox = new JComboBox();
+		communeSectionBox = new JComboBox();
+		addressJText = new JTextField();
+		addressJText.setColumns(15);
+		ageJText = new JTextField();
+		ageJText.setColumns(15);
+		maleJRadioButton = new JRadioButton("MALE",false);
+		femaleJRadioButton = new JRadioButton("FEMALE",false);
 
-		button1 = new JButton("Button1");
+		infantMal = new JRadioButton("Enfant mal nourri",false);
+		infantPrev = new JRadioButton("Enfant en prevention",false);
+		motherExp = new JRadioButton("Femme enceinte",false);
+		motherNurs = new JRadioButton("Femme allaitante",false);
+		
+		//creating General Information Panel
+		geninfoGrid.add(new JLabel("First Name:"));
+		geninfoGrid.add(firstNameJText);
+		geninfoGrid.add(new JLabel("Last Name:"));
+		geninfoGrid.add(lastNameJText);
+		geninfoGrid.add(new JLabel("Commune:"));
+		geninfoGrid.add(communeBox);
+		geninfoGrid.add(new JLabel("Section:"));
+		geninfoGrid.add(communeSectionBox);
+		geninfoGrid.add(new JLabel("Address:"));
+		geninfoGrid.add(addressJText);
+		geninfoGrid.add(new JLabel("Age:"));
+		geninfoGrid.add(ageJText);
+		
+		JPanel sexPanel = new JPanel();
+		sexPanel.add(new JLabel("Sex:"));
+		ButtonGroup sexGroup = new ButtonGroup();
+		sexGroup.add(maleJRadioButton);
+		sexGroup.add(femaleJRadioButton);
+		sexPanel.add(maleJRadioButton);
+		sexPanel.add(femaleJRadioButton);
+		geninfoPanel.add(sexPanel);
+		JPanel empty = new JPanel();
+		
+		geninfoPanel.add(benPanel);
+		
+		//benPanel.add(new JLabel("Beneficiary:"));
+		ButtonGroup infantGroup = new ButtonGroup();
+		infantGroup.add(infantMal);
+		infantGroup.add(infantPrev);
+		infantGroup.add(motherExp);
+		infantGroup.add(motherNurs);
+		JPanel infantPanel = new JPanel();
+		infantPanel.add(infantMal);
+		infantPanel.add(infantPrev);
+		infantPanel.add(motherExp);
+		infantPanel.add(motherNurs);
+		benPanel.add(infantPanel);
+		
+		
+		
+		button1 = new JButton("Save");
 		button2 = new JButton("Button2");
 		button3 = new JButton("Button3");
 		button1.addActionListener(this);
 		button2.addActionListener(this);
-		button3.addActionListener(this);  
-		formPanel.add(button1);
-		formPanel.add(button2);
-		formPanel.add(button3);
+		button3.addActionListener(this); 
+		formPanel.add(geninfoPanel,"North");
+		formPanel.add(mchnPanel,"Center");
+		formPanel.add(buttonPanel,"South");
+		buttonPanel.add(button1);
+		buttonPanel.add(button2);
+		buttonPanel.add(button3);
 
 		return formPanel;
 	}
@@ -152,7 +236,16 @@ public class DataEntryGUI extends JFrame implements ActionListener,
 			MenuItem item = (MenuItem)e.getSource();
 			String cmd = e.getActionCommand();
 			doCommand(cmd);
+		} else if (e.getSource() instanceof JButton){
+		    JButton button = (JButton)e.getSource();
+		    if (button.getText().equals("Save"))
+		   	    System.out.println("Saving data");
+		    if (button.getText().equals("Button2"))
+		    	System.out.println("Button2 action performed");
+		    if (button.getText().equals("Button3"))
+		    	System.out.println("Button3 action performed");
 		}
+		
 	}
 	
 //	/**
@@ -264,7 +357,7 @@ public boolean close() {
 		fd.show();
 		
 		messageFileName = fd.getDirectory() + fd.getFile();
-		SmsReader reader = new SmsReader(messageFileName);
+		reader = new SmsReader(messageFileName);
 
 		try {
 			reader.readFile();
@@ -335,6 +428,24 @@ public boolean close() {
 	private void fillInDataEntryForm(Beneficiary beneficiary) {
 		this.firstNameJText.setText(beneficiary.getFirstName());
 		this.lastNameJText.setText(beneficiary.getLastName());
+		
+		addItemsToComboBox(communeBox, reader.getCommune());
+		this.communeBox.setSelectedItem(beneficiary.getCommune());
+		addItemsToComboBox(communeSectionBox, reader.getCommuneSection(beneficiary.getCommune()));
+	//	this.communeBox.setText(beneficiary.getCommune());
+	//	this.communeSectionBox.setText(beneficiary.getCommuneSection());
+	//	this.addressJText.setText(beneficiary.getAddress());
+		this.ageJText.setText(Integer.toString(beneficiary.getAge()));
+		if (beneficiary.getSex().equals(Beneficiary.Sex.MALE)) {
+			this.maleJRadioButton.setSelected(true);
+		} else {
+			this.femaleJRadioButton.setSelected(true);
+		}
+	}
+	
+	private void addItemsToComboBox (JComboBox combo, String arr[]) {
+		for (int k = 0; k < arr.length; k++) 
+			combo.addItem(arr[k]);
 	}
 	
 	/**
