@@ -42,6 +42,8 @@ public class AttributeManager {
 		abbreviations.put("n", "numberInHome");
 		abbreviations.put("ic", "infantCategory");
 		abbreviations.put("mc", "motherCategory");
+		abbreviations.put("s", "sex");
+
 	}
 	
 	public String mapToLong(Beneficiary.Abbreviated abbreviatedAttributes, String s){
