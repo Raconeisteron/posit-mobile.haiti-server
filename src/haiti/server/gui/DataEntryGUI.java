@@ -231,6 +231,7 @@ public class DataEntryGUI extends JFrame implements ActionListener,
 	
 	/** 
 	 * Handles all menu events whenever the user selects a menu item.
+	 * @param e the action that was performed
 	 */
 	public void actionPerformed(ActionEvent e) {
 		if ((e.getSource() instanceof MenuItem)) {
@@ -240,12 +241,12 @@ public class DataEntryGUI extends JFrame implements ActionListener,
 		} else if (e.getSource() instanceof JButton){
 		    JButton button = (JButton)e.getSource();
 		    if (button.getText().equals("Save")) {
-				beneficiary.setStatus(1);
+				beneficiary.setStatus(1); // sets the status of the current Beneficiary item to processed
 		    	reader.updateMessage(beneficiary);
 		   	    System.out.println("Saving data");
 		    }
 		    if (button.getText().equals("Button2")) {
-				beneficiary.setStatus(2);
+				beneficiary.setStatus(2); // sets the status of the Beneficiary item to pending
 		    	reader.updateMessage(beneficiary);
 		    	System.out.println("Sent to Eldivert");
 		    }
