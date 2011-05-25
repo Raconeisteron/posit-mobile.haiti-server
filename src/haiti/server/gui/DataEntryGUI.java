@@ -264,15 +264,18 @@ public class DataEntryGUI extends JFrame implements ActionListener,
 	/** 
 	 * Executes the command given by its parameter.
 	 * @param a String that specifies the desired command.
+	 * @throws  
 	 */
 	public void doCommand(String cmd) {   
 		//    	showStatus("doCommand " + cmd);
 		if (cmd.equals("About DataEntryGUI...")) 
 			showAboutBox();
 		else if (cmd.equals("Open File..."))  {
-			readMessagesIntoGUI();
+			readMessagesIntoGUI("file");
 		} 
-		else if (cmd.equals("Close ...")) {   
+		else if (cmd.equals("Open Db..."))  {
+			readMessagesIntoGUI("db");
+		} 		else if (cmd.equals("Close ...")) {   
 			this.close();
 		}
 		else if (cmd.equals("Save")) {
@@ -351,18 +354,20 @@ public boolean close() {
 	 * Uses a FileDialog to pick a file and read its messages into the data
 	 * entry form, choosing the first message in the file.
 	 * TODO: Error checking that this is a messages file.
+	 * @throws IOException 
 	 */
-	private void readMessagesIntoGUI () {
+	private void readMessagesIntoGUI (String dborfile) {
 		FileDialog fd = new FileDialog(this, "Open File", FileDialog.LOAD);
 		fd.show();
 		
 		messageFileName = fd.getDirectory() + fd.getFile();
 		reader = new SmsReader(messageFileName);
 
-		try {
+		if (dborfile.equals("file")) {
 			reader.readFile();
-		} catch (IOException e) {
-			e.printStackTrace();
+		} else {
+			reader = new SmsReader();
+			reader.readMsgsFromDb(messageFileName);
 		}
 		messagesArray = reader.getMessagesAsArray();
 		
