@@ -22,8 +22,6 @@
 
 package haiti.server.gui;
 
-import haiti.server.datamodel.Beneficiary;
-
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.sql.Connection;
@@ -42,19 +40,25 @@ import java.util.Scanner;
  *  <BR>To run:     java -classpath ../../haiti-server.jar:. SmsReader <filename> [encoding]
  *
  */
-
 public class SmsReader {
 	
 	
 	public static final String TAG = "SmsReader";
-	
+	public static final String DB_MESSAGE_TABLE = "message_log";
+	public static final String DB_MESSAGE_ID = "id";
+	public static final String DB_MESSAGE_COLUMN = "message_text";
+	public static final String DB_MESSAGE_STATUS = "processed";
+	public static final String DB_MESSAGE_TIME = "timestamp";
+
 	private String filename;
 	private String encoding;
-	private ArrayList<String> messages = new ArrayList<String>();;
+	private ArrayList<String> messages = new ArrayList<String>();
 
-	
-	
-	
+	/**
+	 * Default constructor.
+	 */
+	public SmsReader(){
+	}
 	
 	public SmsReader(String filename) { 
 		this(filename, System.getProperty("file.encoding"));
@@ -66,71 +70,67 @@ public class SmsReader {
 		this.encoding = encoding;
 	}
 	
-	public SmsReader(){
-		
-	}
+
 	/**
+	 * Reads messages from an Sqlite database.
 	 * Details for implementing the DataBase can be found on the below link
 	 * http://www.xerial.org/trac/Xerial/wiki/SQLiteJDBC#Usage
 	 * @param dbName
 	 * @throws ClassNotFoundException
 	 */
-	public void readMsgsFromDb(String dbName) throws ClassNotFoundException {
-		Class.forName("org.sqlite.JDBC");
-		Connection connection = null;
-		try{
-		   connection = DriverManager.getConnection(dbName);
-		   Statement statement = connection.createStatement();
-		   statement.setQueryTimeout(60);  // set timeout to 30 sec.
-		   statement.executeUpdate("drop table if exists beneficiary");
-		   statement.executeUpdate("create table beneficiary (sms string)");
-		   statement.executeUpdate("insert into  beneficiary values('f=tom&l=jones&a=11 Main Street&c=Hartford&z=06106')");
-		   statement.executeUpdate("insert into beneficiary values('f=sarah&l=smith&a=12 Main Street&c=Hartford&z=06106')");
-		   ResultSet rs = statement.executeQuery("select * from beneficiary");
-		   while(rs.next())
-		   {
-		     readSMS(rs.getString("sms"));
-		      }
+	public void readMsgsFromDb(String dbName) {
+		try {
+			Class.forName("org.sqlite.JDBC");
+			Connection connection = null;
+
+			connection = DriverManager.getConnection("jdbc:sqlite:" + dbName);
+			Statement statement = connection.createStatement();
+			statement.setQueryTimeout(60);  // set timeout to 30 sec.
+
+			
+			ResultSet rs = statement.executeQuery("select * from " + DB_MESSAGE_TABLE);
+			rs.next();
+			while(!rs.isAfterLast()) {
+				String msg = rs.getString(DB_MESSAGE_ID) + "&" 
+					+ rs.getString(DB_MESSAGE_STATUS) + "&"
+					+ rs.getString(DB_MESSAGE_TIME) + "&" 
+					+ rs.getString(DB_MESSAGE_COLUMN);
+				System.out.println(msg);
+				
+				messages.add(msg);
+
+				rs.next();
 			}
-		catch(SQLException e)
-	    {
-	      // if the error message is "out of memory", 
-	      // it probably means no database file is found
-	      System.err.println(e.getMessage());
-	    }
-	    finally
-	    {
-	      try
-	      {
-	        if(connection != null)
-	          connection.close();
-	      }
-	      catch(SQLException e)
-	      {
-	        // connection close failed.
-	        System.err.println(e);
-	      }
-	    }
+			if(connection != null)
+				connection.close();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch(SQLException e) {
+			// if the error message is "out of memory", 
+			// it probably means no database file is found
+			e.printStackTrace();
+		}
+
 	}
 	
-	  /** 
-	   * Reads the file line by line into the arraylist. 
-	   */
-	public void readFile() throws IOException {
-	    log("Reading from file.");
-	    Scanner scanner = new Scanner(new FileInputStream(filename), encoding);
-	    //Scanner scanner = new Scanner(new FileInputStream(filename));
-
-	    try {
-	      while (scanner.hasNextLine()){
-	    	  messages.add(scanner.nextLine());
-	      }
-	    }
-	    finally{
-	      scanner.close();
-	    }
-	    log("Text read from " + filename + " : " + System.getProperty("line.separator") + toString());
-	  }
+	/** 
+	 * Reads the file line by line into the arraylist. 
+	 */
+	public void readFile() {
+		Scanner scanner = null;
+		try {
+			scanner = new Scanner(new FileInputStream(filename), encoding);
+			while (scanner.hasNextLine()) {
+				messages.add(scanner.nextLine());
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		finally{
+			scanner.close();
+		}
+		log("Text read from " + filename + " : " + System.getProperty("line.separator") + toString());
+	}
 	
 	public String getFilename() {
 		return filename;
@@ -171,14 +171,13 @@ public class SmsReader {
 	}
 	
 	
-	
 	private void log(String s) {
 		System.out.println(TAG + " " + s);
 	}
 	
-	public void readSMS(String s){
-		messages.add(s);
-	}
+//	private void readSMS(String s){
+//		messages.add(s);
+//	}
 	
 	public String[] getCommune(){
 		String[] commune = {"Anse a Pitres","Bainet","Belle Anse","Cote de fer","Grand Gosier","La vallee","Thiotte"};
@@ -271,8 +270,7 @@ public class SmsReader {
         } else {
             reader = new SmsReader(args[0], args[1]);
             reader.readFile();
-        }
-        
+        }   
     }
 }
 

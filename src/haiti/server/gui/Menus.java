@@ -49,6 +49,7 @@ public class Menus {
 		Menu fileMenu = new Menu("File");
 //		addMenuItem(fileMenu, "New ...", KeyEvent.VK_N, false);
 		addMenuItem(fileMenu, "Open File...", KeyEvent.VK_O, false);
+		addMenuItem(fileMenu, "Open Db...", KeyEvent.VK_O, false);
 		addMenuItem(fileMenu, "Close ...", KeyEvent.VK_W, false);
 		fileMenu.addSeparator();
 		addMenuItem(fileMenu, "Save", KeyEvent.VK_S, false);
@@ -58,11 +59,11 @@ public class Menus {
 //		fileMenu.addSeparator();
 		addMenuItem(fileMenu, "Quit", KeyEvent.VK_Q, false);
 
-		Menu editMenu = new Menu("Edit");
-		addMenuItem(editMenu, "Cut", KeyEvent.VK_X, false);
-		addMenuItem(editMenu, "Copy", KeyEvent.VK_C, false);
-		addMenuItem(editMenu, "Paste", KeyEvent.VK_V, false);
-		addMenuItem(editMenu, "Select All", 0, false);    
+//		Menu editMenu = new Menu("Edit");
+//		addMenuItem(editMenu, "Cut", KeyEvent.VK_X, false);
+//		addMenuItem(editMenu, "Copy", KeyEvent.VK_C, false);
+//		addMenuItem(editMenu, "Paste", KeyEvent.VK_V, false);
+//		addMenuItem(editMenu, "Select All", 0, false);    
 
 		windowMenu = new Menu("Window");
 		CheckboxMenuItem item = new CheckboxMenuItem("DataEntryGUI");
@@ -76,7 +77,7 @@ public class Menus {
 
 		mbar = new MenuBar();
 		mbar.add(fileMenu);
-		mbar.add(editMenu);
+//		mbar.add(editMenu);
 		mbar.add(windowMenu);
 		mbar.setHelpMenu(helpMenu);
 		gui.setMenuBar(mbar);
