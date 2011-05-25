@@ -25,6 +25,8 @@ package haiti.server.gui;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
+import java.util.Locale;
+import java.util.ResourceBundle;
 import java.applet.Applet;
 
 /**
@@ -32,6 +34,8 @@ import java.applet.Applet;
  */
 
 public class Menus {
+	
+	public static Locale[] supportedLocales = {Locale.FRENCH, Locale.ENGLISH};
 
 	private static final int STATIC_WINDOW_MENU_ITEMS = 2;
 
@@ -40,24 +44,31 @@ public class Menus {
 	
 	private static DataEntryGUI gui;
 	
+	public static ResourceBundle menus;
+	private Locale currentLocale;
+
+	   
+	
 
 	public Menus(DataEntryGUI gui) {
 		this.gui = gui;
+		currentLocale = Locale.FRENCH;
+		//menus =  ResourceBundle.getBundle(System.getProperty("user.dir") + "/res/MenusBundle", currentLocale);
+		menus =  ResourceBundle.getBundle("MenusBundle", currentLocale);
 	}
 
 	public void addMenuBar() {
-		Menu fileMenu = new Menu("File");
-//		addMenuItem(fileMenu, "New ...", KeyEvent.VK_N, false);
-		addMenuItem(fileMenu, "Open File...", KeyEvent.VK_O, false);
-		addMenuItem(fileMenu, "Open Db...", KeyEvent.VK_O, false);
-		addMenuItem(fileMenu, "Close ...", KeyEvent.VK_W, false);
+		Menu fileMenu = new Menu(menus.getString("File"));
+		addMenuItem(fileMenu, menus.getString("OpenFile"), KeyEvent.VK_N, false);
+		addMenuItem(fileMenu, menus.getString("OpenDB"), KeyEvent.VK_O, false);
+		addMenuItem(fileMenu, menus.getString("Close"), KeyEvent.VK_W, false);
 		fileMenu.addSeparator();
-		addMenuItem(fileMenu, "Save", KeyEvent.VK_S, false);
-		addMenuItem(fileMenu, "Save As", KeyEvent.VK_A, false);
+		addMenuItem(fileMenu, menus.getString("Save"), KeyEvent.VK_S, false);
+		addMenuItem(fileMenu, menus.getString("SaveAs"), KeyEvent.VK_A, false);
 		fileMenu.addSeparator();
 //		addMenuItem(fileMenu, "Print", KeyEvent.VK_P, false);
 //		fileMenu.addSeparator();
-		addMenuItem(fileMenu, "Quit", KeyEvent.VK_Q, false);
+		addMenuItem(fileMenu, menus.getString("Quit"), KeyEvent.VK_Q, false);
 
 //		Menu editMenu = new Menu("Edit");
 //		addMenuItem(editMenu, "Cut", KeyEvent.VK_X, false);
@@ -65,14 +76,14 @@ public class Menus {
 //		addMenuItem(editMenu, "Paste", KeyEvent.VK_V, false);
 //		addMenuItem(editMenu, "Select All", 0, false);    
 
-		windowMenu = new Menu("Window");
+		windowMenu = new Menu(menus.getString("Window"));
 		CheckboxMenuItem item = new CheckboxMenuItem("DataEntryGUI");
 		windowMenu.add(item);
 		item.setState(true);
 		item.addActionListener(gui);    
 		windowMenu.addSeparator();
 
-		Menu helpMenu = new Menu("Help");
+		Menu helpMenu = new Menu(menus.getString("Help"));
 		addMenuItem(helpMenu, "About DataEntryGUI...", 0, false);
 
 		mbar = new MenuBar();

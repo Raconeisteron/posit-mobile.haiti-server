@@ -270,44 +270,44 @@ public class DataEntryGUI extends JFrame implements ActionListener,
 		//    	showStatus("doCommand " + cmd);
 		if (cmd.equals("About DataEntryGUI...")) 
 			showAboutBox();
-		else if (cmd.equals("Open File..."))  {
+		else if (cmd.equals(Menus.menus.getString("OpenFile")))  {
 			readMessagesIntoGUI("file");
 		} 
-		else if (cmd.equals("Open Db..."))  {
+		else if (cmd.equals(Menus.menus.getString("OpenDB")))  {
 			readMessagesIntoGUI("db");
 		} 		else if (cmd.equals("Close ...")) {   
 			this.close();
 		}
-		else if (cmd.equals("Save")) {
+		else if (cmd.equals(Menus.menus.getString("Save"))) {
 			this.save(false);
 		}
-		else if (cmd.equals("Save As")) {
+		else if (cmd.equals(Menus.menus.getString("SaveAs"))) {
 			this.save(false);
 
 		}
-		else if (cmd.equals("Print"))
-			;
-//			showStatus("PrintCipher... not yet implemented");
-		else if (cmd.equals("Cut")) {
-			//            showStatus("Cut");
-			TextManager.copyText(true);
-		}
-		else if (cmd.equals("Copy")) {
-			//            showStatus("Copy");
-			TextManager.copyText(false);
-		}
-		else if (cmd.equals("Paste")) {
-			//            showStatus("Paste");
-			TextManager.pasteText();
-		}
-		else if (cmd.equals("Select All")) {
-			//            showStatus("Select All");
-			TextManager.selectAll();
-		}
+//		else if (cmd.equals("Print"))
+//			;
+////			showStatus("PrintCipher... not yet implemented");
+//		else if (cmd.equals("Cut")) {
+//			//            showStatus("Cut");
+//			TextManager.copyText(true);
+//		}
+//		else if (cmd.equals("Copy")) {
+//			//            showStatus("Copy");
+//			TextManager.copyText(false);
+//		}
+//		else if (cmd.equals("Paste")) {
+//			//            showStatus("Paste");
+//			TextManager.pasteText();
+//		}
+//		else if (cmd.equals("Select All")) {
+//			//            showStatus("Select All");
+//			TextManager.selectAll();
+//		}
 		else if (cmd.equals("DataEntryGUI")) {
 			activate();
 		}
-		else if (cmd.equals("Quit"))
+		else if (cmd.equals(Menus.menus.getString("Quit")))
 			this.quit();
 	}   
 	
