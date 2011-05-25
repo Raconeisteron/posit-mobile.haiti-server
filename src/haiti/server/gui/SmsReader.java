@@ -95,9 +95,9 @@ public class SmsReader {
 			ResultSet rs = statement.executeQuery("select * from " + DB_MESSAGE_TABLE);
 			rs.next();
 			while(!rs.isAfterLast()) {
-				String msg = rs.getString(DB_MESSAGE_ID) + "&" 
-					+ rs.getString(DB_MESSAGE_STATUS) + "&"
-					+ rs.getString(DB_MESSAGE_TIME) + "&" 
+				String msg = "id=" + rs.getString(DB_MESSAGE_ID) + "&" 
+					+ "status=" + rs.getString(DB_MESSAGE_STATUS) + "&"
+					+ "created=" + rs.getString(DB_MESSAGE_TIME) + "&"
 					+ rs.getString(DB_MESSAGE_COLUMN);
 				System.out.println(msg);
 				

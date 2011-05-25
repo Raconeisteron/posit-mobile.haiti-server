@@ -32,6 +32,9 @@ public class AttributeManager {
 	
 	private HashMap<String,String> abbreviations;
 	
+	/**
+	 * Default constructor, inserts all the attributes into a HashMap
+	 */
 	public AttributeManager() {
 		abbreviations = new HashMap<String, String>();
 		abbreviations.put("f", "firstName");
@@ -45,7 +48,12 @@ public class AttributeManager {
 		abbreviations.put("s", "sex");
 
 	}
-	
+	/**
+	 * Maps the short form field names to long form
+	 * @param abbreviatedAttributes TRUE if abbreviated, FALSE if not
+	 * @param s the String to be mapped to long
+	 * @return the long form of the String
+	 */
 	public String mapToLong(Beneficiary.Abbreviated abbreviatedAttributes, String s){
 		if (abbreviatedAttributes == Beneficiary.Abbreviated.TRUE) {
 			String str = abbreviations.get(s);
