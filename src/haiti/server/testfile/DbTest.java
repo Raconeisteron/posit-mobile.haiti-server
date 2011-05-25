@@ -1,7 +1,6 @@
 package haiti.server.testfile;
 
 
-import java.awt.FileDialog;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -27,8 +26,6 @@ public class DbTest
 		{
 			String path = "jdbc:sqlite:" + System.getProperty("user.dir").toString() + "/db/haiti.db";
 			System.out.println("PATH=" + path);
-			
-			
 			// create a database connection
 			connection = DriverManager.getConnection(path);
 			//connection = DriverManager.getConnection("jdbc:sqlite:db/haiti.db");
@@ -38,7 +35,8 @@ public class DbTest
 			Statement statement = connection.createStatement();
 			System.out.println(statement.toString());
 			statement.setQueryTimeout(30);  // set timeout to 30 sec.
-			
+			statement.execute("UPDATE "+DB_MESSAGE_TABLE);
+			statement.execute("SET status="+Integer.toString(5)+" where id=1;");
 			ResultSet rs = statement.executeQuery("select * from message_log");
 			rs.next();
 			while(!rs.isAfterLast()) {

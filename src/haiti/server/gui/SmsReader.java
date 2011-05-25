@@ -22,6 +22,8 @@
 
 package haiti.server.gui;
 
+import haiti.server.datamodel.Beneficiary;
+
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.sql.Connection;
@@ -29,7 +31,9 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Scanner;
 
 
@@ -254,6 +258,39 @@ public class SmsReader {
 		
 	}
 	 
+	/**
+	 * updateMessage method update the status and modified time for given
+	 * Beneficiary object in database
+	 * 
+	 * @param b
+	 *            is Beneficiary object *
+	 */
+	public void updateMessage(Beneficiary b) {
+		String date_format = "yyyy-MM-dd HH:mm:ss";
+		Calendar cal = Calendar.getInstance();
+		SimpleDateFormat sdf = new SimpleDateFormat(date_format);
+		String time = sdf.format(cal.getTime());
+		try {
+			Class.forName("org.sqlite.JDBC");
+			Connection connection = null;
+			connection = DriverManager.getConnection("jdbc:sqlite:"
+					+ System.getProperty("user.dir").toString()
+					+ "/db/haiti.db");
+			Statement statement = connection.createStatement();
+			statement.setQueryTimeout(60); // set timeout to 30 sec.
+			// statement.executeQuery("select message_text from " +
+			// DB_MESSAGE_TABLE) +
+			// "WHERE id="+Integer.toString(beneficiary.getId());
+			statement.execute("UPDATE " + DB_MESSAGE_TABLE + " SET status='"
+					+ b.getStatus() + "' where id='" + b.getId() + "';");
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			// if the error message is "out of memory",
+			// it probably means no database file is found
+			e.printStackTrace();
+		}
+	}
    
     public static void main (String args[]) throws Exception {
     	SmsReader reader = null;
