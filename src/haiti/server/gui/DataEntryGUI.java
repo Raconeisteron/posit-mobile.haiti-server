@@ -84,6 +84,7 @@ public class DataEntryGUI extends JFrame implements ActionListener,
     private JScrollPane formScrollPane = new JScrollPane();	// Where the data entry form goes
     
     private String messageFileName;
+    private Beneficiary beneficiary;
     
 	public TextArea display;// = new TextArea();
 
@@ -238,10 +239,16 @@ public class DataEntryGUI extends JFrame implements ActionListener,
 			doCommand(cmd);
 		} else if (e.getSource() instanceof JButton){
 		    JButton button = (JButton)e.getSource();
-		    if (button.getText().equals("Save"))
+		    if (button.getText().equals("Save")) {
+				beneficiary.setStatus(1);
+		    	reader.updateMessage(beneficiary);
 		   	    System.out.println("Saving data");
-		    if (button.getText().equals("Button2"))
-		    	System.out.println("Button2 action performed");
+		    }
+		    if (button.getText().equals("Button2")) {
+				beneficiary.setStatus(2);
+		    	reader.updateMessage(beneficiary);
+		    	System.out.println("Sent to Eldivert");
+		    }
 		    if (button.getText().equals("Button3"))
 		    	System.out.println("Button3 action performed");
 		}
@@ -372,7 +379,7 @@ public boolean close() {
 		messagesArray = reader.getMessagesAsArray();
 		
 		formPanel = setUpDataEntryPanel();
-		Beneficiary beneficiary = new Beneficiary(messagesArray[0], Abbreviated.TRUE);
+		beneficiary = new Beneficiary(messagesArray[0], Abbreviated.TRUE);
 		fillInDataEntryForm(beneficiary);
 		
 		this.getContentPane().remove(welcomePanel);
@@ -422,7 +429,7 @@ public boolean close() {
 	public void valueChanged(ListSelectionEvent e) {
 		JList list = (JList) e.getSource();
 		System.out.println("Clicked on  list item " + list.getSelectedValue());
-		Beneficiary beneficiary = new Beneficiary(list.getSelectedValue().toString(), Abbreviated.TRUE);
+		beneficiary = new Beneficiary(list.getSelectedValue().toString(), Abbreviated.TRUE);
 		fillInDataEntryForm(beneficiary);	
 	}
 	
