@@ -248,10 +248,10 @@ public class DataEntryGUI extends JFrame implements ActionListener,
 		    if (button.getText().equals("Button2")) {
 				beneficiary.setStatus(2); // sets the status of the Beneficiary item to pending
 		    	reader.updateMessage(beneficiary);
-		    	System.out.println("Sent to Eldivert");
+		    	System.out.println("Sent to the database manager");
 		    }
 		    if (button.getText().equals("Button3"))
-		    	System.out.println("Button3 action performed");
+		    	System.out.println("DATABASE WIPED");
 		}
 		
 	}

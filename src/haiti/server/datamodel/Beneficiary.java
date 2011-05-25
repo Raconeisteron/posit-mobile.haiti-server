@@ -22,6 +22,9 @@
 
 package haiti.server.datamodel;
 
+import java.util.Locale;
+import java.util.ResourceBundle;
+
 public class Beneficiary {
 	
 	public enum Sex {MALE, FEMALE};
@@ -41,6 +44,11 @@ public class Beneficiary {
 	private int status;
 	private int id;
 
+	public static Locale[] supportedLocales = {Locale.FRENCH, Locale.ENGLISH};
+		
+	public static ResourceBundle messages;
+	private Locale currentLocale;
+	
 	/**
 	 * Default constructor
 	 */
@@ -51,6 +59,8 @@ public class Beneficiary {
 				Sex.MALE,
 				InfantCategory.PREVENTION, MotherCategory.NURSING, 
 				0);
+		currentLocale = Locale.ENGLISH;
+		messages = ResourceBundle.getBundle("MessagesBundle", currentLocale);
 	}
 
 	/**
@@ -60,7 +70,10 @@ public class Beneficiary {
 	 * @param abbreviatedAttributes true iff the attribute names are abbreviated, eg. fn
 	 */
 	public Beneficiary (String attributeValueString, Abbreviated abbreviatedAttributes) {
+		currentLocale = Locale.ENGLISH;
+		messages = ResourceBundle.getBundle("MessagesBundle", currentLocale);
 		split(attributeValueString, "&", "=", abbreviatedAttributes);
+		
 	}
 
 	public Beneficiary(String firstName, String lastName, 
@@ -78,6 +91,8 @@ public class Beneficiary {
 		this.infantCategory = infantCategory;
 		this.motherCategory = motherCategory;
 		this.numberInHome = numberInHome;
+		currentLocale = Locale.ENGLISH;
+		messages = ResourceBundle.getBundle("MessagesBundle", currentLocale);
 	}
 	
 	/**
@@ -93,25 +108,25 @@ public class Beneficiary {
 			
 			AttributeManager am = new AttributeManager();
 			String ss = am.mapToLong(abbreviated, temp2[0]);
-			System.out.println("Attribute = " + ss);
+			System.out.println(messages.getString("Attribute") + " = " + ss);
 			
-			if (ss.equals("firstName"))
+			if (ss.equals(messages.getString("firstName")))
 				firstName=temp2[1];
-			else if (ss.equals("lastName"))
+			else if (ss.equals(messages.getString("lastName")))
 				lastName=temp2[1];
-			else if (ss.equals("commune"))
+			else if (ss.equals(messages.getString("commune")))
 				commune=temp2[1];
-			else if (ss.equals("communeSection"))
+			else if (ss.equals(messages.getString("communeSection")))
 				communeSection=temp2[1];
-			else if (ss.equals("infantCategory"))
+			else if (ss.equals(messages.getString("infantCategory")))
 				infantCategory=InfantCategory.valueOf(temp2[1]);
-			else if (ss.equals("motherCategory"))
+			else if (ss.equals(messages.getString("motherCategory")))
 				motherCategory=MotherCategory.valueOf(temp2[1]);
-			else if (ss.equals("sex"))
+			else if (ss.equals(messages.getString("sex")))
 				sex=Sex.valueOf(temp2[1]);
-			else if (ss.equals("age"))
+			else if (ss.equals(messages.getString("age")))
 				age=Integer.parseInt(temp2[1]);
-			else if (ss.equals("numberInHome"))
+			else if (ss.equals(messages.getString("numberInHome")))
 				numberInHome=Integer.parseInt(temp2[1]);
 			else if (ss.equals("id"))
 				id = Integer.parseInt(temp2[1]);
@@ -211,14 +226,14 @@ public class Beneficiary {
 	
 	public String toString(String separator) {
 		return 
-		"firstName=" + firstName + separator +
-		"lastName=" + lastName + separator +
-		"commune=" + commune + separator +
-		"communeSection=" + communeSection + separator +
-		"age=" + age + separator +
-		"numberInHome=" + numberInHome + separator +
-		"infantCategory=" + infantCategory + separator +
-		"motherCategory=" + motherCategory;
+		messages.getString("firstName") + "=" + firstName + separator +
+		messages.getString("lastName") + "=" + lastName + separator +
+		messages.getString("commune") + "=" + commune + separator +
+		messages.getString("communeSection") + "=" + communeSection + separator +
+		messages.getString("age") + "=" + age + separator +
+		messages.getString("numberInHome") + "=" + numberInHome + separator +
+		messages.getString("infantCategory") + "=" + infantCategory + separator +
+		messages.getString("motherCategory") + "=" + motherCategory;
 	}
 	
 	public String toString() {
@@ -230,9 +245,17 @@ public class Beneficiary {
 	 */
 	public static void main(String[] args) {
 		Beneficiary ben = new Beneficiary();
-//		System.out.println(ben.toString("&"));
-//		System.out.println(ben.toString());
-		ben = new Beneficiary("firstName=first&lastName=last&commune=commune&communeSection=section&age=0&numberInHome=0&infantCategory=PREVENTION&motherCategory=NURSING", Abbreviated.FALSE);
+		// System.out.println(ben.toString("&"));
+		// System.out.println(ben.toString());
+		ben = new Beneficiary(messages.getString("firstName") + "=first&"
+				+ messages.getString("lastName") + "=last&"
+				+ messages.getString("commune") + "=commune&"
+				+ messages.getString("communeSection") + "=section&"
+				+ messages.getString("age") + "=0&"
+				+ messages.getString("numberInHome") + "=0&"
+				+ messages.getString("infantCategory") + "=PREVENTION&"
+				+ messages.getString("motherCategory") + "=NURSING",
+				Abbreviated.FALSE);
 		System.out.println(ben.toString());
 	}
 
