@@ -38,7 +38,8 @@ public class Beneficiary {
 	private int numberInHome;
 	private InfantCategory infantCategory;
 	private MotherCategory motherCategory;
-
+	private int status;
+	private int id;
 
 	/**
 	 * Default constructor
@@ -112,6 +113,10 @@ public class Beneficiary {
 				age=Integer.parseInt(temp2[1]);
 			else if (ss.equals("numberInHome"))
 				numberInHome=Integer.parseInt(temp2[1]);
+			else if (ss.equals("id"))
+				id = Integer.parseInt(temp2[1]);
+			else if (ss.equals("status"))
+				status = Integer.parseInt(temp2[1]);
 		}
 		
 	}
@@ -186,6 +191,22 @@ public class Beneficiary {
 
 	public void setMotherCategory(MotherCategory motherCategory) {
 		this.motherCategory = motherCategory;
+	}
+	
+	public int getStatus() {
+		return status;
+	}
+
+	public void setStatus(int status) {
+		this.status = status;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
 	}
 	
 	public String toString(String separator) {
