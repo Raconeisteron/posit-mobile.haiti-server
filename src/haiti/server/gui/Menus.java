@@ -22,6 +22,8 @@
 package haiti.server.gui;
 
 
+import haiti.server.datamodel.LocaleManager;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
@@ -52,13 +54,19 @@ public class Menus {
 
 	public Menus(DataEntryGUI gui) {
 		this.gui = gui;
-		currentLocale = Locale.FRENCH;
+		currentLocale = Locale.ENGLISH;
 		//menus =  ResourceBundle.getBundle(System.getProperty("user.dir") + "/res/MenusBundle", currentLocale);
 		menus =  ResourceBundle.getBundle("MenusBundle", currentLocale);
 	}
+	
+//	public void addLocaleMenu() {
+//		Menu languageMenu = new Menu("Language");
+//		addMenuItem(languageMenu, "English", KeyEvent.VK_N, false);
+		
+//	}
 
 	public void addMenuBar() {
-		Menu fileMenu = new Menu(menus.getString("File"));
+		Menu fileMenu = new Menu(menus.getString(LocaleManager.FILE_MENU_KEY));
 		addMenuItem(fileMenu, menus.getString("OpenFile"), KeyEvent.VK_N, false);
 		addMenuItem(fileMenu, menus.getString("OpenDB"), KeyEvent.VK_O, false);
 		addMenuItem(fileMenu, menus.getString("Close"), KeyEvent.VK_W, false);

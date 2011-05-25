@@ -37,6 +37,8 @@ public class AttributeManager {
 	 */
 	public AttributeManager() {
 		abbreviations = new HashMap<String, String>();
+		abbreviations.put("i","id");
+		abbreviations.put("st","status");
 		abbreviations.put("f", "firstName");
 		abbreviations.put("l", "lastName");
 		abbreviations.put("c", "commune");

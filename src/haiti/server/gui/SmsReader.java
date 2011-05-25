@@ -51,8 +51,9 @@ public class SmsReader {
 	public static final String DB_MESSAGE_TABLE = "message_log";
 	public static final String DB_MESSAGE_ID = "id";
 	public static final String DB_MESSAGE_COLUMN = "message_text";
-	public static final String DB_MESSAGE_STATUS = "processed";
-	public static final String DB_MESSAGE_TIME = "timestamp";
+	public static final String DB_MESSAGE_STATUS = "status";
+	public static final String DB_MESSAGE_CREATED_ON = "created_on";
+	public static final String DB_MESSAGE_MODIFIED_ON = "modified_on";
 
 	private String filename;
 	private String encoding;
@@ -95,9 +96,10 @@ public class SmsReader {
 			ResultSet rs = statement.executeQuery("select * from " + DB_MESSAGE_TABLE);
 			rs.next();
 			while(!rs.isAfterLast()) {
-				String msg = "id=" + rs.getString(DB_MESSAGE_ID) + "&" 
-					+ "status=" + rs.getString(DB_MESSAGE_STATUS) + "&"
-					+ "created=" + rs.getString(DB_MESSAGE_TIME) + "&"
+				String msg = "i=" + rs.getString(DB_MESSAGE_ID) + "&" 
+					+ "st=" + rs.getString(DB_MESSAGE_STATUS) + "&"
+					+ "created=" + rs.getString(DB_MESSAGE_CREATED_ON) + "&"
+					+ "modified=" + rs.getString(DB_MESSAGE_MODIFIED_ON) + "&"
 					+ rs.getString(DB_MESSAGE_COLUMN);
 				System.out.println(msg);
 				
@@ -281,8 +283,8 @@ public class SmsReader {
 			// statement.executeQuery("select message_text from " +
 			// DB_MESSAGE_TABLE) +
 			// "WHERE id="+Integer.toString(beneficiary.getId());
-			statement.execute("UPDATE " + DB_MESSAGE_TABLE + " SET status='"
-					+ b.getStatus() + "' where id='" + b.getId() + "';");
+			statement.execute("UPDATE " + DB_MESSAGE_TABLE + " SET status="
+					+ b.getStatus() + " where id=" + b.getId() + ";");
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		} catch (SQLException e) {
