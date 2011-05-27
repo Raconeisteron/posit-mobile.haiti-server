@@ -88,6 +88,7 @@ public class DataEntryGUI extends JFrame implements ActionListener,
     
 	public TextArea display;// = new TextArea();
 
+	public static final int DB_STATUS_NEW = 0;
 	public static final int DB_STATUS_PENDING = 1;
 	public static final int DB_STATUS_PROCESSED = 2;
 	
