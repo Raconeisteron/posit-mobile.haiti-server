@@ -34,7 +34,8 @@ public class Beneficiary {
 	public enum InfantCategory {MALNOURISHED, PREVENTION};
 	public enum MotherCategory {EXPECTING, NURSING};
 	public enum Abbreviated {TRUE, FALSE};
-	
+	//public enum Status {NEW, PENDING, PROCESSED};
+
 	private String firstName;
 	private String lastName;
 	private String commune;
@@ -44,8 +45,8 @@ public class Beneficiary {
 	private int numberInHome;
 	private InfantCategory infantCategory;
 	private MotherCategory motherCategory;
-	private int status;
 	private int id;
+	private int status;
 
 	public static Locale[] supportedLocales = {Locale.FRENCH, Locale.ENGLISH};
 		
