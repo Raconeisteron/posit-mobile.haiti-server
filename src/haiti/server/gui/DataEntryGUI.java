@@ -31,6 +31,7 @@ import java.awt.datatransfer.*;
 
 import javax.swing.AbstractButton;
 import javax.swing.BorderFactory;
+import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
@@ -45,6 +46,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
+import javax.swing.SwingConstants;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -63,18 +65,27 @@ public class DataEntryGUI extends JFrame implements ActionListener,
 
 	private Menus menus;
 	
-	//private TextAreaPlus messagesField, outputField;
-	private JTextField firstNameJText, lastNameJText, addressJText, ageJText;
-	private JRadioButton maleJRadioButton, femaleJRadioButton;
-	private JRadioButton infantMal,infantPrev,motherExp,motherNurs;
+	//Strings used throughout form
+//	public static final String first_name="First Name: ",last_name="Last Name: ",commune="Commune: ",section="Section: ",address="Address: ",age="Age: ",sex="Sex: ",beneficiary="Beneficiary: ",house_people="              Number of persons in the house:";
+	public static final String first_name="First Name: ",last_name="Last Name: ",commune="Commune: ",section="Section: ",address="Address: ",age="Age: ",sex="Sex: ",strBeneficiary="Beneficiary: ",house_people="              Number of persons in the house:";
+	public static final String hc="Health Center",dp="Distribution post:",name_child="Responsible name (if child):",name_woman="Responsible name (if pregnant woman):",husband="Husband name (if woman):",father="Father's name (if child):",leader="Are you a mother leader?:",visit="Do you visit a mother leader?:";
+	public static final String agri1="Is someone in your family in the",agri2="Agriculture Program of ACDI/VOCA?:",give_name="If yes, give the name:",yes="Yes",no="No";
+	public static final String male="MALE",female="FEMALE",infantMal="Enfant mal nourri",infantPrev="Enfant en prevention",motherExp="Femme enceinte",motherNurs="Femme allaitante";
+	public static final String data="Data Entry Form",gen="General Information",mchn="MCHN Information",controls="Controls";
+	public static final String save="Save",quit="Quit",open_file="Open File",openfile="OpenFile",openDB="OpenDB",save_as="SaveAs",about="About DataEntryGUI...",close="Close ...";
+	
+	private TextAreaPlus messagesField, outputField;
+	private JTextField firstNameJText, lastNameJText, addressJText, ageJText, peopleInHouseJText;
+	private JTextField healthCenterJText, dpJText, guardianChildJText, guardianWomanJText, husbandJText, fatherJText, agriPersonJText; 
+	private JRadioButton radioMale, radioFemale;
+	private JRadioButton radioInfantMal,radioInfantPrev,radioMotherExp,radioMotherNurs;
+	private JRadioButton radioMotherLeaderYes, radioMotherLeaderNo, radioVisitYes, radioVisitNo, radioAgriYes, radioAgriNo;
 	private JButton button2, button3, button1;
-//	private String[] communeNames
-//	private String[] communeSectionNames= {"Names"};
+	private ButtonGroup sexGroup, infantGroup, agriGroup, motherGroup, motherVisitGroup;
 	private JComboBox communeBox, communeSectionBox;
 	private SmsReader reader;
 	
-	private JPanel welcomePanel, messagesPanel, buttonPanel, formPanel;
-	private JPanel geninfoPanel, geninfoGrid, benPanel, mchnPanel;
+	private JPanel welcomePanel, messagesPanel, buttonPanel, formPanel, geninfoPanel, mchnPanel;
 	private String windowId = "";
 	
 	private JSplitPane splitPane;
@@ -99,7 +110,7 @@ public class DataEntryGUI extends JFrame implements ActionListener,
 		super("DataEntryGUI");
 
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		addWindowListener(this);
+		addWindowListener(this);//Male
 		WindowManager.init(this);
 
 		menus = new Menus(this);
@@ -135,88 +146,243 @@ public class DataEntryGUI extends JFrame implements ActionListener,
 	 * @return
 	 */
 	private JPanel setUpDataEntryPanel() {
+		
+		//Form panel
 		formPanel = new JPanel();
-		formPanel.setBorder(BorderFactory.createTitledBorder("Data Entry Form"));
+		formPanel.setBorder(BorderFactory.createTitledBorder(data));
 		formPanel.setLayout(new BorderLayout());
+		formPanel.setBackground(Color.WHITE); 
 		
+		//General Information Panel
 		geninfoPanel = new JPanel();
-		geninfoPanel.setBorder(BorderFactory.createTitledBorder("General Information"));
-		geninfoPanel.setLayout(new BoxLayout(geninfoPanel, BoxLayout.Y_AXIS));
-		
-		geninfoGrid = new JPanel();
-		geninfoGrid.setLayout(new GridLayout(3,2));
-		geninfoPanel.add(geninfoGrid);
-		
-		benPanel = new JPanel();
-		benPanel.setBorder(BorderFactory.createTitledBorder("Beneficiary"));
-		
-		mchnPanel = new JPanel();
-		mchnPanel.setBorder(BorderFactory.createTitledBorder("MCHN Information"));
-		
-		buttonPanel = new JPanel();
-		buttonPanel.setBorder(BorderFactory.createTitledBorder("Controls"));
-		
+		geninfoPanel.setBorder(BorderFactory.createTitledBorder(gen));
+		geninfoPanel.setLayout(new GridBagLayout());
+		geninfoPanel.setBackground(Color.WHITE); 
+		GridBagConstraints c = new GridBagConstraints();
+
 		firstNameJText = new JTextField();
 		firstNameJText.setColumns(15);
 		lastNameJText = new JTextField();
 		lastNameJText.setColumns(15);
-		
 		communeBox = new JComboBox();
 		communeSectionBox = new JComboBox();
 		addressJText = new JTextField();
 		addressJText.setColumns(15);
 		ageJText = new JTextField();
 		ageJText.setColumns(15);
-		maleJRadioButton = new JRadioButton("MALE",false);
-		femaleJRadioButton = new JRadioButton("FEMALE",false);
+		c.gridy=0;
+		c.gridx=0;
+		c.insets=new Insets(10,5,4,2);
+		c.anchor = c.NORTHEAST;
+		geninfoPanel.add(new JLabel(first_name),c);
+		c.gridy=0;
+		c.gridx=1;
+		geninfoPanel.add(firstNameJText,c);
+		c.gridy=0;
+		c.gridx=2;
+		geninfoPanel.add(new JLabel("last_name"),c);
+		c.gridy=0;
+		c.gridx=3;
+		geninfoPanel.add(lastNameJText,c);
+		c.gridy=1;
+		c.gridx=0;
+		geninfoPanel.add(new JLabel(commune),c);
+		c.gridy=1;
+		c.gridx=1;
+		geninfoPanel.add(communeBox,c);
+		c.gridy=1;
+		c.gridx=2;
+		geninfoPanel.add(new JLabel(section),c);
+		c.gridy=1;
+		c.gridx=3;
+		geninfoPanel.add(communeSectionBox,c);
+		c.gridy=2;
+		c.gridx=0;
+		geninfoPanel.add(new JLabel(address),c);
+		c.gridy=2;
+		c.gridx=1;
+		geninfoPanel.add(addressJText,c);
+		c.gridy=2;
+		c.gridx=2;
+		geninfoPanel.add(new JLabel(age),c);
+		c.gridy=2;
+		c.gridx=3;
+		geninfoPanel.add(ageJText,c);
+		
+		
+		//Sex radio buttons
+		c.gridy=3;
+		c.gridx=0;
+		geninfoPanel.add(new JLabel(sex),c);
+		sexGroup = new ButtonGroup();
+		radioMale = new JRadioButton(male,false);
+		radioFemale = new JRadioButton(female,false);
+		sexGroup.add(radioMale);
+		sexGroup.add(radioFemale);
+		c.gridy=3;
+		c.gridx=1;
+		geninfoPanel.add(radioMale,c);
+		c.gridy=3;
+		c.gridx=2;
+		geninfoPanel.add(radioFemale,c);
 
-		infantMal = new JRadioButton("Enfant mal nourri",false);
-		infantPrev = new JRadioButton("Enfant en prevention",false);
-		motherExp = new JRadioButton("Femme enceinte",false);
-		motherNurs = new JRadioButton("Femme allaitante",false);
 		
-		//creating General Information Panel
-		geninfoGrid.add(new JLabel("First Name:"));
-		geninfoGrid.add(firstNameJText);
-		geninfoGrid.add(new JLabel("Last Name:"));
-		geninfoGrid.add(lastNameJText);
-		geninfoGrid.add(new JLabel("Commune:"));
-		geninfoGrid.add(communeBox);
-		geninfoGrid.add(new JLabel("Section:"));
-		geninfoGrid.add(communeSectionBox);
-		geninfoGrid.add(new JLabel("Address:"));
-		geninfoGrid.add(addressJText);
-		geninfoGrid.add(new JLabel("Age:"));
-		geninfoGrid.add(ageJText);
+		//Beneficiary radio buttons
+		c.gridy = 4;
+		c.gridx=0;
+		geninfoPanel.add(new JLabel(strBeneficiary),c);
+		infantGroup = new ButtonGroup();
+		radioInfantMal = new JRadioButton(infantMal,false);
+		radioInfantPrev = new JRadioButton(infantPrev,false);
+		radioMotherExp = new JRadioButton(motherExp,false);
+		radioMotherNurs = new JRadioButton(motherNurs,false);
+		infantGroup.add(radioInfantMal);
+		infantGroup.add(radioInfantPrev);
+		infantGroup.add(radioMotherExp);
+		infantGroup.add(radioMotherNurs);
+		c.gridy=4;
+		c.gridx=1;
+		geninfoPanel.add(radioInfantMal,c);
+		c.gridy=4;
+		c.gridx=2;
+		geninfoPanel.add(radioInfantPrev,c);
+		c.gridy=4;
+		c.gridx=3;
+		geninfoPanel.add(radioMotherExp,c);
+		c.gridy=4;
+		c.gridx=4;
+		geninfoPanel.add(radioMotherNurs,c);
+	
+		//People in house
+		c.gridy = 5;
+		c.gridx=0;
+		peopleInHouseJText = new JTextField();
+		peopleInHouseJText.setColumns(15);
+		geninfoPanel.add(new JLabel(house_people),c);
+		c.gridy=5;
+		c.gridx=1;
+		geninfoPanel.add(peopleInHouseJText,c);
 		
-		JPanel sexPanel = new JPanel();
-		sexPanel.add(new JLabel("Sex:"));
-		ButtonGroup sexGroup = new ButtonGroup();
-		sexGroup.add(maleJRadioButton);
-		sexGroup.add(femaleJRadioButton);
-		sexPanel.add(maleJRadioButton);
-		sexPanel.add(femaleJRadioButton);
-		geninfoPanel.add(sexPanel);
-		JPanel empty = new JPanel();
+		//MCHN panel
+		mchnPanel = new JPanel();
+		mchnPanel.setBorder(BorderFactory.createTitledBorder(mchn));
+		mchnPanel.setLayout(new GridBagLayout());
+		mchnPanel.setBackground(Color.WHITE); 
+
+		c.gridy=0;
+		c.gridx=0;
+		healthCenterJText = new JTextField();
+		healthCenterJText.setColumns(15);
+		dpJText = new JTextField();
+		dpJText.setColumns(15);
+		guardianChildJText = new JTextField();
+		guardianChildJText.setColumns(15);
+		guardianWomanJText = new JTextField();
+		guardianWomanJText.setColumns(15);
+		husbandJText = new JTextField();
+		husbandJText.setColumns(15);
+		fatherJText = new JTextField();
+		fatherJText.setColumns(15);
+		mchnPanel.add(new JLabel(hc),c);
+		c.gridy=0;
+		c.gridx=1;
+		mchnPanel.add(healthCenterJText,c);
+		c.gridy=0;
+		c.gridx=2;
+		mchnPanel.add(new JLabel(dp),c);
+		c.gridy=0;
+		c.gridx=3;
+		mchnPanel.add(dpJText,c);
+		c.gridy=1;
+		c.gridx=0;
+		mchnPanel.add(new JLabel(name_child),c);
+		c.gridy=1;
+		c.gridx=1;
+		mchnPanel.add(guardianChildJText,c);
+		c.gridy=1;
+		c.gridx=2;
+		mchnPanel.add(new JLabel(name_woman),c);
+		c.gridy=1;
+		c.gridx=3;
+		mchnPanel.add(guardianWomanJText,c);
+		c.gridy=2;
+		c.gridx=0;
+		mchnPanel.add(new JLabel(husband),c);
+		c.gridy=2;
+		c.gridx=1;
+		mchnPanel.add(husbandJText,c);
+		c.gridy=2;
+		c.gridx=2;
+		mchnPanel.add(new JLabel(father),c);
+		c.gridy=2;
+		c.gridx=3;
+		mchnPanel.add(fatherJText,c);
+
+		motherGroup = new ButtonGroup();
+		radioMotherLeaderYes = new JRadioButton(yes,false);
+		radioMotherLeaderNo = new JRadioButton(no,false);
+		motherGroup.add(radioMotherLeaderYes);
+		motherGroup.add(radioMotherLeaderNo);   
+		c.gridy=3;
+		c.gridx=0;
+		mchnPanel.add(new JLabel(leader),c);
+		c.gridy=3;
+		c.gridx=1;
+		mchnPanel.add(radioMotherLeaderYes,c);
+		c.gridy=3;
+		c.gridx=2;
+		mchnPanel.add(radioMotherLeaderNo,c);
+
+		motherVisitGroup = new ButtonGroup();
+		radioVisitYes = new JRadioButton(yes,false);
+		radioVisitNo = new JRadioButton(no,false);
+		motherVisitGroup.add(radioVisitYes);
+		motherVisitGroup.add(radioVisitNo);
+		c.gridy=4;
+		c.gridx=0;
+		mchnPanel.add(new JLabel(visit),c);
+		c.gridy=4;
+		c.gridx=1;
+		mchnPanel.add(radioVisitYes,c);
+		c.gridy=4;
+		c.gridx=2;
+		mchnPanel.add(radioVisitNo,c);
+
+		agriGroup = new ButtonGroup();
+		radioAgriYes = new JRadioButton(yes,false);
+		radioAgriNo = new JRadioButton(no,false);
+		agriGroup.add(radioAgriYes);
+		agriGroup.add(radioAgriNo);
+		c.gridy=5;
+		c.gridx=0;
+		c.insets=new Insets(10,5,0,2);
+		mchnPanel.add(new JLabel(agri1),c);
+		c.insets=new Insets(0,5,4,2);
+		c.gridy=6;
+		c.gridx=0;
+		mchnPanel.add(new JLabel(agri2),c);
+		c.insets=new Insets(0,5,4,2);
+		c.gridy=6;
+		c.gridx=1;
+		mchnPanel.add(radioAgriYes,c);
+		c.gridy=6;
+		c.gridx=2;
+		mchnPanel.add(radioAgriNo,c);
 		
-		geninfoPanel.add(benPanel);
-		
-		//benPanel.add(new JLabel("Beneficiary:"));
-		ButtonGroup infantGroup = new ButtonGroup();
-		infantGroup.add(infantMal);
-		infantGroup.add(infantPrev);
-		infantGroup.add(motherExp);
-		infantGroup.add(motherNurs);
-		JPanel infantPanel = new JPanel();
-		infantPanel.add(infantMal);
-		infantPanel.add(infantPrev);
-		infantPanel.add(motherExp);
-		infantPanel.add(motherNurs);
-		benPanel.add(infantPanel);
-		
-		
-		
-		button1 = new JButton("Save");
+		agriPersonJText = new JTextField();
+		agriPersonJText.setColumns(15);
+		c.gridy=7;
+		c.gridx=0;
+		c.insets=new Insets(10,5,4,2);
+		mchnPanel.add(new JLabel(give_name),c);
+		c.gridy=7;
+		c.gridx=1;
+		mchnPanel.add(agriPersonJText,c);
+
+		buttonPanel = new JPanel();
+		buttonPanel.setBorder(BorderFactory.createTitledBorder(controls));
+		buttonPanel.setBackground(Color.WHITE);
+		button1 = new JButton(save);
 		button2 = new JButton("Button2");
 		button3 = new JButton("Button3");
 		button1.addActionListener(this);
@@ -280,20 +446,20 @@ public class DataEntryGUI extends JFrame implements ActionListener,
 	 */
 	public void doCommand(String cmd) {   
 		//    	showStatus("doCommand " + cmd);
-		if (cmd.equals("About DataEntryGUI...")) 
+		if (cmd.equals(about)) 
 			showAboutBox();
-		else if (cmd.equals(Menus.menus.getString("OpenFile")))  {
+		else if (cmd.equals(Menus.menus.getString(openfile)))  {
 			readMessagesIntoGUI("file");
 		} 
-		else if (cmd.equals(Menus.menus.getString("OpenDB")))  {
+		else if (cmd.equals(Menus.menus.getString(openDB)))  {
 			readMessagesIntoGUI("db");
-		} 		else if (cmd.equals("Close ...")) {   
+		} 		else if (cmd.equals(close)) {   
 			this.close();
 		}
-		else if (cmd.equals(Menus.menus.getString("Save"))) {
+		else if (cmd.equals(Menus.menus.getString(save))) {
 			this.save(false);
 		}
-		else if (cmd.equals(Menus.menus.getString("SaveAs"))) {
+		else if (cmd.equals(Menus.menus.getString(save_as))) {
 			this.save(false);
 
 		}
@@ -319,7 +485,7 @@ public class DataEntryGUI extends JFrame implements ActionListener,
 		else if (cmd.equals("DataEntryGUI")) {
 			activate();
 		}
-		else if (cmd.equals(Menus.menus.getString("Quit")))
+		else if (cmd.equals(Menus.menus.getString(quit)))
 			this.quit();
 	}   
 	
@@ -369,7 +535,7 @@ public boolean close() {
 	 * @throws IOException 
 	 */
 	private void readMessagesIntoGUI (String dborfile) {
-		FileDialog fd = new FileDialog(this, "Open File", FileDialog.LOAD);
+		FileDialog fd = new FileDialog(this, open_file, FileDialog.LOAD);
 		fd.show();
 		
 		messageFileName = fd.getDirectory() + fd.getFile();
@@ -454,9 +620,9 @@ public boolean close() {
 	//	this.addressJText.setText(beneficiary.getAddress());
 		this.ageJText.setText(Integer.toString(beneficiary.getAge()));
 		if (beneficiary.getSex().equals(Beneficiary.Sex.MALE)) {
-			this.maleJRadioButton.setSelected(true);
+			this.radioMale.setSelected(true);
 		} else {
-			this.femaleJRadioButton.setSelected(true);
+			this.radioFemale.setSelected(true);
 		}
 	}
 	
