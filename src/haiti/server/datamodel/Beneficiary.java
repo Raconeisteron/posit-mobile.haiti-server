@@ -25,6 +25,9 @@ package haiti.server.datamodel;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
+import java.util.Locale;
+import java.util.ResourceBundle;
+
 public class Beneficiary {
 	
 	public enum Sex {MALE, FEMALE};
@@ -190,6 +193,8 @@ public class Beneficiary {
 
 	public void setNumberInHome(int numberInHome) {
 		this.numberInHome = numberInHome;
+		currentLocale = Locale.ENGLISH;
+		messages = ResourceBundle.getBundle("MessagesBundle", currentLocale);
 	}
 
 	public InfantCategory getInfantCategory() {
