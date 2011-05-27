@@ -35,19 +35,55 @@ public class AttributeManager {
 	/**
 	 * Default constructor, inserts all the attributes into a HashMap
 	 */
+	
 	public AttributeManager() {
 		abbreviations = new HashMap<String, String>();
-		abbreviations.put("i","id");
-		abbreviations.put("st","status");
-		abbreviations.put("f", "firstName");
-		abbreviations.put("l", "lastName");
-		abbreviations.put("c", "commune");
-		abbreviations.put("cs", "communeSection");
-		abbreviations.put("a", "age");
-		abbreviations.put("n", "numberInHome");
-		abbreviations.put("ic", "infantCategory");
-		abbreviations.put("mc", "motherCategory");
-		abbreviations.put("s", "sex");
+		abbreviations.put(HaitiKeys.ABBREV_ATTRIBUTE, HaitiKeys.LONG_ATTRIBUTE);
+		abbreviations.put(HaitiKeys.ABBREV_FIRST, HaitiKeys.LONG_FIRST);
+		abbreviations.put(HaitiKeys.ABBREV_LAST, HaitiKeys.LONG_LAST);
+		abbreviations.put(HaitiKeys.ABBREV_COMMUNE, HaitiKeys.LONG_COMMUNE);
+		abbreviations.put(HaitiKeys.ABBREV_COMMUNE_SECTION, HaitiKeys.LONG_COMMUNE_SECTION);
+		abbreviations.put(HaitiKeys.ABBREV_ADDRESS, HaitiKeys.LONG_ADDRESS);
+		abbreviations.put(HaitiKeys.ABBREV_AGE, HaitiKeys.LONG_AGE);
+		abbreviations.put(HaitiKeys.ABBREV_SEX, HaitiKeys.LONG_SEX);
+		abbreviations.put(HaitiKeys.ABBREV_BENEFICIARY, HaitiKeys.LONG_BENEFICIARY);
+		abbreviations.put(HaitiKeys.ABBREV_NUMBER_IN_HOME, HaitiKeys.LONG_NUMBER_IN_HOME);
+		abbreviations.put(HaitiKeys.ABBREV_HEALTH_CENTER, HaitiKeys.LONG_HEALTH_CENTER);
+		abbreviations.put(HaitiKeys.ABBREV_DISTRIBUTION_POST, HaitiKeys.LONG_DISTRIBUTION_POST);
+		abbreviations.put(HaitiKeys.ABBREV_NAME_CHILD, HaitiKeys.LONG_NAME_CHILD);
+		abbreviations.put(HaitiKeys.ABBREV_NAME_WOMAN, HaitiKeys.LONG_NAME_WOMAN);
+		abbreviations.put(HaitiKeys.ABBREV_HUSBAND, HaitiKeys.LONG_HUSBAND);
+		abbreviations.put(HaitiKeys.ABBREV_FATHER, HaitiKeys.LONG_FATHER);
+		abbreviations.put(HaitiKeys.ABBREV_MOTHER_LEADER, HaitiKeys.LONG_MOTHER_LEADER);
+		abbreviations.put(HaitiKeys.ABBREV_VISIT_MOTHER, HaitiKeys.LONG_VISIT_MOTHER);
+		abbreviations.put(HaitiKeys.ABBREV_AGRICULTURE_1, HaitiKeys.LONG_AGRICULTURE_1);
+		abbreviations.put(HaitiKeys.ABBREV_AGRICULTURE_2, HaitiKeys.LONG_AGRICULTURE_2);
+		abbreviations.put(HaitiKeys.ABBREV_GIVE_NAME, HaitiKeys.LONG_GIVE_NAME);
+		abbreviations.put(HaitiKeys.ABBREV_YES, HaitiKeys.LONG_YES);
+		abbreviations.put(HaitiKeys.ABBREV_NO, HaitiKeys.LONG_NO);
+		abbreviations.put(HaitiKeys.ABBREV_MALE, HaitiKeys.LONG_MALE);
+		abbreviations.put(HaitiKeys.ABBREV_FEMALE, HaitiKeys.LONG_FEMALE);
+		abbreviations.put(HaitiKeys.ABBREV_INFANT_CATEGORY, HaitiKeys.LONG_INFANT_CATEGORY);
+		abbreviations.put(HaitiKeys.ABBREV_INFANT_MAL, HaitiKeys.LONG_INFANT_MAL);
+		abbreviations.put(HaitiKeys.ABBREV_INFANT_PREVENTION, HaitiKeys.LONG_INFANT_PREVENTION);
+		abbreviations.put(HaitiKeys.ABBREV_MOTHER_CATEGORY, HaitiKeys.LONG_MOTHER_CATEGORY);
+		abbreviations.put(HaitiKeys.ABBREV_MOTHER_EXPECTING, HaitiKeys.LONG_MOTHER_EXPECTING);
+		abbreviations.put(HaitiKeys.ABBREV_MOTHER_NURSING, HaitiKeys.LONG_MOTHER_NURSING);
+		abbreviations.put(HaitiKeys.ABBREV_DATA, HaitiKeys.LONG_DATA);
+		abbreviations.put(HaitiKeys.ABBREV_GENERAL_INFORMATION, HaitiKeys.LONG_GENERAL_INFORMATION);
+		abbreviations.put(HaitiKeys.ABBREV_MCHN_INFORMATION, HaitiKeys.LONG_MCHN_INFORMATION);
+		abbreviations.put(HaitiKeys.ABBREV_CONTROLS, HaitiKeys.LONG_CONTROLS);
+		abbreviations.put(HaitiKeys.ABBREV_STATUS,HaitiKeys.LONG_STATUS);
+		abbreviations.put(HaitiKeys.ABBREV_ID,HaitiKeys.LONG_ID);
+		
+
+		
+
+
+		
+		
+		
+	
 
 	}
 	/**
