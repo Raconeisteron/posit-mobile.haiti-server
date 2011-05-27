@@ -24,6 +24,8 @@ package haiti.server.gui;
 
 import haiti.server.datamodel.LocaleManager;
 
+import haiti.server.datamodel.LocaleManager;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;

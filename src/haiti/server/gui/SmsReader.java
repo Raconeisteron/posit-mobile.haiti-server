@@ -75,7 +75,26 @@ public class SmsReader {
 		this.encoding = encoding;
 	}
 	
-
+	public Connection connectDb(){
+		Connection connection = null;
+		try {
+			Class.forName("org.sqlite.JDBC");
+			//Connection connection = null;
+			//connection = DriverManager.getConnection("jdbc:sqlite:" + System.getProperty("user.dir").toString()
+				//	+ "/db/haiti.db");dbName);
+			connection = DriverManager.getConnection("jdbc:sqlite:"+ this.filename);
+			return connection;
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+			return connection;
+		} catch(SQLException e) {
+			// if the error message is "out of memory", 
+			// it probably means no database file is found
+			e.printStackTrace();
+			return connection;
+		}
+			
+	}
 	/**
 	 * Reads messages from an Sqlite database.
 	 * Details for implementing the DataBase can be found on the below link
