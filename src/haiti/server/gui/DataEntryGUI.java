@@ -88,6 +88,9 @@ public class DataEntryGUI extends JFrame implements ActionListener,
     
 	public TextArea display;// = new TextArea();
 
+	public static final int DB_STATUS_PENDING = 1;
+	public static final int DB_STATUS_PROCESSED = 2;
+	
 	/**
 	 * Creates a DataEntryGUI and sets up the user interface.
 	 */
@@ -241,12 +244,12 @@ public class DataEntryGUI extends JFrame implements ActionListener,
 		} else if (e.getSource() instanceof JButton){
 		    JButton button = (JButton)e.getSource();
 		    if (button.getText().equals("Save")) {
-				beneficiary.setStatus(1); // sets the status of the current Beneficiary item to processed
+				beneficiary.setStatus(DB_STATUS_PROCESSED); // sets the status of the current Beneficiary item to processed
 		    	reader.updateMessage(beneficiary);
 		   	    System.out.println("Saving data");
 		    }
 		    if (button.getText().equals("Button2")) {
-				beneficiary.setStatus(2); // sets the status of the Beneficiary item to pending
+				beneficiary.setStatus(DB_STATUS_PENDING); // sets the status of the Beneficiary item to pending
 		    	reader.updateMessage(beneficiary);
 		    	System.out.println("Sent to the database manager");
 		    }
