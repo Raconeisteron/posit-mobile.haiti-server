@@ -75,17 +75,8 @@ public class AttributeManager {
 		abbreviations.put(HaitiKeys.ABBREV_CONTROLS, HaitiKeys.LONG_CONTROLS);
 		abbreviations.put(HaitiKeys.ABBREV_STATUS,HaitiKeys.LONG_STATUS);
 		abbreviations.put(HaitiKeys.ABBREV_ID,HaitiKeys.LONG_ID);
-		
-
-		
-
-
-		
-		
-		
-	
-
 	}
+	
 	/**
 	 * Maps the short form field names to long form
 	 * @param abbreviatedAttributes TRUE if abbreviated, FALSE if not
@@ -105,6 +96,8 @@ public class AttributeManager {
 	}
 	
 	/**
+	 * TODO:  This method should thoroughly test this class. For example, 
+	 * print out all mappings of short to long.
 	 * @param args
 	 */
 	public static void main(String[] args) {

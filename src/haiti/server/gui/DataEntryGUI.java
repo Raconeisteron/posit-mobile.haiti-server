@@ -21,21 +21,19 @@
 package haiti.server.gui;
 
 import haiti.server.datamodel.Beneficiary;
+import haiti.server.datamodel.HaitiKeys;
 import haiti.server.datamodel.Beneficiary.Abbreviated;
 
 import java.io.*;
+import java.util.Locale;
+import java.util.ResourceBundle;
 import java.awt.*;
 import java.awt.event.*;   
-import java.util.*;
 import java.awt.datatransfer.*;
 
-import javax.swing.AbstractButton;
 import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
-import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -47,12 +45,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
-import javax.swing.SwingConstants;
-import javax.swing.border.TitledBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-
-import sun.tools.tree.ThisExpression;
 
 
 /** 
@@ -61,13 +55,14 @@ import sun.tools.tree.ThisExpression;
  *  <P>This class implements the main window and menu system for the
  *  application.  
  */
-
-
 public class DataEntryGUI extends JFrame implements ActionListener, 
 	WindowListener, ClipboardOwner, ItemListener, ListSelectionListener   {
 
+	public static final String BUTTON_SAVE = "Save";
+	
+	
 	private Menus menus;
-	private enum DbSource {FILE, DATA_BASE};
+	public enum DbSource {FILE, DATA_BASE};
 	
 	//Strings used throughout form
 	public static final String first_name="First Name: ",
@@ -102,7 +97,8 @@ public class DataEntryGUI extends JFrame implements ActionListener,
 		gen="General Information",
 		mchn="MCHN Information",
 		controls="Controls";
-	public static final String SAVE="Save",
+	public static final String 
+		SAVE="Save",
 		QUIT="Quit",
 		OPEN_FILE="Open File",
 		openfile="OpenFile",
@@ -111,7 +107,6 @@ public class DataEntryGUI extends JFrame implements ActionListener,
 		ABOUT="About DataEntryGUI...",
 		CLOSE="Close ...";
 	
-	private TextAreaPlus messagesField, outputField;
 	private JTextField firstNameJText, lastNameJText, addressJText, ageJText, peopleInHouseJText;
 	private JTextField healthCenterJText, dpJText, guardianChildJText, guardianWomanJText, husbandJText, fatherJText, agriPersonJText; 
 	private JRadioButton radioMale, radioFemale;
@@ -122,7 +117,7 @@ public class DataEntryGUI extends JFrame implements ActionListener,
 	private JComboBox communeBox, communeSectionBox;
 	private SmsReader reader;
 	
-	private JPanel welcomePanel, messagesPanel, buttonPanel, formPanel, geninfoPanel, mchnPanel;
+	private JPanel welcomePanel, buttonPanel, formPanel, geninfoPanel, mchnPanel;
 	private String windowId = "";
 	
 	private JSplitPane splitPane;
@@ -151,7 +146,7 @@ public class DataEntryGUI extends JFrame implements ActionListener,
 		WindowManager.init(this);
 
 		menus = new Menus(this);
-		menus.addMenuBar();
+		menus.createMenuBar();
 		setMenuBar(Menus.getMenuBar());	    
 
 		this.setupFrame();
@@ -165,21 +160,28 @@ public class DataEntryGUI extends JFrame implements ActionListener,
 		Tools.centerWindow(this);
 		requestFocus();
 	} 
+	
+	
 
 	/**
 	 *  Manages the detailed operations of setting up the user interface.
 	 */ 
 	private void setupFrame() {
 		welcomePanel = new JPanel();
-		welcomePanel.setBorder(BorderFactory.createTitledBorder("Data Entry"));
-		JLabel label = new JLabel("Welcome");
-		label.setSize(new Dimension(300,300));
-		welcomePanel.add(label);
+		MultiLineLabel welcome = 
+			new MultiLineLabel(
+					"DataEntryGUI " + "v0.1" + "\n" +
+					" \n" +
+					"Humanitarian FOSS Project\n" +
+					"Trinity College, Hartford, CT, USA\n\n" +
+					"DataEntryGUI is free software");
+		
+		welcomePanel.add(welcome);
 		this.getContentPane().add(welcomePanel);
 	}
 
 	/**
-	 * Sets up the panel that used for Beneficiary registration.
+	 * Sets up the panel used for Beneficiary registration.
 	 * @return
 	 */
 	private JPanel setUpDataEntryPanel() {
@@ -210,7 +212,7 @@ public class DataEntryGUI extends JFrame implements ActionListener,
 		c.gridy=0;
 		c.gridx=0;
 		c.insets=new Insets(10,5,4,2);
-		c.anchor = c.NORTHEAST;
+		c.anchor = GridBagConstraints.NORTHEAST;
 		geninfoPanel.add(new JLabel(first_name),c);
 		c.gridy=0;
 		c.gridx=1;
@@ -419,7 +421,7 @@ public class DataEntryGUI extends JFrame implements ActionListener,
 		buttonPanel = new JPanel();
 		buttonPanel.setBorder(BorderFactory.createTitledBorder(controls));
 		buttonPanel.setBackground(Color.WHITE);
-		button1 = new JButton(SAVE);
+		button1 = new JButton(Menus.menus.getString(BUTTON_SAVE));
 		button2 = new JButton("Button2");
 		button3 = new JButton("Button3");
 		button1.addActionListener(this);
@@ -442,25 +444,25 @@ public class DataEntryGUI extends JFrame implements ActionListener,
 	 */
 	public void actionPerformed(ActionEvent e) {
 		if ((e.getSource() instanceof MenuItem)) {
-			MenuItem item = (MenuItem)e.getSource();
 			String cmd = e.getActionCommand();
 			doCommand(cmd);
 		} else if (e.getSource() instanceof JButton){
 		    JButton button = (JButton)e.getSource();
-		    if (button.getText().equals("Save")) {
+		    if (button.getText().equals(Menus.menus.getString(BUTTON_SAVE))) {
 				beneficiary.setStatus(DB_STATUS_PROCESSED); // sets the status of the current Beneficiary item to processed
 		    	reader.updateMessage(beneficiary);
+		    	//TODO:  This should output all the Beneficiary data to the TBS DB
 		   	    System.out.println("Saving data");
 		    }
 		    if (button.getText().equals("Button2")) {
 				beneficiary.setStatus(DB_STATUS_PENDING); // sets the status of the Beneficiary item to pending
 		    	reader.updateMessage(beneficiary);
+		    	//TODO: This should write the message to a file for Db Manager
 		    	System.out.println("Sent to the database manager");
 		    }
 		    if (button.getText().equals("Button3"))
-		    	System.out.println("DATABASE WIPED");
+		    	System.out.println("Button 3");
 		}
-		
 	}
 
 	/** 
@@ -469,7 +471,7 @@ public class DataEntryGUI extends JFrame implements ActionListener,
 	 * @throws  
 	 */
 	public void doCommand(String cmd) {   
-		//    	showStatus("doCommand " + cmd);
+		System.out.println("doCommand " + cmd);
 		if (cmd.equals(ABOUT)) 
 			showAboutBox();
 		else if (cmd.equals(Menus.menus.getString(openfile)))  {
@@ -477,32 +479,58 @@ public class DataEntryGUI extends JFrame implements ActionListener,
 		} 
 		else if (cmd.equals(Menus.menus.getString(OPEN_DB)))  {
 			readMessagesIntoGUI(DbSource.DATA_BASE);
-		} 		else if (cmd.equals(CLOSE)) {   
-			this.close();
 		}
-		else if (cmd.equals(Menus.menus.getString(SAVE))) {
-			this.save(false);
-		}
-		else if (cmd.equals(Menus.menus.getString(SAVE_AS))) {
-			this.save(false);
-
-		}
+//		} 		else if (cmd.equals(CLOSE)) {   
+//			this.close();
+//		}
+//		else if (cmd.equals(Menus.menus.getString(SAVE))) {
+//			this.save(false);
+//		}
+//		else if (cmd.equals(Menus.menus.getString(SAVE_AS))) {
+//			this.save(false);
+//		}
 		else if (cmd.equals("DataEntryGUI")) {
 			activate();
 		}
 		else if (cmd.equals(Menus.menus.getString(QUIT)))
 			this.quit();
+		else if (cmd.equals(Menus.menus.getString("English"))) {
+			Menus.currentLocale = Locale.ENGLISH;
+			Menus.menus = ResourceBundle.getBundle("MenusBundle", Menus.currentLocale);
+			System.out.println("Changing language to English "  + Menus.currentLocale.toString());
+			//menus = new Menus(this);
+			menus.createMenuBar();
+			setMenuBar(Menus.getMenuBar());	 
+			updateOnLocaleChanged();
+			this.repaint();
+		}
+		else if (cmd.equals(Menus.menus.getString("French"))) {
+			Menus.currentLocale = Locale.FRENCH;
+			Menus.menus = ResourceBundle.getBundle("MenusBundle", Menus.currentLocale);
+			System.out.println("Changing language to French " + Menus.currentLocale.toString());
+			//menus = new Menus(this);
+			menus.createMenuBar();
+			setMenuBar(Menus.getMenuBar());	
+			updateOnLocaleChanged();
+			this.repaint();
+		}
 	}   
 	
+	private void updateOnLocaleChanged() {
+		if (button1 != null) {
+			//button1.setText(Menus.menus.getString(BUTTON_SAVE));	
+			this.repaint();
+		}
+	}
 
-/**
- *  Closes this window, first saving the text in the TextAreas if necessary.
- */  
-public boolean close() {
-	setVisible(false);
-	//dispose();
-	return true;    
-}
+///**
+// *  Closes this window, first saving the text in the TextAreas if necessary.
+// */  
+//public boolean close() {
+//	setVisible(false);
+//	//dispose();
+//	return true;    
+//}
 	/**
 	 * Sets up a split pane with messages on top and the data entry form on the bottom.
 	 * @param messages
@@ -520,7 +548,7 @@ public boolean close() {
         this.formScrollPane = new JScrollPane(formPanel);
 
 		//Provide minimum sizes for the two components in the split pane
-		Dimension minimumSize = new Dimension(800, 100);
+//		Dimension minimumSize = new Dimension(800, 100);
 		//listScrollPane.setMinimumSize(minimumSize);
 		//formScrollPane.setMinimumSize(minimumSize);
 		
@@ -543,7 +571,7 @@ public boolean close() {
 		
 		JFileChooser fd = new JFileChooser();
 		int result = fd.showOpenDialog(this);
-		if (result == fd.CANCEL_OPTION) 
+		if (result == JFileChooser.CANCEL_OPTION) 
 			return;
 		messageFileName = fd.getSelectedFile().toString();
 		
@@ -560,6 +588,7 @@ public boolean close() {
 		}
 		messagesArray = reader.getMessagesAsArray();
 		
+//		DataEntryForm formPanel = new DataEntryForm();
 		formPanel = setUpDataEntryPanel();
 		beneficiary = new Beneficiary(messagesArray[0], Abbreviated.TRUE);
 		fillInDataEntryForm(beneficiary);
