@@ -38,6 +38,7 @@ public class Beneficiary {
 
 	private String firstName;
 	private String lastName;
+	private String address;
 	private String commune;
 	private String communeSection;
 	private int age;
@@ -106,36 +107,60 @@ public class Beneficiary {
 	 * @param abbreviated are the attributes abbreviated
 	 */
 	private void split(String s, String outerDelim, String innerDelim, Abbreviated abbreviated) {
-		String temp[] = s.split(outerDelim);
-		for (int k = 0; k < temp.length; k++) {
-			String temp2[] = temp[k].split(innerDelim);	
+		String attrvalPairs[] = s.split(outerDelim);				// Pairs like attr1=val1
+		for (int k = 0; k < attrvalPairs.length; k++) {
+			String attrval[] = attrvalPairs[k].split(innerDelim);	// Puts attr in 0 and val in 1
 			
 			AttributeManager am = new AttributeManager();
-			String ss = am.mapToLong(abbreviated, temp2[0]);
-			System.out.println(messages.getString("Attribute") + " = " + ss);
+			String longAttr = am.mapToLong(abbreviated, attrval[0]);
+			System.out.println(messages.getString("Attribute") + " = " + longAttr);
 			
-			if (ss.equals(messages.getString("firstName")))
-				firstName=temp2[1];
-			else if (ss.equals(messages.getString("lastName")))
-				lastName=temp2[1];
-			else if (ss.equals(messages.getString("commune")))
-				commune=temp2[1];
-			else if (ss.equals(messages.getString("communeSection")))
-				communeSection=temp2[1];
-			else if (ss.equals(messages.getString("infantCategory")))
-				infantCategory=InfantCategory.valueOf(temp2[1]);
-			else if (ss.equals(messages.getString("motherCategory")))
-				motherCategory=MotherCategory.valueOf(temp2[1]);
-			else if (ss.equals(messages.getString("sex")))
-				sex=Sex.valueOf(temp2[1]);
-			else if (ss.equals(messages.getString("age")))
-				age=Integer.parseInt(temp2[1]);
-			else if (ss.equals(messages.getString("numberInHome")))
-				numberInHome=Integer.parseInt(temp2[1]);
-			else if (ss.equals("id"))
-				id = Integer.parseInt(temp2[1]);
-			else if (ss.equals("status"))
-				status = Integer.parseInt(temp2[1]);
+			if (longAttr.equals(HaitiKeys.LONG_FIRST))
+				firstName=attrval[1];
+			else if (longAttr.equals(HaitiKeys.LONG_LAST))
+				lastName=attrval[1];
+			else if (longAttr.equals(HaitiKeys.LONG_ADDRESS))
+				address = attrval[1];
+			else if (longAttr.equals(HaitiKeys.LONG_COMMUNE))
+				commune=attrval[1];
+			else if (longAttr.equals(HaitiKeys.LONG_COMMUNE_SECTION))
+				communeSection=attrval[1];
+			else if (longAttr.equals(HaitiKeys.LONG_INFANT_CATEGORY))
+				infantCategory=InfantCategory.valueOf(attrval[1]);
+			else if (longAttr.equals(HaitiKeys.LONG_MOTHER_CATEGORY))
+				motherCategory=MotherCategory.valueOf(attrval[1]);
+			else if (longAttr.equals(HaitiKeys.LONG_SEX))
+				sex=Sex.valueOf(attrval[1]);
+			else if (longAttr.equals(HaitiKeys.LONG_AGE))
+				age=Integer.parseInt(attrval[1]);
+			else if (longAttr.equals(HaitiKeys.LONG_NUMBER_IN_HOME))
+				numberInHome=Integer.parseInt(attrval[1]);
+			else if (longAttr.equals("id"))
+				id = Integer.parseInt(attrval[1]);
+			else if (longAttr.equals("status"))
+				status = Integer.parseInt(attrval[1]);
+//			if (longAttr.equals(messages.getString("firstName")))
+//				firstName=attrval[1];
+//			else if (longAttr.equals(messages.getString("lastName")))
+//				lastName=attrval[1];
+//			else if (longAttr.equals(messages.getString("commune")))
+//				commune=attrval[1];
+//			else if (longAttr.equals(messages.getString("communeSection")))
+//				communeSection=attrval[1];
+//			else if (longAttr.equals(messages.getString("infantCategory")))
+//				infantCategory=InfantCategory.valueOf(attrval[1]);
+//			else if (longAttr.equals(messages.getString("motherCategory")))
+//				motherCategory=MotherCategory.valueOf(attrval[1]);
+//			else if (longAttr.equals(messages.getString("sex")))
+//				sex=Sex.valueOf(attrval[1]);
+//			else if (longAttr.equals(messages.getString("age")))
+//				age=Integer.parseInt(attrval[1]);
+//			else if (longAttr.equals(messages.getString("numberInHome")))
+//				numberInHome=Integer.parseInt(attrval[1]);
+//			else if (longAttr.equals("id"))
+//				id = Integer.parseInt(attrval[1]);
+//			else if (longAttr.equals("status"))
+//				status = Integer.parseInt(attrval[1]);
 		}
 		
 	}
@@ -155,7 +180,14 @@ public class Beneficiary {
 	public void setLastName(String lastName) {
 		this.lastName = lastName;
 	}
+	
+	public String getAddress() {
+		return address;
+	}
 
+	public void setAddress(String address) {
+		this.address = address;
+	}
 	public String getCommune() {
 		return commune;
 	}

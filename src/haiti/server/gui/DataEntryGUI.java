@@ -37,6 +37,7 @@ import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
@@ -51,6 +52,8 @@ import javax.swing.border.TitledBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import sun.tools.tree.ThisExpression;
+
 
 /** 
  * <p>Top-level window for the DataEntryGUI application. 
@@ -64,15 +67,49 @@ public class DataEntryGUI extends JFrame implements ActionListener,
 	WindowListener, ClipboardOwner, ItemListener, ListSelectionListener   {
 
 	private Menus menus;
+	private enum DbSource {FILE, DATA_BASE};
 	
 	//Strings used throughout form
-//	public static final String first_name="First Name: ",last_name="Last Name: ",commune="Commune: ",section="Section: ",address="Address: ",age="Age: ",sex="Sex: ",beneficiary="Beneficiary: ",house_people="              Number of persons in the house:";
-	public static final String first_name="First Name: ",last_name="Last Name: ",commune="Commune: ",section="Section: ",address="Address: ",age="Age: ",sex="Sex: ",strBeneficiary="Beneficiary: ",house_people="              Number of persons in the house:";
-	public static final String hc="Health Center",dp="Distribution post:",name_child="Responsible name (if child):",name_woman="Responsible name (if pregnant woman):",husband="Husband name (if woman):",father="Father's name (if child):",leader="Are you a mother leader?:",visit="Do you visit a mother leader?:";
-	public static final String agri1="Is someone in your family in the",agri2="Agriculture Program of ACDI/VOCA?:",give_name="If yes, give the name:",yes="Yes",no="No";
-	public static final String male="MALE",female="FEMALE",infantMal="Enfant mal nourri",infantPrev="Enfant en prevention",motherExp="Femme enceinte",motherNurs="Femme allaitante";
-	public static final String data="Data Entry Form",gen="General Information",mchn="MCHN Information",controls="Controls";
-	public static final String save="Save",quit="Quit",open_file="Open File",openfile="OpenFile",openDB="OpenDB",save_as="SaveAs",about="About DataEntryGUI...",close="Close ...";
+	public static final String first_name="First Name: ",
+		last_name="Last Name: ",
+		commune="Commune: ",
+		section="Section: ",
+		address="Address: ",
+		age="Age: ",
+		sex="Sex: ",
+		strBeneficiary="Beneficiary: ",
+		house_people="              Number of persons in the house:";
+	public static final String hc="Health Center",
+		dp="Distribution post:",
+		name_child="Responsible name (if child):",
+		name_woman="Responsible name (if pregnant woman):",
+		husband="Husband name (if woman):",
+		father="Father's name (if child):",
+		leader="Are you a mother leader?:",
+		visit="Do you visit a mother leader?:";
+	public static final String agri1="Is someone in your family in the",
+		agri2="Agriculture Program of ACDI/VOCA?:",
+		give_name="If yes, give the name:",
+		yes="Yes",
+		no="No";
+	public static final String male="MALE",
+		female="FEMALE",
+		infantMal="Enfant mal nourri",
+		infantPrev="Enfant en prevention",
+		motherExp="Femme enceinte",
+		motherNurs="Femme allaitante";
+	public static final String data="Data Entry Form",
+		gen="General Information",
+		mchn="MCHN Information",
+		controls="Controls";
+	public static final String SAVE="Save",
+		QUIT="Quit",
+		OPEN_FILE="Open File",
+		openfile="OpenFile",
+		OPEN_DB="OpenDB",
+		SAVE_AS="SaveAs",
+		ABOUT="About DataEntryGUI...",
+		CLOSE="Close ...";
 	
 	private TextAreaPlus messagesField, outputField;
 	private JTextField firstNameJText, lastNameJText, addressJText, ageJText, peopleInHouseJText;
@@ -382,7 +419,7 @@ public class DataEntryGUI extends JFrame implements ActionListener,
 		buttonPanel = new JPanel();
 		buttonPanel.setBorder(BorderFactory.createTitledBorder(controls));
 		buttonPanel.setBackground(Color.WHITE);
-		button1 = new JButton(save);
+		button1 = new JButton(SAVE);
 		button2 = new JButton("Button2");
 		button3 = new JButton("Button3");
 		button1.addActionListener(this);
@@ -425,19 +462,6 @@ public class DataEntryGUI extends JFrame implements ActionListener,
 		}
 		
 	}
-	
-//	/**
-//	 *  Closes this window, first saving the text in the TextAreas if necessary.
-//	 */  
-//	public boolean close() {
-//		if (!saveTextInTextAreas(false))
-//			return false;
-//		setVisible(false);
-//		WindowManager.removeWindow(this);
-//		dispose();
-//		return true;    
-//	}
-
 
 	/** 
 	 * Executes the command given by its parameter.
@@ -446,46 +470,27 @@ public class DataEntryGUI extends JFrame implements ActionListener,
 	 */
 	public void doCommand(String cmd) {   
 		//    	showStatus("doCommand " + cmd);
-		if (cmd.equals(about)) 
+		if (cmd.equals(ABOUT)) 
 			showAboutBox();
 		else if (cmd.equals(Menus.menus.getString(openfile)))  {
-			readMessagesIntoGUI("file");
+			readMessagesIntoGUI(DbSource.FILE);
 		} 
-		else if (cmd.equals(Menus.menus.getString(openDB)))  {
-			readMessagesIntoGUI("db");
-		} 		else if (cmd.equals(close)) {   
+		else if (cmd.equals(Menus.menus.getString(OPEN_DB)))  {
+			readMessagesIntoGUI(DbSource.DATA_BASE);
+		} 		else if (cmd.equals(CLOSE)) {   
 			this.close();
 		}
-		else if (cmd.equals(Menus.menus.getString(save))) {
+		else if (cmd.equals(Menus.menus.getString(SAVE))) {
 			this.save(false);
 		}
-		else if (cmd.equals(Menus.menus.getString(save_as))) {
+		else if (cmd.equals(Menus.menus.getString(SAVE_AS))) {
 			this.save(false);
 
 		}
-//		else if (cmd.equals("Print"))
-//			;
-////			showStatus("PrintCipher... not yet implemented");
-//		else if (cmd.equals("Cut")) {
-//			//            showStatus("Cut");
-//			TextManager.copyText(true);
-//		}
-//		else if (cmd.equals("Copy")) {
-//			//            showStatus("Copy");
-//			TextManager.copyText(false);
-//		}
-//		else if (cmd.equals("Paste")) {
-//			//            showStatus("Paste");
-//			TextManager.pasteText();
-//		}
-//		else if (cmd.equals("Select All")) {
-//			//            showStatus("Select All");
-//			TextManager.selectAll();
-//		}
 		else if (cmd.equals("DataEntryGUI")) {
 			activate();
 		}
-		else if (cmd.equals(Menus.menus.getString(quit)))
+		else if (cmd.equals(Menus.menus.getString(QUIT)))
 			this.quit();
 	}   
 	
@@ -495,7 +500,7 @@ public class DataEntryGUI extends JFrame implements ActionListener,
  */  
 public boolean close() {
 	setVisible(false);
-	dispose();
+	//dispose();
 	return true;    
 }
 	/**
@@ -534,14 +539,20 @@ public boolean close() {
 	 * TODO: Error checking that this is a messages file.
 	 * @throws IOException 
 	 */
-	private void readMessagesIntoGUI (String dborfile) {
-		FileDialog fd = new FileDialog(this, open_file, FileDialog.LOAD);
-		fd.show();
+	private void readMessagesIntoGUI (DbSource dbSource) {
 		
-		messageFileName = fd.getDirectory() + fd.getFile();
+		JFileChooser fd = new JFileChooser();
+		int result = fd.showOpenDialog(this);
+		if (result == fd.CANCEL_OPTION) 
+			return;
+		messageFileName = fd.getSelectedFile().toString();
+		
+		//messageFileName = fd.getDirectory() + fd.getFile();
+		System.out.println("messagefilename = " + messageFileName);
+
 		reader = new SmsReader(messageFileName);
 
-		if (dborfile.equals("file")) {
+		if (dbSource == DbSource.FILE) {
 			reader.readFile();
 		} else {
 			reader = new SmsReader();
@@ -556,9 +567,8 @@ public boolean close() {
 		this.getContentPane().remove(welcomePanel);
 		this.getContentPane().add(setUpSplitPane(messagesArray, formPanel));
 		this.pack();
+		Tools.centerWindow(this);
 		this.repaint();
-		
-		//splitPane.setMinimumSize(minimumSize);		
 	}
 
 	/**
@@ -617,8 +627,20 @@ public boolean close() {
 		addItemsToComboBox(communeSectionBox, reader.getCommuneSection(beneficiary.getCommune()));
 	//	this.communeBox.setText(beneficiary.getCommune());
 	//	this.communeSectionBox.setText(beneficiary.getCommuneSection());
-	//	this.addressJText.setText(beneficiary.getAddress());
+		this.addressJText.setText(beneficiary.getAddress());
 		this.ageJText.setText(Integer.toString(beneficiary.getAge()));
+		this.peopleInHouseJText.setText(Integer.toString(beneficiary.getNumberInHome()));
+		
+		if (beneficiary.getMotherCategory().equals(Beneficiary.MotherCategory.EXPECTING)) 
+			this.radioMotherExp.setSelected(true);
+		else 
+			this.radioMotherNurs.setSelected(true); 
+
+		if (beneficiary.getInfantCategory().equals(Beneficiary.InfantCategory.MALNOURISHED)) 
+			this.radioInfantMal.setSelected(true);
+		else 
+			this.radioInfantPrev.setSelected(true);
+		
 		if (beneficiary.getSex().equals(Beneficiary.Sex.MALE)) {
 			this.radioMale.setSelected(true);
 		} else {
