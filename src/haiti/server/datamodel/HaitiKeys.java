@@ -34,13 +34,6 @@ public class HaitiKeys {
 	public static final String FORM_GENERAL_INFORMATION="General Information";
 	public static final String FORM_MCHN_INFORMATION="MCHN Information";
 	public static final String FORM_CONTROLS="Controls";
-	public static final String MENU_SAVE="Save";
-	public static final String MENU_QUIT="Quit";
-	public static final String MENU_OPEN_FILE="OpenFile";
-	public static final String MENU_OPEN_DB="OpenDB";
-	public static final String MENU_SAVE_AS="SaveAs";
-	public static final String MENU_ABOUT="About DataEntryGUI...";
-	public static final String MENU_CLOSE="Close ...";
 	
 	public static final String ABBREV_ATTRIBUTE = "attr";
 	public static final String ABBREV_FIRST = "fn";

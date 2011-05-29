@@ -39,67 +39,48 @@ import java.applet.Applet;
 
 public class Menus {
 	
+	public static final String MENU_FILE = "File";
+	public static final String MENU_OPEN_FILE = "OpenFile";
+	public static final String MENU_OPEN_DB = "OpenDB";
+	public static final String MENU_QUIT = "Quit";
+	public static final String MENU_ABOUT = "About DataEntryGUI...";
+	public static final String MENU_LOCALE = "Locale";
+	public static final String MENU_ENGLISH = "English";
+	public static final String MENU_FRENCH = "French";
+	public static final String MENU_HELP = "Help";
+	
 	public static Locale[] supportedLocales = {Locale.FRENCH, Locale.ENGLISH};
 
 	private static final int STATIC_WINDOW_MENU_ITEMS = 2;
-
-	private static MenuBar mbar;
-	public static Menu windowMenu;
 	
+	private static MenuBar mbar;	
 	private static DataEntryGUI gui;
 	
 	public static ResourceBundle menus;
-	private Locale currentLocale;
-
-	   
-	
+	public static Locale currentLocale;
 
 	public Menus(DataEntryGUI gui) {
 		this.gui = gui;
-		currentLocale = Locale.ENGLISH;
-		//menus =  ResourceBundle.getBundle(System.getProperty("user.dir") + "/res/MenusBundle", currentLocale);
+		currentLocale = Locale.FRENCH;
 		menus =  ResourceBundle.getBundle("MenusBundle", currentLocale);
 	}
-	
-//	public void addLocaleMenu() {
-//		Menu languageMenu = new Menu("Language");
-//		addMenuItem(languageMenu, "English", KeyEvent.VK_N, false);
-		
-//	}
 
-	public void addMenuBar() {
-		Menu fileMenu = new Menu(menus.getString(LocaleManager.FILE_MENU_KEY));
-		addMenuItem(fileMenu, menus.getString("OpenFile"), KeyEvent.VK_N, false);
-		addMenuItem(fileMenu, menus.getString("OpenDB"), KeyEvent.VK_O, false);
-		addMenuItem(fileMenu, menus.getString("Close"), KeyEvent.VK_W, false);
-		fileMenu.addSeparator();
-		addMenuItem(fileMenu, menus.getString("Save"), KeyEvent.VK_S, false);
-		addMenuItem(fileMenu, menus.getString("SaveAs"), KeyEvent.VK_A, false);
-		fileMenu.addSeparator();
-//		addMenuItem(fileMenu, "Print", KeyEvent.VK_P, false);
-//		fileMenu.addSeparator();
-		addMenuItem(fileMenu, menus.getString("Quit"), KeyEvent.VK_Q, false);
+	public void createMenuBar() {
+		Menu fileMenu = new Menu(menus.getString(MENU_FILE));
+		addMenuItem(fileMenu, menus.getString(MENU_OPEN_FILE), KeyEvent.VK_N, false);
+		addMenuItem(fileMenu, menus.getString(MENU_OPEN_DB), KeyEvent.VK_O, false);
+		addMenuItem(fileMenu, menus.getString(MENU_QUIT), KeyEvent.VK_Q, false);
 
-//		Menu editMenu = new Menu("Edit");
-//		addMenuItem(editMenu, "Cut", KeyEvent.VK_X, false);
-//		addMenuItem(editMenu, "Copy", KeyEvent.VK_C, false);
-//		addMenuItem(editMenu, "Paste", KeyEvent.VK_V, false);
-//		addMenuItem(editMenu, "Select All", 0, false);    
+		Menu localeMenu = new Menu(menus.getString(MENU_LOCALE));
+		addMenuItem(localeMenu, menus.getString(MENU_ENGLISH), KeyEvent.VK_E, false);	
+		addMenuItem(localeMenu, menus.getString(MENU_FRENCH), KeyEvent.VK_F, false);	
 
-		windowMenu = new Menu(menus.getString("Window"));
-		CheckboxMenuItem item = new CheckboxMenuItem("DataEntryGUI");
-		windowMenu.add(item);
-		item.setState(true);
-		item.addActionListener(gui);    
-		windowMenu.addSeparator();
-
-		Menu helpMenu = new Menu(menus.getString("Help"));
-		addMenuItem(helpMenu, "About DataEntryGUI...", 0, false);
+		Menu helpMenu = new Menu(menus.getString(MENU_HELP));
+		addMenuItem(helpMenu, MENU_ABOUT, 0, false);
 
 		mbar = new MenuBar();
 		mbar.add(fileMenu);
-//		mbar.add(editMenu);
-		mbar.add(windowMenu);
+		mbar.add(localeMenu);
 		mbar.setHelpMenu(helpMenu);
 		gui.setMenuBar(mbar);
 	}
@@ -125,50 +106,4 @@ public class Menus {
 	public static MenuBar getMenuBar() {
 		return mbar;
 	}
-
-//	public static void updateMenus() {
-//		CheckboxMenuItem item = null;  
-//		int nItems = windowMenu.getItemCount();  
-//		DataEntryFrame cf = WindowManager.getActiveCipherFrame();
-//
-//		if (cf != null) {           // Mark one Frame active                              
-//			item = (CheckboxMenuItem)windowMenu.getItem(0);
-//			item.setState(false);            
-//			for (int i= STATIC_WINDOW_MENU_ITEMS; i < nItems; i++) {
-//				item = (CheckboxMenuItem)windowMenu.getItem(i) ;
-//				item.setState( item.getLabel().indexOf(cf.getWindowId()) != -1);
-//			}
-//			return;
-//		}
-//		// Mark GUI active
-//		item = (CheckboxMenuItem)windowMenu.getItem(0);
-//		item.setState(true);
-//		for (int i= STATIC_WINDOW_MENU_ITEMS; i < nItems; i++) {
-//			item = (CheckboxMenuItem)windowMenu.getItem(i);
-//			item.setState(false);
-//		}
-//		return;
-//	}
-
-	public static void extendWindowMenu(String name) {
-		if (gui == null) return;
-		CheckboxMenuItem item = new CheckboxMenuItem(name);
-		item.addActionListener(gui);  
-		item.setState(true);
-		windowMenu.add(item);
-		item = (CheckboxMenuItem)windowMenu.getItem(0);
-		item.setState(false);
-	}
-
-	public static void trimWindowMenu(String id) {
-		for (int k = STATIC_WINDOW_MENU_ITEMS; k < windowMenu.getItemCount(); k++) {
-			CheckboxMenuItem item = (CheckboxMenuItem)windowMenu.getItem(k);
-			if (item.getLabel().indexOf(id) != -1) {
-				windowMenu.remove(item);
-				return;
-			}
-		}
-		return;    
-	}
-
-}// Menus
+}

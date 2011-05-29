@@ -139,30 +139,7 @@ public class Beneficiary {
 				id = Integer.parseInt(attrval[1]);
 			else if (longAttr.equals("status"))
 				status = Integer.parseInt(attrval[1]);
-//			if (longAttr.equals(messages.getString("firstName")))
-//				firstName=attrval[1];
-//			else if (longAttr.equals(messages.getString("lastName")))
-//				lastName=attrval[1];
-//			else if (longAttr.equals(messages.getString("commune")))
-//				commune=attrval[1];
-//			else if (longAttr.equals(messages.getString("communeSection")))
-//				communeSection=attrval[1];
-//			else if (longAttr.equals(messages.getString("infantCategory")))
-//				infantCategory=InfantCategory.valueOf(attrval[1]);
-//			else if (longAttr.equals(messages.getString("motherCategory")))
-//				motherCategory=MotherCategory.valueOf(attrval[1]);
-//			else if (longAttr.equals(messages.getString("sex")))
-//				sex=Sex.valueOf(attrval[1]);
-//			else if (longAttr.equals(messages.getString("age")))
-//				age=Integer.parseInt(attrval[1]);
-//			else if (longAttr.equals(messages.getString("numberInHome")))
-//				numberInHome=Integer.parseInt(attrval[1]);
-//			else if (longAttr.equals("id"))
-//				id = Integer.parseInt(attrval[1]);
-//			else if (longAttr.equals("status"))
-//				status = Integer.parseInt(attrval[1]);
 		}
-		
 	}
 	
 	public String getFirstName() {
