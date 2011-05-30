@@ -1,11 +1,11 @@
 /*
  * File: MultiLineLabel.java
  * 
- * Copyright (C) 2009 R. Morelli
+ * Copyright (C) 2011 The Humanitarian FOSS Project (http://hfoss.org).
  * 
- * This file is part of CryptoToolJ.
+ * This file is part of POSIT-Haiti Server for ACDI/VOCA.
  *
- * CryptoToolJ is free software; you can redistribute it and/or modify
+ * POSIT-Haiti Server is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by 
  * the Free Software Foundation; either version 3.0 of the License, or (at
  * your option) any later version.
@@ -17,12 +17,6 @@
  * 
  * You should have received a copy of the GNU General Public License
  * along with this program; if not visit http://www.gnu.org/licenses/gpl.html.
- * <P>Description: Implements a Java 1.1 version of a GUI tool for using and analyzing
- *  historical ciphers.
-
- * Credits: CryptoToolJ is modeled after the ImageJ program which is written by
- *  Wayne Rasband of the National Institutes of Health. ImageJ is in the public domain.
- *
  */
 
 package haiti.server.gui;

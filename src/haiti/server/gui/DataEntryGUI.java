@@ -1,11 +1,11 @@
 /*
  * File: DataEntryGUI.java
  * 
- * Copyright (C) 2009 R. Morelli
+ * Copyright (C) 2011 The Humanitarian FOSS Project (http://hfoss.org).
  * 
- * This file is part of DataEntryGUI.
+ * This file is part of POSIT-Haiti Server.
  *
- * DataEntryGUI is free software; you can redistribute it and/or modify
+ * POSIT-Haiti Server is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by 
  * the Free Software Foundation; either version 3.0 of the License, or (at
  * your option) any later version.
@@ -93,7 +93,7 @@ public class DataEntryGUI extends JFrame implements WindowListener, ListSelectio
 
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		addWindowListener(this);
-		WindowManager.init(this);
+//		WindowManager.init(this);
 		
 		mLocaleManager = new LocaleManager();  // Set's the default locale
 
@@ -109,7 +109,7 @@ public class DataEntryGUI extends JFrame implements WindowListener, ListSelectio
 		setSize(900,700);
 		pack();
 		setVisible(true);
-		Tools.centerWindow(this);
+		DataEntryGUI.centerWindow(this);
 		requestFocus();
 	} 
 	
@@ -194,7 +194,7 @@ public class DataEntryGUI extends JFrame implements WindowListener, ListSelectio
 		this.getContentPane().remove(mWelcomePanel);
 		this.getContentPane().add(setUpSplitPane(mMessagesArray, mFormPanel));
 		this.pack();
-		Tools.centerWindow(this);
+		DataEntryGUI.centerWindow(this);
 		this.repaint();
 	}
 
@@ -212,24 +212,6 @@ public class DataEntryGUI extends JFrame implements WindowListener, ListSelectio
 		"DataEntryGUI is free software.");
 	}
 
-//	/**
-//	 *  Implementation of the Save and SaveAs commands.
-//	 */  
-//	public void save(boolean rename) {
-//	}
-//
-//	/**
-//	 *  Sets this window's id number.
-//	 */  
-//	public void setWindowId( int n ) {
-//		windowId = "" + n;
-//	}
-//	/**
-//	 *  Gets this window's id number.
-//	 */  
-//	public String getWindowId() { return windowId; }
-//
-//	
 	/**
 	 * Listens to the messages list.
 	 * TODO:  Figure out why it appears to be called twice on each click.
@@ -312,16 +294,21 @@ public class DataEntryGUI extends JFrame implements WindowListener, ListSelectio
 		}
 	}
 
-	
-	
 	/**
-	 *  Creates an instance of DataEntryGUI and when run in application mode.
+	 * Utility method to center windows used by the application.
+	 * @param win
 	 */
-	public static void main(String args[]) {  //main method
-		DataEntryGUI gui = new DataEntryGUI(); 
-	}  //end main()
-
+	public static void centerWindow( Window win) {
+	    Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+	    Dimension winSize = win.getSize();
+	    int x = (screenSize.width - winSize.width)/2;
+	    int y = (screenSize.height - winSize.height)/4;
+	    if (y < 0) 
+		y = 0;
+	    win.setLocation(x, y);    
+	}
 	
+
 	/**
 	 * Inner class to render list elements.
 	 * @author rmorelli
@@ -350,6 +337,14 @@ public class DataEntryGUI extends JFrame implements WindowListener, ListSelectio
 		    return(label);
 		  }
 		}
+	
+	/**
+	 *  Creates an instance of DataEntryGUI and when run in application mode.
+	 */
+	public static void main(String args[]) {  //main method
+		DataEntryGUI gui = new DataEntryGUI(); 
+	}  //end main()
+
 	
 
 }

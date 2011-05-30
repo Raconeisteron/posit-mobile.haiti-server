@@ -1,7 +1,7 @@
 /*
  * File: SmsReader.java
  * 
- * Copyright (C) 2011 Humanitarian FOSS Project
+ * Copyright (C) 2011 The Humanitarian FOSS Project (http://hfoss.org).
  * 
  * This file is part of POSIT-Haiti Server.
  *
