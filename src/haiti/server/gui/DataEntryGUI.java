@@ -22,9 +22,11 @@ package haiti.server.gui;
 
 import haiti.server.datamodel.Beneficiary;
 import haiti.server.datamodel.HaitiKeys;
+import haiti.server.datamodel.LocaleManager;
 import haiti.server.datamodel.Beneficiary.Abbreviated;
 
 import java.io.*;
+import java.util.Hashtable;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import java.awt.*;
@@ -33,6 +35,9 @@ import java.awt.datatransfer.*;
 
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
+import javax.swing.DefaultListCellRenderer;
+import javax.swing.DefaultListModel;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
@@ -55,85 +60,30 @@ import javax.swing.event.ListSelectionListener;
  *  <P>This class implements the main window and menu system for the
  *  application.  
  */
-public class DataEntryGUI extends JFrame implements ActionListener, 
-	WindowListener, ClipboardOwner, ItemListener, ListSelectionListener   {
+public class DataEntryGUI extends JFrame implements WindowListener, ListSelectionListener   {
 
-	public static final String BUTTON_SAVE = "Save";
-	
-	
-	private Menus menus;
 	public enum DbSource {FILE, DATA_BASE};
+
 	
-	//Strings used throughout form
-	public static final String first_name="First Name: ",
-		last_name="Last Name: ",
-		commune="Commune: ",
-		section="Section: ",
-		address="Address: ",
-		age="Age: ",
-		sex="Sex: ",
-		strBeneficiary="Beneficiary: ",
-		house_people="              Number of persons in the house:";
-	public static final String hc="Health Center",
-		dp="Distribution post:",
-		name_child="Responsible name (if child):",
-		name_woman="Responsible name (if pregnant woman):",
-		husband="Husband name (if woman):",
-		father="Father's name (if child):",
-		leader="Are you a mother leader?:",
-		visit="Do you visit a mother leader?:";
-	public static final String agri1="Is someone in your family in the",
-		agri2="Agriculture Program of ACDI/VOCA?:",
-		give_name="If yes, give the name:",
-		yes="Yes",
-		no="No";
-	public static final String male="MALE",
-		female="FEMALE",
-		infantMal="Enfant mal nourri",
-		infantPrev="Enfant en prevention",
-		motherExp="Femme enceinte",
-		motherNurs="Femme allaitante";
-	public static final String data="Data Entry Form",
-		gen="General Information",
-		mchn="MCHN Information",
-		controls="Controls";
-	public static final String 
-		SAVE="Save",
-		QUIT="Quit",
-		OPEN_FILE="Open File",
-		openfile="OpenFile",
-		OPEN_DB="OpenDB",
-		SAVE_AS="SaveAs",
-		ABOUT="About DataEntryGUI...",
-		CLOSE="Close ...";
-	
-	private JTextField firstNameJText, lastNameJText, addressJText, ageJText, peopleInHouseJText;
-	private JTextField healthCenterJText, dpJText, guardianChildJText, guardianWomanJText, husbandJText, fatherJText, agriPersonJText; 
-	private JRadioButton radioMale, radioFemale;
-	private JRadioButton radioInfantMal,radioInfantPrev,radioMotherExp,radioMotherNurs;
-	private JRadioButton radioMotherLeaderYes, radioMotherLeaderNo, radioVisitYes, radioVisitNo, radioAgriYes, radioAgriNo;
-	private JButton button2, button3, button1;
-	private ButtonGroup sexGroup, infantGroup, agriGroup, motherGroup, motherVisitGroup;
-	private JComboBox communeBox, communeSectionBox;
-	private SmsReader reader;
-	
-	private JPanel welcomePanel, buttonPanel, formPanel, geninfoPanel, mchnPanel;
+	private Menus mMenuManager;
+	private LocaleManager  mLocaleManager;
+	private SmsReader mReader;
+	private JPanel mWelcomePanel ;
 	private String windowId = "";
 	
-	private JSplitPane splitPane;
-	private JList messageList;
-	private String[] messagesArray;
-	private JScrollPane listScrollPane = new JScrollPane(); // Where the messages go
-    private JScrollPane formScrollPane = new JScrollPane();	// Where the data entry form goes
+	private JSplitPane mSplitPane;
+	private JList mMessageList;
+	private DefaultListModel mListModel;
+	private String[] mMessagesArray;
+	private JScrollPane mListScrollPane = new JScrollPane(); // Where the messages go
+    private JScrollPane mFormScrollPane = new JScrollPane();	// Where the data entry form goes
     
-    private String messageFileName;
-    private Beneficiary beneficiary;
+    private String mMessagesFileOrDbName;
+    private Beneficiary mBeneficiary;
     
-	public TextArea display;// = new TextArea();
-
-	public static final int DB_STATUS_NEW = 0;
-	public static final int DB_STATUS_PENDING = 1;
-	public static final int DB_STATUS_PROCESSED = 2;
+    private DataEntryForm mFormPanel;
+    
+	//public TextArea display;// = new TextArea();
 	
 	/**
 	 * Creates a DataEntryGUI and sets up the user interface.
@@ -142,13 +92,15 @@ public class DataEntryGUI extends JFrame implements ActionListener,
 		super("DataEntryGUI");
 
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		addWindowListener(this);//Male
+		addWindowListener(this);
 		WindowManager.init(this);
+		
+		mLocaleManager = new LocaleManager();  // Set's the default locale
 
-		menus = new Menus(this);
-		menus.createMenuBar();
-		setMenuBar(Menus.getMenuBar());	    
-
+		mMenuManager = new Menus(this);
+		mMenuManager.createMenuBar();
+		setMenuBar(Menus.getMenuBar());	  
+		
 		this.setupFrame();
 		this.setMinimumSize(new Dimension(500,300));
 
@@ -167,7 +119,7 @@ public class DataEntryGUI extends JFrame implements ActionListener,
 	 *  Manages the detailed operations of setting up the user interface.
 	 */ 
 	private void setupFrame() {
-		welcomePanel = new JPanel();
+		mWelcomePanel = new JPanel();
 		MultiLineLabel welcome = 
 			new MultiLineLabel(
 					"DataEntryGUI " + "v0.1" + "\n" +
@@ -176,361 +128,10 @@ public class DataEntryGUI extends JFrame implements ActionListener,
 					"Trinity College, Hartford, CT, USA\n\n" +
 					"DataEntryGUI is free software");
 		
-		welcomePanel.add(welcome);
-		this.getContentPane().add(welcomePanel);
+		mWelcomePanel.add(welcome);
+		this.getContentPane().add(mWelcomePanel);
 	}
-
-	/**
-	 * Sets up the panel used for Beneficiary registration.
-	 * @return
-	 */
-	private JPanel setUpDataEntryPanel() {
-		
-		//Form panel
-		formPanel = new JPanel();
-		formPanel.setBorder(BorderFactory.createTitledBorder(data));
-		formPanel.setLayout(new BorderLayout());
-		formPanel.setBackground(Color.WHITE); 
-		
-		//General Information Panel
-		geninfoPanel = new JPanel();
-		geninfoPanel.setBorder(BorderFactory.createTitledBorder(gen));
-		geninfoPanel.setLayout(new GridBagLayout());
-		geninfoPanel.setBackground(Color.WHITE); 
-		GridBagConstraints c = new GridBagConstraints();
-
-		firstNameJText = new JTextField();
-		firstNameJText.setColumns(15);
-		lastNameJText = new JTextField();
-		lastNameJText.setColumns(15);
-		communeBox = new JComboBox();
-		communeSectionBox = new JComboBox();
-		addressJText = new JTextField();
-		addressJText.setColumns(15);
-		ageJText = new JTextField();
-		ageJText.setColumns(15);
-		c.gridy=0;
-		c.gridx=0;
-		c.insets=new Insets(10,5,4,2);
-		c.anchor = GridBagConstraints.NORTHEAST;
-		geninfoPanel.add(new JLabel(first_name),c);
-		c.gridy=0;
-		c.gridx=1;
-		geninfoPanel.add(firstNameJText,c);
-		c.gridy=0;
-		c.gridx=2;
-		geninfoPanel.add(new JLabel("last_name"),c);
-		c.gridy=0;
-		c.gridx=3;
-		geninfoPanel.add(lastNameJText,c);
-		c.gridy=1;
-		c.gridx=0;
-		geninfoPanel.add(new JLabel(commune),c);
-		c.gridy=1;
-		c.gridx=1;
-		geninfoPanel.add(communeBox,c);
-		c.gridy=1;
-		c.gridx=2;
-		geninfoPanel.add(new JLabel(section),c);
-		c.gridy=1;
-		c.gridx=3;
-		geninfoPanel.add(communeSectionBox,c);
-		c.gridy=2;
-		c.gridx=0;
-		geninfoPanel.add(new JLabel(address),c);
-		c.gridy=2;
-		c.gridx=1;
-		geninfoPanel.add(addressJText,c);
-		c.gridy=2;
-		c.gridx=2;
-		geninfoPanel.add(new JLabel(age),c);
-		c.gridy=2;
-		c.gridx=3;
-		geninfoPanel.add(ageJText,c);
-		
-		
-		//Sex radio buttons
-		c.gridy=3;
-		c.gridx=0;
-		geninfoPanel.add(new JLabel(sex),c);
-		sexGroup = new ButtonGroup();
-		radioMale = new JRadioButton(male,false);
-		radioFemale = new JRadioButton(female,false);
-		sexGroup.add(radioMale);
-		sexGroup.add(radioFemale);
-		c.gridy=3;
-		c.gridx=1;
-		geninfoPanel.add(radioMale,c);
-		c.gridy=3;
-		c.gridx=2;
-		geninfoPanel.add(radioFemale,c);
-
-		
-		//Beneficiary radio buttons
-		c.gridy = 4;
-		c.gridx=0;
-		geninfoPanel.add(new JLabel(strBeneficiary),c);
-		infantGroup = new ButtonGroup();
-		radioInfantMal = new JRadioButton(infantMal,false);
-		radioInfantPrev = new JRadioButton(infantPrev,false);
-		radioMotherExp = new JRadioButton(motherExp,false);
-		radioMotherNurs = new JRadioButton(motherNurs,false);
-		infantGroup.add(radioInfantMal);
-		infantGroup.add(radioInfantPrev);
-		infantGroup.add(radioMotherExp);
-		infantGroup.add(radioMotherNurs);
-		c.gridy=4;
-		c.gridx=1;
-		geninfoPanel.add(radioInfantMal,c);
-		c.gridy=4;
-		c.gridx=2;
-		geninfoPanel.add(radioInfantPrev,c);
-		c.gridy=4;
-		c.gridx=3;
-		geninfoPanel.add(radioMotherExp,c);
-		c.gridy=4;
-		c.gridx=4;
-		geninfoPanel.add(radioMotherNurs,c);
-	
-		//People in house
-		c.gridy = 5;
-		c.gridx=0;
-		peopleInHouseJText = new JTextField();
-		peopleInHouseJText.setColumns(15);
-		geninfoPanel.add(new JLabel(house_people),c);
-		c.gridy=5;
-		c.gridx=1;
-		geninfoPanel.add(peopleInHouseJText,c);
-		
-		//MCHN panel
-		mchnPanel = new JPanel();
-		mchnPanel.setBorder(BorderFactory.createTitledBorder(mchn));
-		mchnPanel.setLayout(new GridBagLayout());
-		mchnPanel.setBackground(Color.WHITE); 
-
-		c.gridy=0;
-		c.gridx=0;
-		healthCenterJText = new JTextField();
-		healthCenterJText.setColumns(15);
-		dpJText = new JTextField();
-		dpJText.setColumns(15);
-		guardianChildJText = new JTextField();
-		guardianChildJText.setColumns(15);
-		guardianWomanJText = new JTextField();
-		guardianWomanJText.setColumns(15);
-		husbandJText = new JTextField();
-		husbandJText.setColumns(15);
-		fatherJText = new JTextField();
-		fatherJText.setColumns(15);
-		mchnPanel.add(new JLabel(hc),c);
-		c.gridy=0;
-		c.gridx=1;
-		mchnPanel.add(healthCenterJText,c);
-		c.gridy=0;
-		c.gridx=2;
-		mchnPanel.add(new JLabel(dp),c);
-		c.gridy=0;
-		c.gridx=3;
-		mchnPanel.add(dpJText,c);
-		c.gridy=1;
-		c.gridx=0;
-		mchnPanel.add(new JLabel(name_child),c);
-		c.gridy=1;
-		c.gridx=1;
-		mchnPanel.add(guardianChildJText,c);
-		c.gridy=1;
-		c.gridx=2;
-		mchnPanel.add(new JLabel(name_woman),c);
-		c.gridy=1;
-		c.gridx=3;
-		mchnPanel.add(guardianWomanJText,c);
-		c.gridy=2;
-		c.gridx=0;
-		mchnPanel.add(new JLabel(husband),c);
-		c.gridy=2;
-		c.gridx=1;
-		mchnPanel.add(husbandJText,c);
-		c.gridy=2;
-		c.gridx=2;
-		mchnPanel.add(new JLabel(father),c);
-		c.gridy=2;
-		c.gridx=3;
-		mchnPanel.add(fatherJText,c);
-
-		motherGroup = new ButtonGroup();
-		radioMotherLeaderYes = new JRadioButton(yes,false);
-		radioMotherLeaderNo = new JRadioButton(no,false);
-		motherGroup.add(radioMotherLeaderYes);
-		motherGroup.add(radioMotherLeaderNo);   
-		c.gridy=3;
-		c.gridx=0;
-		mchnPanel.add(new JLabel(leader),c);
-		c.gridy=3;
-		c.gridx=1;
-		mchnPanel.add(radioMotherLeaderYes,c);
-		c.gridy=3;
-		c.gridx=2;
-		mchnPanel.add(radioMotherLeaderNo,c);
-
-		motherVisitGroup = new ButtonGroup();
-		radioVisitYes = new JRadioButton(yes,false);
-		radioVisitNo = new JRadioButton(no,false);
-		motherVisitGroup.add(radioVisitYes);
-		motherVisitGroup.add(radioVisitNo);
-		c.gridy=4;
-		c.gridx=0;
-		mchnPanel.add(new JLabel(visit),c);
-		c.gridy=4;
-		c.gridx=1;
-		mchnPanel.add(radioVisitYes,c);
-		c.gridy=4;
-		c.gridx=2;
-		mchnPanel.add(radioVisitNo,c);
-
-		agriGroup = new ButtonGroup();
-		radioAgriYes = new JRadioButton(yes,false);
-		radioAgriNo = new JRadioButton(no,false);
-		agriGroup.add(radioAgriYes);
-		agriGroup.add(radioAgriNo);
-		c.gridy=5;
-		c.gridx=0;
-		c.insets=new Insets(10,5,0,2);
-		mchnPanel.add(new JLabel(agri1),c);
-		c.insets=new Insets(0,5,4,2);
-		c.gridy=6;
-		c.gridx=0;
-		mchnPanel.add(new JLabel(agri2),c);
-		c.insets=new Insets(0,5,4,2);
-		c.gridy=6;
-		c.gridx=1;
-		mchnPanel.add(radioAgriYes,c);
-		c.gridy=6;
-		c.gridx=2;
-		mchnPanel.add(radioAgriNo,c);
-		
-		agriPersonJText = new JTextField();
-		agriPersonJText.setColumns(15);
-		c.gridy=7;
-		c.gridx=0;
-		c.insets=new Insets(10,5,4,2);
-		mchnPanel.add(new JLabel(give_name),c);
-		c.gridy=7;
-		c.gridx=1;
-		mchnPanel.add(agriPersonJText,c);
-
-		buttonPanel = new JPanel();
-		buttonPanel.setBorder(BorderFactory.createTitledBorder(controls));
-		buttonPanel.setBackground(Color.WHITE);
-		button1 = new JButton(Menus.menus.getString(BUTTON_SAVE));
-		button2 = new JButton("Button2");
-		button3 = new JButton("Button3");
-		button1.addActionListener(this);
-		button2.addActionListener(this);
-		button3.addActionListener(this); 
-		formPanel.add(geninfoPanel,"North");
-		formPanel.add(mchnPanel,"Center");
-		formPanel.add(buttonPanel,"South");
-		buttonPanel.add(button1);
-		buttonPanel.add(button2);
-		buttonPanel.add(button3);
-
-		return formPanel;
-	}
-	
-	
-	/** 
-	 * Handles all menu events whenever the user selects a menu item.
-	 * @param e the action that was performed
-	 */
-	public void actionPerformed(ActionEvent e) {
-		if ((e.getSource() instanceof MenuItem)) {
-			String cmd = e.getActionCommand();
-			doCommand(cmd);
-		} else if (e.getSource() instanceof JButton){
-		    JButton button = (JButton)e.getSource();
-		    if (button.getText().equals(Menus.menus.getString(BUTTON_SAVE))) {
-				beneficiary.setStatus(DB_STATUS_PROCESSED); // sets the status of the current Beneficiary item to processed
-		    	reader.updateMessage(beneficiary);
-		    	//TODO:  This should output all the Beneficiary data to the TBS DB
-		   	    System.out.println("Saving data");
-		    }
-		    if (button.getText().equals("Button2")) {
-				beneficiary.setStatus(DB_STATUS_PENDING); // sets the status of the Beneficiary item to pending
-		    	reader.updateMessage(beneficiary);
-		    	//TODO: This should write the message to a file for Db Manager
-		    	System.out.println("Sent to the database manager");
-		    }
-		    if (button.getText().equals("Button3"))
-		    	System.out.println("Button 3");
-		}
-	}
-
-	/** 
-	 * Executes the command given by its parameter.
-	 * @param a String that specifies the desired command.
-	 * @throws  
-	 */
-	public void doCommand(String cmd) {   
-		System.out.println("doCommand " + cmd);
-		if (cmd.equals(ABOUT)) 
-			showAboutBox();
-		else if (cmd.equals(Menus.menus.getString(openfile)))  {
-			readMessagesIntoGUI(DbSource.FILE);
-		} 
-		else if (cmd.equals(Menus.menus.getString(OPEN_DB)))  {
-			readMessagesIntoGUI(DbSource.DATA_BASE);
-		}
-//		} 		else if (cmd.equals(CLOSE)) {   
-//			this.close();
-//		}
-//		else if (cmd.equals(Menus.menus.getString(SAVE))) {
-//			this.save(false);
-//		}
-//		else if (cmd.equals(Menus.menus.getString(SAVE_AS))) {
-//			this.save(false);
-//		}
-		else if (cmd.equals("DataEntryGUI")) {
-			activate();
-		}
-		else if (cmd.equals(Menus.menus.getString(QUIT)))
-			this.quit();
-		else if (cmd.equals(Menus.menus.getString("English"))) {
-			Menus.currentLocale = Locale.ENGLISH;
-			Menus.menus = ResourceBundle.getBundle("MenusBundle", Menus.currentLocale);
-			System.out.println("Changing language to English "  + Menus.currentLocale.toString());
-			//menus = new Menus(this);
-			menus.createMenuBar();
-			setMenuBar(Menus.getMenuBar());	 
-			updateOnLocaleChanged();
-			this.repaint();
-		}
-		else if (cmd.equals(Menus.menus.getString("French"))) {
-			Menus.currentLocale = Locale.FRENCH;
-			Menus.menus = ResourceBundle.getBundle("MenusBundle", Menus.currentLocale);
-			System.out.println("Changing language to French " + Menus.currentLocale.toString());
-			//menus = new Menus(this);
-			menus.createMenuBar();
-			setMenuBar(Menus.getMenuBar());	
-			updateOnLocaleChanged();
-			this.repaint();
-		}
-	}   
-	
-	private void updateOnLocaleChanged() {
-		if (button1 != null) {
-			//button1.setText(Menus.menus.getString(BUTTON_SAVE));	
-			this.repaint();
-		}
-	}
-
-///**
-// *  Closes this window, first saving the text in the TextAreas if necessary.
-// */  
-//public boolean close() {
-//	setVisible(false);
-//	//dispose();
-//	return true;    
-//}
+ 	
 	/**
 	 * Sets up a split pane with messages on top and the data entry form on the bottom.
 	 * @param messages
@@ -539,26 +140,25 @@ public class DataEntryGUI extends JFrame implements ActionListener,
 	 */
 	private JSplitPane setUpSplitPane (String messages[], JPanel formPanel) {
 		// Set up the ListScrollPane
-		messageList = new JList(messages);
-        messageList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        messageList.setSelectedIndex(0);
-        messageList.addListSelectionListener(this);
-        this.listScrollPane = new JScrollPane(messageList);
-
-        this.formScrollPane = new JScrollPane(formPanel);
-
-		//Provide minimum sizes for the two components in the split pane
-//		Dimension minimumSize = new Dimension(800, 100);
-		//listScrollPane.setMinimumSize(minimumSize);
-		//formScrollPane.setMinimumSize(minimumSize);
+		mListModel = new DefaultListModel();
+		for (int k = 0; k < messages.length; k++)
+			mListModel.add(k, messages[k]);
+		mMessageList = new JList(mListModel);
+		//mMessageList = new JList(messages);
+	    mMessageList.setCellRenderer(new CustomRenderer());
+        mMessageList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        mMessageList.setSelectedIndex(0);
+        mMessageList.addListSelectionListener(this);
+        this.mListScrollPane = new JScrollPane(mMessageList);
+        this.mFormScrollPane = new JScrollPane(formPanel);
 		
         // See http://download.oracle.com/javase/tutorial/uiswing/components/splitpane.html
 		//Create a split pane with the two scroll panes in it.
-		splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT,
-		                           listScrollPane, formScrollPane);
-		splitPane.setOneTouchExpandable(true);
-		splitPane.setDividerLocation(100);
-		return splitPane;
+		mSplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT,
+		                           mListScrollPane, mFormScrollPane);
+		mSplitPane.setOneTouchExpandable(true);
+		mSplitPane.setDividerLocation(100);
+		return mSplitPane;
 	}
 	
 	/**
@@ -567,34 +167,32 @@ public class DataEntryGUI extends JFrame implements ActionListener,
 	 * TODO: Error checking that this is a messages file.
 	 * @throws IOException 
 	 */
-	private void readMessagesIntoGUI (DbSource dbSource) {
+	public void readMessagesIntoGUI (DbSource dbSource) {
 		
 		JFileChooser fd = new JFileChooser();
 		int result = fd.showOpenDialog(this);
 		if (result == JFileChooser.CANCEL_OPTION) 
 			return;
-		messageFileName = fd.getSelectedFile().toString();
+		mMessagesFileOrDbName = fd.getSelectedFile().toString();
 		
-		//messageFileName = fd.getDirectory() + fd.getFile();
-		System.out.println("messagefilename = " + messageFileName);
+		System.out.println("messagefilename = " + mMessagesFileOrDbName);
 
-		reader = new SmsReader(messageFileName);
+		mReader = new SmsReader(mMessagesFileOrDbName);
 
 		if (dbSource == DbSource.FILE) {
-			reader.readFile();
+			mReader.readFile();
 		} else {
-			reader = new SmsReader();
-			reader.readMsgsFromDb(messageFileName);
+			mReader = new SmsReader();
+			mReader.readUnprocessedMsgsFromDb(mMessagesFileOrDbName);
 		}
-		messagesArray = reader.getMessagesAsArray();
+		mMessagesArray = mReader.getMessagesAsArray();
 		
-//		DataEntryForm formPanel = new DataEntryForm();
-		formPanel = setUpDataEntryPanel();
-		beneficiary = new Beneficiary(messagesArray[0], Abbreviated.TRUE);
-		fillInDataEntryForm(beneficiary);
+		mFormPanel = new DataEntryForm(this);
+		mBeneficiary = new Beneficiary(mMessagesArray[0], Abbreviated.TRUE);
+		mFormPanel.fillInForm(mBeneficiary,mReader);
 		
-		this.getContentPane().remove(welcomePanel);
-		this.getContentPane().add(setUpSplitPane(messagesArray, formPanel));
+		this.getContentPane().remove(mWelcomePanel);
+		this.getContentPane().add(setUpSplitPane(mMessagesArray, mFormPanel));
 		this.pack();
 		Tools.centerWindow(this);
 		this.repaint();
@@ -614,24 +212,24 @@ public class DataEntryGUI extends JFrame implements ActionListener,
 		"DataEntryGUI is free software.");
 	}
 
-	/**
-	 *  Implementation of the Save and SaveAs commands.
-	 */  
-	public void save(boolean rename) {
-	}
-
-	/**
-	 *  Sets this window's id number.
-	 */  
-	public void setWindowId( int n ) {
-		windowId = "" + n;
-	}
-	/**
-	 *  Gets this window's id number.
-	 */  
-	public String getWindowId() { return windowId; }
-
-	
+//	/**
+//	 *  Implementation of the Save and SaveAs commands.
+//	 */  
+//	public void save(boolean rename) {
+//	}
+//
+//	/**
+//	 *  Sets this window's id number.
+//	 */  
+//	public void setWindowId( int n ) {
+//		windowId = "" + n;
+//	}
+//	/**
+//	 *  Gets this window's id number.
+//	 */  
+//	public String getWindowId() { return windowId; }
+//
+//	
 	/**
 	 * Listens to the messages list.
 	 * TODO:  Figure out why it appears to be called twice on each click.
@@ -639,54 +237,15 @@ public class DataEntryGUI extends JFrame implements ActionListener,
 	public void valueChanged(ListSelectionEvent e) {
 		JList list = (JList) e.getSource();
 		System.out.println("Clicked on  list item " + list.getSelectedValue());
-		beneficiary = new Beneficiary(list.getSelectedValue().toString(), Abbreviated.TRUE);
-		fillInDataEntryForm(beneficiary);	
-	}
-	
-	/**
-	 * Fills in the Data Entry Form.
-	 * @param beneficiary 
-	 */
-	private void fillInDataEntryForm(Beneficiary beneficiary) {
-		this.firstNameJText.setText(beneficiary.getFirstName());
-		this.lastNameJText.setText(beneficiary.getLastName());
-		
-		addItemsToComboBox(communeBox, reader.getCommune());
-		this.communeBox.setSelectedItem(beneficiary.getCommune());
-		addItemsToComboBox(communeSectionBox, reader.getCommuneSection(beneficiary.getCommune()));
-	//	this.communeBox.setText(beneficiary.getCommune());
-	//	this.communeSectionBox.setText(beneficiary.getCommuneSection());
-		this.addressJText.setText(beneficiary.getAddress());
-		this.ageJText.setText(Integer.toString(beneficiary.getAge()));
-		this.peopleInHouseJText.setText(Integer.toString(beneficiary.getNumberInHome()));
-		
-		if (beneficiary.getMotherCategory().equals(Beneficiary.MotherCategory.EXPECTING)) 
-			this.radioMotherExp.setSelected(true);
-		else 
-			this.radioMotherNurs.setSelected(true); 
-
-		if (beneficiary.getInfantCategory().equals(Beneficiary.InfantCategory.MALNOURISHED)) 
-			this.radioInfantMal.setSelected(true);
-		else 
-			this.radioInfantPrev.setSelected(true);
-		
-		if (beneficiary.getSex().equals(Beneficiary.Sex.MALE)) {
-			this.radioMale.setSelected(true);
-		} else {
-			this.radioFemale.setSelected(true);
-		}
-	}
-	
-	private void addItemsToComboBox (JComboBox combo, String arr[]) {
-		for (int k = 0; k < arr.length; k++) 
-			combo.addItem(arr[k]);
+		mBeneficiary = new Beneficiary(list.getSelectedValue().toString(), Abbreviated.TRUE);
+		mFormPanel.fillInForm(mBeneficiary, mReader);	
 	}
 	
 	/**
 	 *  Provides a controlled quit of the program for either
 	 *   its applet or application versions.
 	 */
-	private void quit() {  
+	public void quit() {  
 		setVisible(false);  
 		dispose();
 	}
@@ -695,31 +254,16 @@ public class DataEntryGUI extends JFrame implements ActionListener,
 	 *  Returns a reference to the programs Menus object.
 	 */
 	public Menus getMenus() {
-		return menus;
+		return mMenuManager;
 	}
 
-	/**
-	 *  Brings the top-level DataEntryGUI frame to the front.
-	 */
-	private void activate() {
-//		//       showStatus("DataEntryGUI Window activated");
-//		this.toFront();	
-//		this.setMenuBar(menus.getMenuBar());
-//		Menus.updateMenus();
-	}
 
 	/**
+	 * Window Manager Interface
 	 *  Responds to a window closing event.
 	 */
-	public void windowClosing(WindowEvent e) {
-		quit();
-	}
-	public void windowActivated(WindowEvent e) { 
-//		this.toFront();
-//		this.setMenuBar(menus.getMenuBar());
-//		Menus.updateMenus();
-//		//	activate(); 
-	}
+	public void windowClosing(WindowEvent e) {  quit();  }
+	public void windowActivated(WindowEvent e) { 	}
 	public void windowClosed(WindowEvent e) {}
 	public void windowDeactivated(WindowEvent e) {}
 	public void windowDeiconified(WindowEvent e) {}
@@ -727,18 +271,48 @@ public class DataEntryGUI extends JFrame implements ActionListener,
 	public void windowOpened(WindowEvent e) {}
 
 	/**
-	 *  Displays a message on the DataEntryGUI's display.
+	 * Revised the messages status to "Processed" and updates the Db and
+	 * displays the revised status in the GUI's List.
 	 */
-	public void showStatus(String msg) {
-		display.append(msg + "\n");
+	public void postMessageToTBS() {
+		// TODO Auto-generated method stub
+		System.out.println(mBeneficiary.toString());
+		mBeneficiary.setStatus(SmsReader.DB_STATUS_PROCESSED); // sets the status of the current Beneficiary item to processed
+		mReader.updateMessage(mBeneficiary, this.mMessagesFileOrDbName);
+		int index = this.mMessageList.getSelectedIndex();
+		String msg = mReader.getMessageById(mBeneficiary.getId(), this.mMessagesFileOrDbName);
+		System.out.println(msg);
+		if (!msg.contains("NOT FOUND")) {
+			this.mListModel.set(index,msg);
+			this.mMessageList.setSelectedIndex(index++);
+			this.mMessageList.repaint();
+			System.out.println("Posted message to TBS Db");
+		} else {
+			System.out.println("ERROR in Posting message to TBS Db");
+		}
 	}
 
-	public void lostOwnership (Clipboard clip, Transferable cont) {}
+
+
+	public void forwardMessageToDbMgr() {
+		// TODO Auto-generated method stub
+		System.out.println(mBeneficiary.toString());
+		mBeneficiary.setStatus(SmsReader.DB_STATUS_PENDING); // sets the status of the current Beneficiary item to processed
+		mReader.updateMessage(mBeneficiary, this.mMessagesFileOrDbName);
+		int index = this.mMessageList.getSelectedIndex();
+		String msg = mReader.getMessageById(mBeneficiary.getId(), this.mMessagesFileOrDbName);
+		System.out.println(msg);
+		if (!msg.contains("NOT FOUND")) {
+			this.mListModel.set(index,msg);
+			this.mMessageList.setSelectedIndex(index++);
+			this.mMessageList.repaint();
+			System.out.println("Posted message to TBS Db");
+		} else {
+			System.out.println("ERROR in Forwarding Message to Db Mgr");
+		}
+	}
 
 	
-	public void itemStateChanged(ItemEvent arg0) {
-		// TODO Auto-generated method stu
-	}
 	
 	/**
 	 *  Creates an instance of DataEntryGUI and when run in application mode.
@@ -747,5 +321,35 @@ public class DataEntryGUI extends JFrame implements ActionListener,
 		DataEntryGUI gui = new DataEntryGUI(); 
 	}  //end main()
 
+	
+	/**
+	 * Inner class to render list elements.
+	 * @author rmorelli
+	 *
+	 */
+	class CustomRenderer extends DefaultListCellRenderer {
+		
+		  public Component getListCellRendererComponent(JList list,
+		                                                Object value,
+		                                                int index,
+		                                                boolean isSelected,
+		                                                boolean hasFocus) {
+		    JLabel label =
+		      (JLabel)super.getListCellRendererComponent(list,
+		                                                 value,
+		                                                 index,
+		                                                 isSelected,
+		                                                 hasFocus);
+		    String entry = (String)value;
+		    if (entry.contains("status=2")) {
+		    	label.setBackground(Color.RED);
+		    } else if (entry.contains("status=1")) {
+		    	label.setBackground(Color.YELLOW);
+		    	label.setForeground(Color.RED);
+		    }
+		    return(label);
+		  }
+		}
+	
 
 }

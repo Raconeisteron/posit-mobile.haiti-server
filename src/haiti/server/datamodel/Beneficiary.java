@@ -49,11 +49,7 @@ public class Beneficiary {
 	private int id;
 	private int status;
 
-	public static Locale[] supportedLocales = {Locale.FRENCH, Locale.ENGLISH};
-		
-	public static ResourceBundle messages;
-	private Locale currentLocale;
-	
+
 	/**
 	 * Default constructor
 	 */
@@ -64,8 +60,6 @@ public class Beneficiary {
 				Sex.MALE,
 				InfantCategory.PREVENTION, MotherCategory.NURSING, 
 				0);
-		currentLocale = Locale.ENGLISH;
-		messages = ResourceBundle.getBundle("MessagesBundle", currentLocale);
 	}
 
 	/**
@@ -75,8 +69,7 @@ public class Beneficiary {
 	 * @param abbreviatedAttributes true iff the attribute names are abbreviated, eg. fn
 	 */
 	public Beneficiary (String attributeValueString, Abbreviated abbreviatedAttributes) {
-		currentLocale = Locale.ENGLISH;
-		messages = ResourceBundle.getBundle("MessagesBundle", currentLocale);
+		System.out.println("Splitting " + attributeValueString);
 		split(attributeValueString, "&", "=", abbreviatedAttributes);
 		
 	}
@@ -96,8 +89,6 @@ public class Beneficiary {
 		this.infantCategory = infantCategory;
 		this.motherCategory = motherCategory;
 		this.numberInHome = numberInHome;
-		currentLocale = Locale.ENGLISH;
-		messages = ResourceBundle.getBundle("MessagesBundle", currentLocale);
 	}
 	
 	/**
@@ -113,9 +104,12 @@ public class Beneficiary {
 			
 			AttributeManager am = new AttributeManager();
 			String longAttr = am.mapToLong(abbreviated, attrval[0]);
-			System.out.println(messages.getString("Attribute") + " = " + longAttr);
 			
-			if (longAttr.equals(HaitiKeys.LONG_FIRST))
+			if (longAttr.equals(HaitiKeys.LONG_ID))
+				id = Integer.parseInt(attrval[1]);
+			else if (longAttr.equals(HaitiKeys.LONG_STATUS))
+				status = Integer.parseInt(attrval[1]);
+			else if (longAttr.equals(HaitiKeys.LONG_FIRST))
 				firstName=attrval[1];
 			else if (longAttr.equals(HaitiKeys.LONG_LAST))
 				lastName=attrval[1];
@@ -203,8 +197,6 @@ public class Beneficiary {
 
 	public void setNumberInHome(int numberInHome) {
 		this.numberInHome = numberInHome;
-		currentLocale = Locale.ENGLISH;
-		messages = ResourceBundle.getBundle("MessagesBundle", currentLocale);
 	}
 
 	public InfantCategory getInfantCategory() {
@@ -240,15 +232,16 @@ public class Beneficiary {
 	}
 	
 	public String toString(String separator) {
-		return 
-		messages.getString("firstName") + "=" + firstName + separator +
-		messages.getString("lastName") + "=" + lastName + separator +
-		messages.getString("commune") + "=" + commune + separator +
-		messages.getString("communeSection") + "=" + communeSection + separator +
-		messages.getString("age") + "=" + age + separator +
-		messages.getString("numberInHome") + "=" + numberInHome + separator +
-		messages.getString("infantCategory") + "=" + infantCategory + separator +
-		messages.getString("motherCategory") + "=" + motherCategory;
+		return "id = " + id + separator + 
+		"status = " + status + separator + 
+		"firstName = " + firstName + separator +
+		"lastName = " + lastName + separator +
+		"commune = " + commune + separator +
+		"communeSection = " + communeSection + separator +
+		"age = " + age + separator +
+		"numberInHome = " + numberInHome + separator +
+		"infantCategory = " + infantCategory + separator +
+		"motherCategory = " + motherCategory;
 	}
 	
 	public String toString() {
@@ -262,15 +255,6 @@ public class Beneficiary {
 		Beneficiary ben = new Beneficiary();
 		// System.out.println(ben.toString("&"));
 		// System.out.println(ben.toString());
-		ben = new Beneficiary(messages.getString("firstName") + "=first&"
-				+ messages.getString("lastName") + "=last&"
-				+ messages.getString("commune") + "=commune&"
-				+ messages.getString("communeSection") + "=section&"
-				+ messages.getString("age") + "=0&"
-				+ messages.getString("numberInHome") + "=0&"
-				+ messages.getString("infantCategory") + "=PREVENTION&"
-				+ messages.getString("motherCategory") + "=NURSING",
-				Abbreviated.FALSE);
 		System.out.println(ben.toString());
 	}
 
