@@ -2,26 +2,29 @@ package haiti.server.datamodel;
 
 public class HaitiKeys {
 	
-	public static final String FORM_FIRST_NAME="First Name: ";
-	public static final String FORM_LAST_NAME="Last Name: ";
-	public static final String FORM_COMMUNE="Commune: ";
-	public static final String FORM_SECTION="Section: ";
-	public static final String FORM_ADDRESS="Address: ";
-	public static final String FORM_AGE="Age: ";
-	public static final String FORM_SEX="Sex: ";
-	public static final String FORM_BENEFICIARY="Beneficiary: ";
-	public static final String FORM_NUMBER_IN_HOUSE="Number of persons in the house:";
-	public static final String FORM_HEALTH_CENTER="Health Center";
-	public static final String FORM_DISTRIBUTION_POST="Distribution post:";
-	public static final String FORM_NAME_CHILD="Responsible name (if child):";
-	public static final String FORM_NAME_WOMAN="Responsible name (if pregnant woman):";
-	public static final String FORM_HUSBAND="Husband name (if woman):";
-	public static final String FORM_FATHER="Father's name (if child):";
-	public static final String FORM_MOTHER_LEADER="Are you a mother leader?:";
-	public static final String FORM_VISIT_MOTHER="Do you visit a mother leader?:";
-	public static final String FORM_AGRICULTURE_1="Is someone in your family in the";
-	public static final String FORM_AGRICULTURE_2="Agriculture Program of ACDI/VOCA?:";
-	public static final String FORM_GIVE_NAME="If yes, give the name:";
+	public static final String FORM_FIRST_NAME="FirstName";
+	public static final String FORM_LAST_NAME="LastName";
+	public static final String FORM_COMMUNE="Commune";
+	public static final String FORM_SECTION="Section";
+	public static final String FORM_ADDRESS="Address";
+	public static final String FORM_AGE="Age";
+	public static final String FORM_SEX="Sex";
+	public static final String FORM_MALE="Male";
+	public static final String FORM_FEMALE="Female";
+
+	public static final String FORM_BENEFICIARY="Beneficiary";
+	public static final String FORM_NUMBER_IN_HOUSE= "NumberInHome"; // "Number of persons in the house:";
+	public static final String FORM_HEALTH_CENTER="HealthCenter";
+	public static final String FORM_DISTRIBUTION_POST="DistributionPost";
+	public static final String FORM_NAME_CHILD= "NameIfChild"; // "Responsible name (if child):";
+	public static final String FORM_NAME_WOMAN= "NameIfWoman";  // "Responsible name (if pregnant woman):";
+	public static final String FORM_HUSBAND= "Husband"; // "Husband name (if woman):";
+	public static final String FORM_FATHER= "Father";  // "Father's name (if child):";
+	public static final String FORM_MOTHER_LEADER = "MotherLeader";  // "Are you a mother leader?:";
+	public static final String FORM_VISIT_MOTHER = "VisitMotherLeader";   // "Do you visit a mother leader?:";
+	public static final String FORM_AGRICULTURE_1 = "Agr1";  // "Is someone in your family in the";
+	public static final String FORM_AGRICULTURE_2 = "Agr2";  // Agriculture Program of ACDI/VOCA?:";
+	public static final String FORM_GIVE_NAME= "GiveName";  // "If yes, give the name:";
 	public static final String BUTTON_YES="Yes";
 	public static final String BUTTON_NO="No";
 	public static final String BUTTON_MALE="MALE";
@@ -30,10 +33,7 @@ public class HaitiKeys {
 	public static final String BUTTON_INFANT_PREVENTION="Enfant en prevention";
 	public static final String BUTTON_MOTHER_EXPECTING="Femme enceinte";
 	public static final String BUTTON_MOTHER_NURSING="Femme allaitante";
-	public static final String FORM_DATA="Data Entry Form";
-	public static final String FORM_GENERAL_INFORMATION="General Information";
-	public static final String FORM_MCHN_INFORMATION="MCHN Information";
-	public static final String FORM_CONTROLS="Controls";
+
 	
 	public static final String ABBREV_ATTRIBUTE = "attr";
 	public static final String ABBREV_FIRST = "fn";
@@ -71,7 +71,7 @@ public class HaitiKeys {
 	public static final String ABBREV_MCHN_INFORMATION = "mchn";
 	public static final String ABBREV_CONTROLS = "ctrl";
 	public static final String ABBREV_STATUS = "st";
-	public static final String ABBREV_ID = "i";
+	public static final String ABBREV_ID = "id";
 	
 	public static final String LONG_ATTRIBUTE = "attribute";
 	public static final String LONG_FIRST = "firstName";
@@ -82,9 +82,9 @@ public class HaitiKeys {
 	public static final String LONG_AGE = "age";
 	public static final String LONG_SEX = "sex";
 	public static final String LONG_BENEFICIARY = "beneficiary";
-	public static final String LONG_NUMBER_IN_HOME = "numberInHome";
-	public static final String LONG_HEALTH_CENTER = "healthCenter";
-	public static final String LONG_DISTRIBUTION_POST = "distributionPost";
+	public static final String LONG_NUMBER_IN_HOME = "NumberInHome";
+	public static final String LONG_HEALTH_CENTER = "HealthCenter";
+	public static final String LONG_DISTRIBUTION_POST = "DistributionPost";
 	public static final String LONG_NAME_CHILD = "nameChild";
 	public static final String LONG_NAME_WOMAN = "nameWoman";
 	public static final String LONG_HUSBAND = "husband";
@@ -98,12 +98,12 @@ public class HaitiKeys {
 	public static final String LONG_NO = "no";
 	public static final String LONG_MALE = "male";
 	public static final String LONG_FEMALE = "female";
-	public static final String LONG_INFANT_CATEGORY = "infantCategory";
-	public static final String LONG_INFANT_MAL = "infantMal";
-	public static final String LONG_INFANT_PREVENTION = "infantPrevention";
-	public static final String LONG_MOTHER_CATEGORY = "motherCategory";
-	public static final String LONG_MOTHER_EXPECTING = "motherExpecting";
-	public static final String LONG_MOTHER_NURSING = "motherNursing";
+	public static final String LONG_INFANT_CATEGORY = "InfantCategory";
+	public static final String LONG_INFANT_MAL = "InfantMal";
+	public static final String LONG_INFANT_PREVENTION = "InfantPrevention";
+	public static final String LONG_MOTHER_CATEGORY = "MotherCategory";
+	public static final String LONG_MOTHER_EXPECTING = "MotherExpecting";
+	public static final String LONG_MOTHER_NURSING = "MotherNursing";
 	public static final String LONG_DATA = "data";
 	public static final String LONG_GENERAL_INFORMATION = "generalInformation";
 	public static final String LONG_MCHN_INFORMATION = "mchnInformation";

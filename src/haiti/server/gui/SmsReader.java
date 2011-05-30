@@ -46,7 +46,7 @@ import java.util.Scanner;
  */
 public class SmsReader {
 	
-	
+	public enum MessageStatus {NEW, PENDING, PROCESSED};
 	public static final String TAG = "SmsReader";
 	public static final String DB_MESSAGE_TABLE = "message_log";
 	public static final String DB_MESSAGE_ID = "id";
@@ -54,6 +54,11 @@ public class SmsReader {
 	public static final String DB_MESSAGE_STATUS = "status";
 	public static final String DB_MESSAGE_CREATED_ON = "created_on";
 	public static final String DB_MESSAGE_MODIFIED_ON = "modified_on";
+	public static final String SEPARATOR = "&";
+	
+	public static final int DB_STATUS_NEW = 0;
+	public static final int DB_STATUS_PENDING = 1;
+	public static final int DB_STATUS_PROCESSED = 2;
 
 	private String filename;
 	private String encoding;
@@ -75,14 +80,11 @@ public class SmsReader {
 		this.encoding = encoding;
 	}
 	
-	public Connection connectDb(){
+	public Connection connectDb(String filename){
 		Connection connection = null;
 		try {
 			Class.forName("org.sqlite.JDBC");
-			//Connection connection = null;
-			//connection = DriverManager.getConnection("jdbc:sqlite:" + System.getProperty("user.dir").toString()
-				//	+ "/db/haiti.db");dbName);
-			connection = DriverManager.getConnection("jdbc:sqlite:"+ this.filename);
+			connection = DriverManager.getConnection("jdbc:sqlite:" + filename);
 			return connection;
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
@@ -102,41 +104,88 @@ public class SmsReader {
 	 * @param dbName
 	 * @throws ClassNotFoundException
 	 */
-	public void readMsgsFromDb(String dbName) {
+	public void readUnprocessedMsgsFromDb(String dbName) {
 		try {
-			Class.forName("org.sqlite.JDBC");
-			Connection connection = null;
-
-			connection = DriverManager.getConnection("jdbc:sqlite:" + dbName);
+			Connection connection = connectDb(dbName);			
 			Statement statement = connection.createStatement();
-			statement.setQueryTimeout(60);  // set timeout to 30 sec.
-
+			statement.setQueryTimeout(30);  // set timeout to 30 sec.
 			
 			ResultSet rs = statement.executeQuery("select * from " + DB_MESSAGE_TABLE);
 			rs.next();
 			while(!rs.isAfterLast()) {
-				String msg = "i=" + rs.getString(DB_MESSAGE_ID) + "&" 
-					+ "st=" + rs.getString(DB_MESSAGE_STATUS) + "&"
-					+ "created=" + rs.getString(DB_MESSAGE_CREATED_ON) + "&"
-					+ "modified=" + rs.getString(DB_MESSAGE_MODIFIED_ON) + "&"
+				String msg = DB_MESSAGE_ID + "=" +  rs.getString(DB_MESSAGE_ID) + SEPARATOR 
+					+ DB_MESSAGE_STATUS + "=" + rs.getString(DB_MESSAGE_STATUS) + SEPARATOR
+					+ DB_MESSAGE_CREATED_ON + ":" + rs.getString(DB_MESSAGE_CREATED_ON) + SEPARATOR
+					+ DB_MESSAGE_MODIFIED_ON  + ":" + rs.getString(DB_MESSAGE_MODIFIED_ON) + SEPARATOR
 					+ rs.getString(DB_MESSAGE_COLUMN);
 				System.out.println(msg);
-				
-				messages.add(msg);
 
+				messages.add(msg);
 				rs.next();
 			}
 			if(connection != null)
 				connection.close();
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
 		} catch(SQLException e) {
 			// if the error message is "out of memory", 
 			// it probably means no database file is found
 			e.printStackTrace();
 		}
-
 	}
+	
+	public String getMessageById(int id, String dbName) {
+		System.out.println("Getting message for id= " + id);
+		Connection connection = connectDb(dbName);
+		Statement statement;
+		String msg = null;
+		try {
+			statement = connection.createStatement();
+			statement.setQueryTimeout(30);  // set timeout to 30 sec	
+			ResultSet rs = statement.executeQuery("select * from " + DB_MESSAGE_TABLE + " where id = " + id);
+
+
+			rs.next();
+			if (rs.isAfterLast())
+				return id + " NOT FOUND";
+
+			msg = DB_MESSAGE_ID + "=" +  rs.getString(DB_MESSAGE_ID) + SEPARATOR 
+			+ DB_MESSAGE_STATUS + "=" + rs.getString(DB_MESSAGE_STATUS) + SEPARATOR
+			+ DB_MESSAGE_CREATED_ON + ":" + rs.getString(DB_MESSAGE_CREATED_ON) + SEPARATOR
+			+ DB_MESSAGE_MODIFIED_ON  + ":" + rs.getString(DB_MESSAGE_MODIFIED_ON) + SEPARATOR
+			+ rs.getString(DB_MESSAGE_COLUMN);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
+		return msg;
+	}
+	
+	/**
+	 * updateMessage method update the status and modified time for given
+	 * Beneficiary object in database
+	 * 
+	 * @param b is the Beneficiary object
+	 */
+	public void updateMessage(Beneficiary b, String dbName) {
+		String date_format = "yyyy-MM-dd HH:mm:ss";
+		Calendar cal = Calendar.getInstance();
+		SimpleDateFormat sdf = new SimpleDateFormat(date_format);
+		String time = sdf.format(cal.getTime());
+		Connection connection = connectDb(dbName);
+		
+		try {
+			Statement statement = connection.createStatement();
+			statement.setQueryTimeout(60); // set timeout to 30 sec.
+
+			statement.execute("UPDATE " + DB_MESSAGE_TABLE + " SET status="
+					+ b.getStatus() + " where id=" + b.getId() + ";");
+			
+		} catch (SQLException e) {
+			// if the error message is "out of memory",
+			// it probably means no database file is found
+			e.printStackTrace();
+		}
+	}
+
 	
 	/** 
 	 * Reads the file line by line into the arraylist. 
@@ -279,45 +328,17 @@ public class SmsReader {
 		
 	}
 	 
-	/**
-	 * updateMessage method update the status and modified time for given
-	 * Beneficiary object in database
-	 * 
-	 * @param b
-	 *            is Beneficiary object *
-	 */
-	public void updateMessage(Beneficiary b) {
-		String date_format = "yyyy-MM-dd HH:mm:ss";
-		Calendar cal = Calendar.getInstance();
-		SimpleDateFormat sdf = new SimpleDateFormat(date_format);
-		String time = sdf.format(cal.getTime());
-		try {
-			Class.forName("org.sqlite.JDBC");
-			Connection connection = null;
-			connection = DriverManager.getConnection("jdbc:sqlite:"
-					+ System.getProperty("user.dir").toString()
-					+ "/db/haiti.db");
-			Statement statement = connection.createStatement();
-			statement.setQueryTimeout(60); // set timeout to 30 sec.
-			// statement.executeQuery("select message_text from " +
-			// DB_MESSAGE_TABLE) +
-			// "WHERE id="+Integer.toString(beneficiary.getId());
-			statement.execute("UPDATE " + DB_MESSAGE_TABLE + " SET status="
-					+ b.getStatus() + " where id=" + b.getId() + ";");
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		} catch (SQLException e) {
-			// if the error message is "out of memory",
-			// it probably means no database file is found
-			e.printStackTrace();
-		}
-	}
    
+	/**
+	 * This method need to be completely test this class.
+	 * @param args
+	 * @throws Exception
+	 */
     public static void main (String args[]) throws Exception {
     	SmsReader reader = null;
     	if (args.length < 1) {
     		reader = new SmsReader();
-            reader.readMsgsFromDb("jdbc:sqlite:sample.db");
+            reader.readUnprocessedMsgsFromDb("jdbc:sqlite:sample.db");
             String[] arr = reader.getMessagesAsArray();
             for (int i = 0; i < arr.length; i ++) {
             	System.out.println(arr[i]);
