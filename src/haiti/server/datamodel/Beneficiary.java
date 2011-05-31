@@ -30,24 +30,25 @@ import java.util.ResourceBundle;
 
 public class Beneficiary {
 	
-	public enum Sex {MALE, FEMALE};
-	public enum InfantCategory {MALNOURISHED, PREVENTION};
-	public enum MotherCategory {EXPECTING, NURSING};
+	public enum Sex {MALE, FEMALE, UNKNOWN};
+	public enum InfantCategory {MALNOURISHED, PREVENTION, UNKNOWN};
+	public enum MotherCategory {EXPECTING, NURSING, UNKNOWN};
 	public enum Abbreviated {TRUE, FALSE};
-	public enum Status {NEW, PENDING, PROCESSED};
+	public enum Status {NEW, PENDING, PROCESSED, UNKNOWN};
 
-	private String firstName;
-	private String lastName;
-	private String address;
-	private String commune;
-	private String communeSection;
-	private int age;
-	private Sex sex; 
-	private int numberInHome;
-	private InfantCategory infantCategory;
-	private MotherCategory motherCategory;
-	private int id;
-	private int status;
+	private String firstName = "";
+	private String lastName = "";
+	private String address = "";
+	private String commune = "";
+	private String communeSection = "";
+	private int age = -1;
+	private Sex sex = Sex.UNKNOWN; 
+	private int numberInHome = -1;
+	private InfantCategory infantCategory = InfantCategory.UNKNOWN;
+	private MotherCategory motherCategory = MotherCategory.UNKNOWN;
+	private int id = -1;
+	private Status status = Status.UNKNOWN;
+	//private int status ;
 
 
 	/**
@@ -74,6 +75,9 @@ public class Beneficiary {
 		
 	}
 
+	public String getRandomDossierNumber(){
+		return "" + (int)(Math.random() * 1000000);
+	}
 	public Beneficiary(String firstName, String lastName, 
 			String commune, String communeSection,
 			int age,
@@ -108,7 +112,7 @@ public class Beneficiary {
 			if (longAttr.equals(HaitiKeys.LONG_ID))
 				id = Integer.parseInt(attrval[1]);
 			else if (longAttr.equals(HaitiKeys.LONG_STATUS))
-				status = Integer.parseInt(attrval[1]);
+				status = Status.valueOf(attrval[1]);
 			else if (longAttr.equals(HaitiKeys.LONG_FIRST))
 				firstName=attrval[1];
 			else if (longAttr.equals(HaitiKeys.LONG_LAST))
@@ -129,10 +133,10 @@ public class Beneficiary {
 				age=Integer.parseInt(attrval[1]);
 			else if (longAttr.equals(HaitiKeys.LONG_NUMBER_IN_HOME))
 				numberInHome=Integer.parseInt(attrval[1]);
-			else if (longAttr.equals("id"))
-				id = Integer.parseInt(attrval[1]);
-			else if (longAttr.equals("status"))
-				status = Integer.parseInt(attrval[1]);
+//			else if (longAttr.equals("id"))
+//				id = Integer.parseInt(attrval[1]);
+//			else if (longAttr.equals("status"))
+//				status = Integer.parseInt(attrval[1]);
 		}
 	}
 	
@@ -215,11 +219,11 @@ public class Beneficiary {
 		this.motherCategory = motherCategory;
 	}
 	
-	public int getStatus() {
+	public Status getStatus() {
 		return status;
 	}
 
-	public void setStatus(int status) {
+	public void setStatus(Status status) {
 		this.status = status;
 	}
 

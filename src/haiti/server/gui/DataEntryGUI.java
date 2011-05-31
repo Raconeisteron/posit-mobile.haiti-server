@@ -260,8 +260,10 @@ public class DataEntryGUI extends JFrame implements WindowListener, ListSelectio
 		// TODO Auto-generated method stub
 		System.out.println(mBeneficiary.toString());
 		TbsManager tbs = new TbsManager();
-		if (tbs.postNewBeneficiary(mBeneficiary)) {
-			mBeneficiary.setStatus(SmsReader.DB_STATUS_PROCESSED); // sets the status of the current Beneficiary item to processed
+		String result = tbs.postNewBeneficiary(mBeneficiary);
+		
+		if (result.equals(TbsManager.RESULT_OK)) {
+			mBeneficiary.setStatus(Beneficiary.Status.PROCESSED); // sets the status of the current Beneficiary item to processed
 			mReader.updateMessage(mBeneficiary, this.mMessagesFileOrDbName);
 			int index = this.mMessageList.getSelectedIndex();
 			String msg = mReader.getMessageById(mBeneficiary.getId(), this.mMessagesFileOrDbName);
@@ -275,7 +277,7 @@ public class DataEntryGUI extends JFrame implements WindowListener, ListSelectio
 				System.out.println("ERROR in Posting message to TBS Db");
 			}
 		} else {
-			System.out.println("ERROR: Error status returned from TBS");
+			System.out.println("ERROR: " + result);
 		}
 	}
 
@@ -287,7 +289,7 @@ public class DataEntryGUI extends JFrame implements WindowListener, ListSelectio
 	public void forwardMessageToDbMgr() {
 		// TODO Auto-generated method stub
 		System.out.println(mBeneficiary.toString());
-		mBeneficiary.setStatus(SmsReader.DB_STATUS_PENDING); // sets the status of the current Beneficiary item to processed
+		mBeneficiary.setStatus(Beneficiary.Status.PENDING); // sets the status of the current Beneficiary item to processed
 		mReader.updateMessage(mBeneficiary, this.mMessagesFileOrDbName);
 		int index = this.mMessageList.getSelectedIndex();
 		String msg = mReader.getMessageById(mBeneficiary.getId(), this.mMessagesFileOrDbName);
