@@ -253,29 +253,37 @@ public class DataEntryGUI extends JFrame implements WindowListener, ListSelectio
 	public void windowOpened(WindowEvent e) {}
 
 	/**
-	 * Revised the messages status to "Processed" and updates the Db and
+	 * Revises the message's status to "Processed" and updates the SMS Db and
 	 * displays the revised status in the GUI's List.
 	 */
 	public void postMessageToTBS() {
 		// TODO Auto-generated method stub
 		System.out.println(mBeneficiary.toString());
-		mBeneficiary.setStatus(SmsReader.DB_STATUS_PROCESSED); // sets the status of the current Beneficiary item to processed
-		mReader.updateMessage(mBeneficiary, this.mMessagesFileOrDbName);
-		int index = this.mMessageList.getSelectedIndex();
-		String msg = mReader.getMessageById(mBeneficiary.getId(), this.mMessagesFileOrDbName);
-		System.out.println(msg);
-		if (!msg.contains("NOT FOUND")) {
-			this.mListModel.set(index,msg);
-			this.mMessageList.setSelectedIndex(index++);
-			this.mMessageList.repaint();
-			System.out.println("Posted message to TBS Db");
+		TbsManager tbs = new TbsManager();
+		if (tbs.postNewBeneficiary(mBeneficiary)) {
+			mBeneficiary.setStatus(SmsReader.DB_STATUS_PROCESSED); // sets the status of the current Beneficiary item to processed
+			mReader.updateMessage(mBeneficiary, this.mMessagesFileOrDbName);
+			int index = this.mMessageList.getSelectedIndex();
+			String msg = mReader.getMessageById(mBeneficiary.getId(), this.mMessagesFileOrDbName);
+			System.out.println(msg);
+			if (!msg.contains("NOT FOUND")) {
+				this.mListModel.set(index,msg);
+				this.mMessageList.setSelectedIndex(index++);
+				this.mMessageList.repaint();
+				System.out.println("Posted message to TBS Db");
+			} else {
+				System.out.println("ERROR in Posting message to TBS Db");
+			}
 		} else {
-			System.out.println("ERROR in Posting message to TBS Db");
+			System.out.println("ERROR: Error status returned from TBS");
 		}
 	}
 
 
-
+	/**
+	 * Revises the message's status to "Pending", updates the SMS Db and
+	 * displays the revised status in the GUI list.
+	 */
 	public void forwardMessageToDbMgr() {
 		// TODO Auto-generated method stub
 		System.out.println(mBeneficiary.toString());
