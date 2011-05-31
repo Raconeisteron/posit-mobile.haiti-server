@@ -13,9 +13,8 @@ public class TbsManager {
 	 * @return
 	 */
 	public boolean postNewBeneficiary(Beneficiary beneficiary) {
-		// TODO: Write the necessary queries and return true
-		//  if insert was successful
-		return false;
+		// TODO: Write the necessary queries and return the result.
+		return true;
 	}
 
 }
