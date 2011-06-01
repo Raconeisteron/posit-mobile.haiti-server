@@ -97,8 +97,6 @@ public class DataEntryForm extends JPanel implements ActionListener {
 		radioAgriYes, 
 		radioAgriNo;
 
-
-
 	private JComboBox 
 		communeBox, 
 		communeSectionBox;
@@ -130,7 +128,7 @@ public class DataEntryForm extends JPanel implements ActionListener {
 		setUpDataEntryPanel();
 	}
 	
-	
+
 	/**
 	 * Fills in the Data Entry Form.
 	 * @param beneficiary 

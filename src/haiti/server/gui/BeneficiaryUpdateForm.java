@@ -48,9 +48,9 @@ public class BeneficiaryUpdateForm extends JPanel implements ActionListener {
 	public static final String BUTTON_SAVE="Save";
 	public static final String BUTTON_DB_MGR = "DbMgr";
 		
-	public static final String BORDER_DATA_ENTRY = "DataEntryForm";
-	public static final String BORDER_GEN_INFO = "GeneralInfo";
-	public static final String BORDER_MCHN_INFO = "MCHNInfo";
+	public static final String BORDER_BENEFICIARY_UPDATE = "BeneficiaryUpdateForm";
+	public static final String BORDER_BENEFICIARY_INFO = "BeneficiaryInfo";
+	public static final String BORDER_UPDATE_INFO = "UpdateInfo";
 	public static final String BORDER_CONTROLS = "Controls";
 
 	private DataEntryGUI mGui;
@@ -62,67 +62,53 @@ public class BeneficiaryUpdateForm extends JPanel implements ActionListener {
 		welcomePanel, 
 		buttonPanel, 
 		formPanel, 
-		geninfoPanel, 
-		mchnPanel;
+		benifPanel, 
+		updatePanel;
 	private JTextField 
+		dossierJText,
 		firstNameJText, 
 		lastNameJText, 
-		addressJText, 
-		ageJText, 
-		peopleInHouseJText,
-		healthCenterJText, 
-		dpJText, 
-		guardianChildJText, 
-		guardianWomanJText, 
-		husbandJText, 
-		fatherJText, 
-		agriPersonJText; 
-	private ButtonGroup 
-		sexGroup, 
-		infantGroup, 
-		agriGroup, 
-		motherGroup, 
-		motherVisitGroup;
+		dobJText,
+		monthsJText,
+		transferredWhyJText,
+		modificationsWhyJText,
+		suspendWhyJText;
+
+	private ButtonGroup  
+		infantGroup,
+		presentGroup,
+		transferredGroup,
+		modificationsGroup,
+		suspendGroup;
+
 	private JRadioButton 
-		radioMale, 
-		radioFemale,
 		radioInfantMal,
 		radioInfantPrev,
 		radioMotherExp,
 		radioMotherNurs,
-		radioMotherLeaderYes, 
-		radioMotherLeaderNo, 
-		radioVisitYes, 
-		radioVisitNo, 
-		radioAgriYes, 
-		radioAgriNo;
+		radioPresentYes,
+		radioPresentNo,
+		radioTransferredYes,
+		radioTransferredNo,
+		radioModificationsYes,
+		radioModificationsNo,
+		radioSuspendYes,
+		radioSuspendNo;
 
-
-
-	private JComboBox 
-		communeBox, 
-		communeSectionBox;
 	private JLabel 
+		dossierLabel,
 		firstNameLabel,
 		lastNameLabel,
-		communeLabel,
-		communeSectionLabel,
-		addressLabel,
-		ageLabel,
-		sexLabel,
+		dobLabel,
+		monthsLabel,
 		beneficiaryLabel,
-		nInHouseLabel,
-		healthCenterLabel,
-		distributionLabel,
-		childLabel,
-		womanLabel,
-		husbandLabel,
-		fatherLabel,
-		leaderLabel,
-		visitLabel,
-		agr1Label,
-		agr2Label,
-		giveNameLabel;
+		presentLabel,
+		transferredLabel,
+		modificationsLabel,
+		suspendLabel,
+		transferredWhyLabel,
+		modificationsWhyLabel,
+		suspendWhyLabel;
 
 
 	public BeneficiaryUpdateForm(DataEntryGUI gui) {
@@ -139,15 +125,6 @@ public class BeneficiaryUpdateForm extends JPanel implements ActionListener {
 		this.firstNameJText.setText(beneficiary.getFirstName());
 		this.lastNameJText.setText(beneficiary.getLastName());
 		
-		addItemsToComboBox(communeBox, reader.getCommune());
-		this.communeBox.setSelectedItem(beneficiary.getCommune());
-		addItemsToComboBox(communeSectionBox, reader.getCommuneSection(beneficiary.getCommune()));
-	//	this.communeBox.setText(beneficiary.getCommune());
-	//	this.communeSectionBox.setText(beneficiary.getCommuneSection());
-		this.addressJText.setText(beneficiary.getAddress());
-		this.ageJText.setText(Integer.toString(beneficiary.getAge()));
-		this.peopleInHouseJText.setText(Integer.toString(beneficiary.getNumberInHome()));
-		
 		if (beneficiary.getMotherCategory().equals(Beneficiary.MotherCategory.EXPECTING)) 
 			this.radioMotherExp.setSelected(true);
 		else 
@@ -158,11 +135,7 @@ public class BeneficiaryUpdateForm extends JPanel implements ActionListener {
 		else 
 			this.radioInfantPrev.setSelected(true);
 		
-		if (beneficiary.getSex().equals(Beneficiary.Sex.MALE)) {
-			this.radioMale.setSelected(true);
-		} else {
-			this.radioFemale.setSelected(true);
-		}
+
 	}
 	
 	/**
@@ -184,39 +157,41 @@ public class BeneficiaryUpdateForm extends JPanel implements ActionListener {
 		super.paintComponent(g);
 
 		toDbButton.setText(LocaleManager.resources.getString(BUTTON_SAVE));
-		this.setBorder(BorderFactory.createTitledBorder(LocaleManager.resources.getString(BORDER_DATA_ENTRY)));
+		this.setBorder(BorderFactory.createTitledBorder(LocaleManager.resources.getString(BORDER_BENEFICIARY_UPDATE)));
 		buttonPanel.setBorder(BorderFactory.createTitledBorder(LocaleManager.resources.getString(BORDER_CONTROLS)));
-		geninfoPanel.setBorder(BorderFactory.createTitledBorder(LocaleManager.resources.getString(BORDER_GEN_INFO)));
+		benifPanel.setBorder(BorderFactory.createTitledBorder(LocaleManager.resources.getString(BORDER_BENEFICIARY_INFO)));
+		
+		dossierLabel.setText(LocaleManager.resources.getString(HaitiKeys.FORM_DOSSIER));
 		firstNameLabel.setText(LocaleManager.resources.getString(HaitiKeys.FORM_FIRST_NAME));
 		lastNameLabel.setText(LocaleManager.resources.getString(HaitiKeys.FORM_LAST_NAME));
-		communeLabel.setText(LocaleManager.resources.getString(HaitiKeys.FORM_COMMUNE));
-		communeSectionLabel.setText(LocaleManager.resources.getString(HaitiKeys.FORM_SECTION));
-		addressLabel.setText(LocaleManager.resources.getString(HaitiKeys.FORM_ADDRESS));
-		ageLabel.setText(LocaleManager.resources.getString(HaitiKeys.FORM_AGE));
-		sexLabel.setText(LocaleManager.resources.getString(HaitiKeys.FORM_SEX));
-		radioMale.setText(LocaleManager.resources.getString(HaitiKeys.FORM_MALE));
-		radioFemale.setText(LocaleManager.resources.getString(HaitiKeys.FORM_FEMALE));
-
+		dobLabel.setText(LocaleManager.resources.getString(HaitiKeys.FORM_DOB));
 		beneficiaryLabel.setText(LocaleManager.resources.getString(HaitiKeys.FORM_BENEFICIARY));
 		radioInfantMal.setText(LocaleManager.resources.getString(HaitiKeys.LONG_INFANT_MAL));
 		radioInfantPrev.setText(LocaleManager.resources.getString(HaitiKeys.LONG_INFANT_PREVENTION));
 		radioMotherExp.setText(LocaleManager.resources.getString(HaitiKeys.LONG_MOTHER_EXPECTING));
 		radioMotherNurs.setText(LocaleManager.resources.getString(HaitiKeys.LONG_MOTHER_NURSING));
-		nInHouseLabel.setText(LocaleManager.resources.getString(HaitiKeys.LONG_NUMBER_IN_HOME));
+		monthsLabel.setText(LocaleManager.resources.getString(HaitiKeys.FORM_MONTHS));
+	
+		updatePanel.setBorder(BorderFactory.createTitledBorder(LocaleManager.resources.getString(BORDER_UPDATE_INFO)));
+		presentLabel.setText(LocaleManager.resources.getString(HaitiKeys.FORM_PRESENT));
+		radioPresentYes.setText(LocaleManager.resources.getString(HaitiKeys.BUTTON_YES));
+		radioPresentNo.setText(LocaleManager.resources.getString(HaitiKeys.BUTTON_NO));
 		
-		mchnPanel.setBorder(BorderFactory.createTitledBorder(LocaleManager.resources.getString(BORDER_MCHN_INFO)));
-		healthCenterLabel.setText(LocaleManager.resources.getString(HaitiKeys.FORM_HEALTH_CENTER));
-		distributionLabel.setText(LocaleManager.resources.getString(HaitiKeys.FORM_DISTRIBUTION_POST));
-		childLabel.setText(LocaleManager.resources.getString(HaitiKeys.FORM_NAME_CHILD));
-		womanLabel.setText(LocaleManager.resources.getString(HaitiKeys.FORM_NAME_WOMAN));
-		husbandLabel.setText(LocaleManager.resources.getString(HaitiKeys.FORM_FATHER));
-		fatherLabel.setText(LocaleManager.resources.getString(HaitiKeys.FORM_HUSBAND));
+		transferredLabel.setText(LocaleManager.resources.getString(HaitiKeys.FORM_TRANSFERRED));
+		radioTransferredYes.setText(LocaleManager.resources.getString(HaitiKeys.BUTTON_YES));
+		radioTransferredNo.setText(LocaleManager.resources.getString(HaitiKeys.BUTTON_NO));
+		transferredWhyLabel.setText(LocaleManager.resources.getString(HaitiKeys.FORM_WHY));
+		
+		modificationsLabel.setText(LocaleManager.resources.getString(HaitiKeys.FORM_MODIFICATIONS));
+		radioModificationsYes.setText(LocaleManager.resources.getString(HaitiKeys.BUTTON_YES));
+		radioModificationsNo.setText(LocaleManager.resources.getString(HaitiKeys.BUTTON_NO));
+		modificationsWhyLabel.setText(LocaleManager.resources.getString(HaitiKeys.FORM_WHY));
+		
+		suspendLabel.setText(LocaleManager.resources.getString(HaitiKeys.FORM_SUSPEND));
+		radioSuspendYes.setText(LocaleManager.resources.getString(HaitiKeys.BUTTON_YES));
+		radioSuspendNo.setText(LocaleManager.resources.getString(HaitiKeys.BUTTON_NO));
+		suspendWhyLabel.setText(LocaleManager.resources.getString(HaitiKeys.FORM_WHY));
 
-		leaderLabel.setText(LocaleManager.resources.getString(HaitiKeys.FORM_MOTHER_LEADER));
-		visitLabel.setText(LocaleManager.resources.getString(HaitiKeys.FORM_VISIT_MOTHER));
-		agr1Label.setText(LocaleManager.resources.getString(HaitiKeys.FORM_AGRICULTURE_1));
-		agr2Label.setText(LocaleManager.resources.getString(HaitiKeys.FORM_AGRICULTURE_2));
-		giveNameLabel.setText(LocaleManager.resources.getString(HaitiKeys.FORM_GIVE_NAME));
 	}
 	
 	/**
@@ -226,97 +201,65 @@ public class BeneficiaryUpdateForm extends JPanel implements ActionListener {
 	private JPanel setUpDataEntryPanel() {
 		//Form panel
 		//formPanel = new JPanel();
-		this.setBorder(BorderFactory.createTitledBorder(LocaleManager.resources.getString(BORDER_DATA_ENTRY)));
+		this.setBorder(BorderFactory.createTitledBorder(LocaleManager.resources.getString(BORDER_BENEFICIARY_UPDATE)));
 		this.setLayout(new BorderLayout());
 		this.setBackground(Color.WHITE); 
 		
-		//General Information Panel
-		geninfoPanel = new JPanel();
-		geninfoPanel.setBorder(BorderFactory.createTitledBorder(LocaleManager.resources.getString(BORDER_GEN_INFO)));
-		geninfoPanel.setLayout(new GridBagLayout());
-		geninfoPanel.setBackground(Color.WHITE); 
+		//Beneficiary Information Panel
+		benifPanel = new JPanel();
+		benifPanel.setBorder(BorderFactory.createTitledBorder(LocaleManager.resources.getString(BORDER_BENEFICIARY_INFO)));
+		benifPanel.setLayout(new GridBagLayout());
+		benifPanel.setBackground(Color.WHITE); 
 		GridBagConstraints c = new GridBagConstraints();
-
+		dossierJText = new JTextField();
+		dossierJText.setColumns(15);
 		firstNameJText = new JTextField();
 		firstNameJText.setColumns(15);
 		lastNameJText = new JTextField();
 		lastNameJText.setColumns(15);
-		communeBox = new JComboBox();
-		communeSectionBox = new JComboBox();
-		addressJText = new JTextField();
-		addressJText.setColumns(15);
-		ageJText = new JTextField();
-		ageJText.setColumns(15);
+		dobJText = new JTextField();
+		dobJText.setColumns(15);
+		monthsJText = new JTextField();
+		monthsJText.setColumns(15);
 		c.gridy=0;
 		c.gridx=0;
 		c.insets=new Insets(10,5,4,2);
 		c.anchor = GridBagConstraints.NORTHEAST;
-		firstNameLabel = new JLabel(LocaleManager.resources.getString(HaitiKeys.FORM_FIRST_NAME));
-		geninfoPanel.add(firstNameLabel,c);
+		
+		dossierLabel = new JLabel(LocaleManager.resources.getString(HaitiKeys.FORM_DOSSIER));
+		benifPanel.add(dossierLabel,c);
 		c.gridy=0;
 		c.gridx=1;
-		geninfoPanel.add(firstNameJText,c);
-		c.gridy=0;
+		benifPanel.add(dossierJText,c);
+		
+		firstNameLabel = new JLabel(LocaleManager.resources.getString(HaitiKeys.FORM_FIRST_NAME));
+		c.gridy=1;
+		c.gridx=0;
+		benifPanel.add(firstNameLabel,c);
+		c.gridy=1;
+		c.gridx=1;
+		benifPanel.add(firstNameJText,c);
+		c.gridy=1;
 		c.gridx=2;
 		lastNameLabel = new JLabel(LocaleManager.resources.getString(HaitiKeys.FORM_LAST_NAME));
-		geninfoPanel.add(lastNameLabel,c);
-		c.gridy=0;
-		c.gridx=3;
-		geninfoPanel.add(lastNameJText,c);
-		c.gridy=1;
-		c.gridx=0;
-		communeLabel = new JLabel(LocaleManager.resources.getString(HaitiKeys.FORM_COMMUNE));
-		geninfoPanel.add(communeLabel,c);
-		c.gridy=1;
-		c.gridx=1;
-		geninfoPanel.add(communeBox,c);
-		c.gridy=1;
-		c.gridx=2;
-		communeSectionLabel = new JLabel(LocaleManager.resources.getString(HaitiKeys.FORM_SECTION));
-		geninfoPanel.add(communeSectionLabel,c);
+		benifPanel.add(lastNameLabel,c);
 		c.gridy=1;
 		c.gridx=3;
-		geninfoPanel.add(communeSectionBox,c);
-		c.gridy=2;
-		c.gridx=0;
-		addressLabel = new JLabel(LocaleManager.resources.getString(HaitiKeys.FORM_ADDRESS));
-		geninfoPanel.add(addressLabel,c);
-		c.gridy=2;
-		c.gridx=1;
-		geninfoPanel.add(addressJText,c);
-		c.gridy=2;
-		c.gridx=2;
-		ageLabel = new JLabel(LocaleManager.resources.getString(HaitiKeys.FORM_AGE));
-		geninfoPanel.add(ageLabel,c);
-		c.gridy=2;
-		c.gridx=3;
-		geninfoPanel.add(ageJText,c);
-		
-		
-		//Sex radio buttons
-		c.gridy=3;
-		c.gridx=0;
-		sexLabel = new JLabel();
-		sexLabel.setText(LocaleManager.resources.getString(HaitiKeys.FORM_SEX));
-		geninfoPanel.add(sexLabel,c);
-		sexGroup = new ButtonGroup();
-		radioMale = new JRadioButton(LocaleManager.resources.getString(HaitiKeys.FORM_MALE),false);
-		radioFemale = new JRadioButton(LocaleManager.resources.getString(HaitiKeys.FORM_FEMALE),false);
-		sexGroup.add(radioMale);
-		sexGroup.add(radioFemale);
-		c.gridy=3;
-		c.gridx=1;
-		geninfoPanel.add(radioMale,c);
-		c.gridy=3;
-		c.gridx=2;
-		geninfoPanel.add(radioFemale,c);
+		benifPanel.add(lastNameJText,c);
 
+		dobLabel = new JLabel(LocaleManager.resources.getString(HaitiKeys.FORM_DOB));
+		c.gridy = 2;
+		c.gridx=0;
+		benifPanel.add(dobLabel,c);
+		c.gridy = 2;
+		c.gridx=1;
+		benifPanel.add(dobJText,c);
 		
 		//Beneficiary radio buttons
-		c.gridy = 4;
+		c.gridy = 3;
 		c.gridx=0;
 		beneficiaryLabel = new JLabel(LocaleManager.resources.getString(HaitiKeys.FORM_BENEFICIARY));
-		geninfoPanel.add(beneficiaryLabel,c);
+		benifPanel.add(beneficiaryLabel,c);
 		infantGroup = new ButtonGroup();
 		radioInfantMal = new JRadioButton(LocaleManager.resources.getString(HaitiKeys.LONG_INFANT_MAL),false);
 		radioInfantPrev = new JRadioButton(LocaleManager.resources.getString(HaitiKeys.LONG_INFANT_PREVENTION),false);
@@ -326,158 +269,134 @@ public class BeneficiaryUpdateForm extends JPanel implements ActionListener {
 		infantGroup.add(radioInfantPrev);
 		infantGroup.add(radioMotherExp);
 		infantGroup.add(radioMotherNurs);
-		c.gridy=4;
+		c.gridy=3;
 		c.gridx=1;
-		geninfoPanel.add(radioInfantMal,c);
-		c.gridy=4;
+		benifPanel.add(radioInfantMal,c);
+		c.gridy=3;
 		c.gridx=2;
-		geninfoPanel.add(radioInfantPrev,c);
-		c.gridy=4;
+		benifPanel.add(radioInfantPrev,c);
+		c.gridy=3;
 		c.gridx=3;
-		geninfoPanel.add(radioMotherExp,c);
-		c.gridy=4;
+		benifPanel.add(radioMotherExp,c);
+		c.gridy=3;
 		c.gridx=4;
-		geninfoPanel.add(radioMotherNurs,c);
+		benifPanel.add(radioMotherNurs,c);
 	
-		//People in house
-		c.gridy = 5;
-		c.gridx=0;
-		peopleInHouseJText = new JTextField();
-		peopleInHouseJText.setColumns(3);
-		nInHouseLabel = new JLabel(LocaleManager.resources.getString(HaitiKeys.LONG_NUMBER_IN_HOME));
-		geninfoPanel.add(nInHouseLabel,c);
-		c.gridy=5;
-		c.gridx=1;
-		geninfoPanel.add(peopleInHouseJText,c);
-		
-		//MCHN panel
-		mchnPanel = new JPanel();
-		mchnPanel.setBorder(BorderFactory.createTitledBorder(LocaleManager.resources.getString(BORDER_MCHN_INFO)));
-		mchnPanel.setLayout(new GridBagLayout());
-		mchnPanel.setBackground(Color.WHITE); 
-
-		c.gridy=0;
-		c.gridx=0;
-		healthCenterJText = new JTextField();
-		healthCenterJText.setColumns(15);
-		dpJText = new JTextField();
-		dpJText.setColumns(15);
-		guardianChildJText = new JTextField();
-		guardianChildJText.setColumns(15);
-		guardianWomanJText = new JTextField();
-		guardianWomanJText.setColumns(15);
-		husbandJText = new JTextField();
-		husbandJText.setColumns(15);
-		fatherJText = new JTextField();
-		fatherJText.setColumns(15);
-		
-		healthCenterLabel = new JLabel(LocaleManager.resources.getString(HaitiKeys.FORM_HEALTH_CENTER));
-		mchnPanel.add(healthCenterLabel,c);
-		c.gridy=0;
-		c.gridx=1;
-		mchnPanel.add(healthCenterJText,c);
-		c.gridy=0;
-		c.gridx=2;
-		distributionLabel = new JLabel(LocaleManager.resources.getString(HaitiKeys.FORM_DISTRIBUTION_POST));
-		mchnPanel.add(distributionLabel,c);
-		c.gridy=0;
-		c.gridx=3;
-		mchnPanel.add(dpJText,c);
-		c.gridy=1;
-		c.gridx=0;
-		childLabel = new JLabel(LocaleManager.resources.getString(HaitiKeys.FORM_NAME_CHILD));
-		mchnPanel.add(childLabel,c);
-		c.gridy=1;
-		c.gridx=1;
-		mchnPanel.add(guardianChildJText,c);
-		c.gridy=1;
-		c.gridx=2;
-		womanLabel = new JLabel(LocaleManager.resources.getString(HaitiKeys.FORM_NAME_WOMAN));
-		mchnPanel.add(womanLabel,c);
-		c.gridy=1;
-		c.gridx=3;
-		mchnPanel.add(guardianWomanJText,c);
-		c.gridy=2;
-		c.gridx=0;
-		husbandLabel = new JLabel(LocaleManager.resources.getString(HaitiKeys.FORM_FATHER));
-		mchnPanel.add(husbandLabel,c);
-		c.gridy=2;
-		c.gridx=1;
-		mchnPanel.add(husbandJText,c);
-		c.gridy=2;
-		c.gridx=2;
-		fatherLabel = new JLabel(LocaleManager.resources.getString(HaitiKeys.FORM_HUSBAND));
-		mchnPanel.add(fatherLabel,c);
-		c.gridy=2;
-		c.gridx=3;
-		mchnPanel.add(fatherJText,c);
-
-		motherGroup = new ButtonGroup();
-		radioMotherLeaderYes = new JRadioButton(LocaleManager.resources.getString(HaitiKeys.BUTTON_YES),false);
-		radioMotherLeaderNo = new JRadioButton(LocaleManager.resources.getString(HaitiKeys.BUTTON_NO),false);
-		motherGroup.add(radioMotherLeaderYes);
-		motherGroup.add(radioMotherLeaderNo);   
-		c.gridy=3;
-		c.gridx=0;
-		leaderLabel = new JLabel(LocaleManager.resources.getString(HaitiKeys.FORM_MOTHER_LEADER));
-		mchnPanel.add(leaderLabel,c);
-		c.gridy=3;
-		c.gridx=1;
-		mchnPanel.add(radioMotherLeaderYes,c);
-		c.gridy=3;
-		c.gridx=2;
-		mchnPanel.add(radioMotherLeaderNo,c);
-
-		motherVisitGroup = new ButtonGroup();
-		radioVisitYes = new JRadioButton(LocaleManager.resources.getString(HaitiKeys.BUTTON_YES),false);
-		radioVisitNo = new JRadioButton(LocaleManager.resources.getString(HaitiKeys.BUTTON_NO),false);
-		motherVisitGroup.add(radioVisitYes);
-		motherVisitGroup.add(radioVisitNo);
+		monthsLabel = new JLabel(LocaleManager.resources.getString(HaitiKeys.FORM_MONTHS));
 		c.gridy=4;
 		c.gridx=0;
-		visitLabel = new JLabel(LocaleManager.resources.getString(HaitiKeys.FORM_VISIT_MOTHER));
-		mchnPanel.add(visitLabel,c);
+		benifPanel.add(monthsLabel,c);
 		c.gridy=4;
 		c.gridx=1;
-		mchnPanel.add(radioVisitYes,c);
-		c.gridy=4;
-		c.gridx=2;
-		mchnPanel.add(radioVisitNo,c);
-
-		agriGroup = new ButtonGroup();
-		radioAgriYes = new JRadioButton(LocaleManager.resources.getString(HaitiKeys.BUTTON_YES),false);
-		radioAgriNo = new JRadioButton(LocaleManager.resources.getString(HaitiKeys.BUTTON_NO),false);
-		agriGroup.add(radioAgriYes);
-		agriGroup.add(radioAgriNo);
-		c.gridy=5;
-		c.gridx=0;
-		c.insets=new Insets(10,5,0,2);
-		agr1Label = new JLabel(LocaleManager.resources.getString(HaitiKeys.FORM_AGRICULTURE_1));
-		mchnPanel.add(agr1Label,c);
-		c.insets=new Insets(0,5,4,2);
-		c.gridy=6;
-		c.gridx=0;
-		agr2Label = new JLabel(LocaleManager.resources.getString(HaitiKeys.FORM_AGRICULTURE_2));
-		mchnPanel.add(agr2Label,c);
-		c.insets=new Insets(0,5,4,2);
-		c.gridy=6;
-		c.gridx=1;
-		mchnPanel.add(radioAgriYes,c);
-		c.gridy=6;
-		c.gridx=2;
-		mchnPanel.add(radioAgriNo,c);
+		benifPanel.add(monthsJText,c);
 		
-		agriPersonJText = new JTextField();
-		agriPersonJText.setColumns(15);
-		c.gridy=7;
+		
+		//Update panel
+		updatePanel = new JPanel();
+		updatePanel.setBorder(BorderFactory.createTitledBorder(LocaleManager.resources.getString(BORDER_UPDATE_INFO)));
+		updatePanel.setLayout(new GridBagLayout());
+		updatePanel.setBackground(Color.WHITE); 
+
+		c.gridy=0;
 		c.gridx=0;
+		presentLabel = new JLabel(LocaleManager.resources.getString(HaitiKeys.FORM_PRESENT));
+		updatePanel.add(presentLabel,c);
+		
+		presentGroup = new ButtonGroup();
+		radioPresentYes = new JRadioButton(LocaleManager.resources.getString(HaitiKeys.BUTTON_YES),false);
+		radioPresentNo = new JRadioButton(LocaleManager.resources.getString(HaitiKeys.BUTTON_NO),false);
+		presentGroup.add(radioPresentYes);
+		presentGroup.add(radioPresentNo);	
+		c.gridy=0;
+		c.gridx=1;
+		updatePanel.add(radioPresentYes,c);
+		c.gridy=0;
+		c.gridx=2;
+		updatePanel.add(radioPresentNo,c);
+		
+		c.gridy=1;
+		c.gridx=0;
+		transferredLabel = new JLabel(LocaleManager.resources.getString(HaitiKeys.FORM_TRANSFERRED));
+		updatePanel.add(transferredLabel,c);
+		transferredGroup = new ButtonGroup();
+		radioTransferredYes = new JRadioButton(LocaleManager.resources.getString(HaitiKeys.BUTTON_YES),false);
+		radioTransferredNo = new JRadioButton(LocaleManager.resources.getString(HaitiKeys.BUTTON_NO),false);
+		transferredGroup.add(radioTransferredYes);
+		transferredGroup.add(radioTransferredNo);	
+		c.gridy=1;
+		c.gridx=1;
+		updatePanel.add(radioTransferredYes,c);
+		c.gridy=1;
+		c.gridx=2;
+		updatePanel.add(radioTransferredNo,c);
+		c.gridy=1;
+		c.gridx=3;
+		c.insets=new Insets(10,25,4,2);
+		transferredWhyLabel = new JLabel(LocaleManager.resources.getString(HaitiKeys.FORM_WHY));
+		updatePanel.add(transferredWhyLabel,c);
+		c.gridy=1;
+		c.gridx=4;
 		c.insets=new Insets(10,5,4,2);
-		giveNameLabel = new JLabel(LocaleManager.resources.getString(HaitiKeys.FORM_GIVE_NAME));
-		mchnPanel.add(giveNameLabel,c);
-		c.gridy=7;
-		c.gridx=1;
-		mchnPanel.add(agriPersonJText,c);
+		transferredWhyJText = new JTextField();
+		transferredWhyJText.setColumns(15);
+		updatePanel.add(transferredWhyJText,c);
 
+		c.gridy=2;
+		c.gridx=0;
+		modificationsLabel = new JLabel(LocaleManager.resources.getString(HaitiKeys.FORM_MODIFICATIONS));
+		updatePanel.add(modificationsLabel,c);
+		modificationsGroup = new ButtonGroup();
+		radioModificationsYes = new JRadioButton(LocaleManager.resources.getString(HaitiKeys.BUTTON_YES),false);
+		radioModificationsNo = new JRadioButton(LocaleManager.resources.getString(HaitiKeys.BUTTON_NO),false);
+		modificationsGroup.add(radioModificationsYes);
+		modificationsGroup.add(radioModificationsNo);	
+		c.gridy=2;
+		c.gridx=1;
+		updatePanel.add(radioModificationsYes,c);
+		c.gridy=2;
+		c.gridx=2;
+		updatePanel.add(radioModificationsNo,c);
+		c.gridy=2;
+		c.gridx=3;
+		c.insets=new Insets(10,25,4,2);
+		modificationsWhyLabel = new JLabel(LocaleManager.resources.getString(HaitiKeys.FORM_WHY));
+		updatePanel.add(modificationsWhyLabel,c);
+		c.gridy=2;
+		c.gridx=4;
+		c.insets=new Insets(10,5,4,2);
+		modificationsWhyJText = new JTextField();
+		modificationsWhyJText.setColumns(15);
+		updatePanel.add(modificationsWhyJText,c);
+		
+		c.gridy=3;
+		c.gridx=0;
+		suspendLabel = new JLabel(LocaleManager.resources.getString(HaitiKeys.FORM_SUSPEND));
+		updatePanel.add(suspendLabel,c);
+		suspendGroup = new ButtonGroup();
+		radioSuspendYes = new JRadioButton(LocaleManager.resources.getString(HaitiKeys.BUTTON_YES),false);
+		radioSuspendNo = new JRadioButton(LocaleManager.resources.getString(HaitiKeys.BUTTON_NO),false);
+		suspendGroup.add(radioSuspendYes);
+		suspendGroup.add(radioSuspendNo);	
+		c.gridy=3;
+		c.gridx=1;
+		updatePanel.add(radioSuspendYes,c);
+		c.gridy=3;
+		c.gridx=2;
+		updatePanel.add(radioSuspendNo,c);
+		c.gridy=3;
+		c.gridx=3;
+		c.insets=new Insets(10,25,4,2);
+		suspendWhyLabel = new JLabel(LocaleManager.resources.getString(HaitiKeys.FORM_WHY));
+		updatePanel.add(suspendWhyLabel,c);
+		c.gridy=3;
+		c.gridx=4;
+		c.insets=new Insets(10,5,4,2);
+		suspendWhyJText = new JTextField();
+		suspendWhyJText.setColumns(15);
+		updatePanel.add(suspendWhyJText,c);
+			
+		
+		//Control panel
 		buttonPanel = new JPanel();
 		buttonPanel.setBorder(BorderFactory.createTitledBorder(LocaleManager.resources.getString(BORDER_CONTROLS)));
 		buttonPanel.setBackground(Color.WHITE);
@@ -486,8 +405,8 @@ public class BeneficiaryUpdateForm extends JPanel implements ActionListener {
 		toDbMgrButton = new JButton(LocaleManager.resources.getString(BUTTON_DB_MGR));
 		toDbButton.addActionListener(this);
 		toDbMgrButton.addActionListener(this);
-		this.add(geninfoPanel,"North");
-		this.add(mchnPanel,"Center");
+		this.add(benifPanel,"North");
+		this.add(updatePanel,"Center");
 		this.add(buttonPanel,"South");
 		buttonPanel.add(toDbButton);
 		buttonPanel.add(toDbMgrButton);
