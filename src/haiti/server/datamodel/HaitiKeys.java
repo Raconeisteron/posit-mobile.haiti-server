@@ -54,7 +54,17 @@ public class HaitiKeys {
 	public static final String BUTTON_INFANT_PREVENTION="Enfant en prevention";
 	public static final String BUTTON_MOTHER_EXPECTING="Femme enceinte";
 	public static final String BUTTON_MOTHER_NURSING="Femme allaitante";
-
+	
+	
+	public static final String FORM_DOSSIER="Dossier";
+	public static final String FORM_DOB= "DateOfBirth";
+	public static final String FORM_MONTHS= "MonthsRemaining";
+	public static final String FORM_PRESENT= "Present";  // "Was the beneficiary present?";
+	public static final String FORM_TRANSFERRED= "Transferred";  // "Should this beneficiary be transferred to a new category?";
+	public static final String FORM_MODIFICATIONS= "Modifications";  // "Are modifications needed in the beneficiary's record?";
+	public static final String FORM_SUSPEND= "Suspend";  // "Should the beneficiary be suspended?";
+	public static final String FORM_WHY= "Why"; //"If so, why?:";
+	
 	
 	public static final String ABBREV_ATTRIBUTE = "attr";
 	public static final String ABBREV_FIRST = "fn";
@@ -131,4 +141,6 @@ public class HaitiKeys {
 	public static final String LONG_CONTROLS = "controls";
 	public static final String LONG_STATUS = "status";
 	public static final String LONG_ID = "id";
-}
+	
+	public static final String LONG_DOSSIER = "dossier";
+	}
