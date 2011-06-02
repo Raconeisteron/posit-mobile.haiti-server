@@ -21,9 +21,10 @@
 package haiti.server.gui;
 
 import haiti.server.datamodel.Beneficiary;
-import haiti.server.datamodel.HaitiKeys;
-import haiti.server.datamodel.LocaleManager;
 import haiti.server.datamodel.Beneficiary.Abbreviated;
+import haiti.server.datamodel.LocaleManager;
+import haiti.server.gui.SmsReader.MessageStatus;
+import haiti.server.gui.SmsReader.MessageType;
 
 import java.io.*;
 import java.util.Hashtable;
@@ -115,7 +116,9 @@ public class DataEntryGUI extends JFrame implements WindowListener, ListSelectio
 		requestFocus();
 	} 
 	
-	
+	public void messageRepaint() {
+		this.mMessageList.repaint();
+	}
 
 	/**
 	 *  Manages the detailed operations of setting up the user interface.
@@ -178,6 +181,8 @@ public class DataEntryGUI extends JFrame implements WindowListener, ListSelectio
 	 * TODO: Error checking that this is a messages file.
 	 * @throws IOException 
 	 */
+	
+	//deprecated
 	public void readMessagesIntoGUI (DbSource dbSource) {
 		
 		JFileChooser fd = new JFileChooser();
@@ -197,6 +202,41 @@ public class DataEntryGUI extends JFrame implements WindowListener, ListSelectio
 			mReader.readUnprocessedMsgsFromDb(mMessagesFileOrDbName);
 		}
 		mMessagesArray = mReader.getMessagesAsArray();
+		
+		mFormPanel = new DataEntryForm(this);
+		mBeneficiary = new Beneficiary(mMessagesArray[0], Abbreviated.TRUE);
+		mFormPanel.fillInForm(mBeneficiary,mReader);
+		
+//		mUpdatePanel = new BeneficiaryUpdateForm(this);
+//		mBeneficiary = new Beneficiary(mMessagesArray[0], Abbreviated.TRUE);
+//		mUpdatePanel.fillInForm(mBeneficiary,mReader);
+			
+		this.getContentPane().remove(mWelcomePanel);
+//		this.getContentPane().add(setUpSplitPane(mMessagesArray, mUpdatePanel));
+		this.getContentPane().add(setUpSplitPane(mMessagesArray, mFormPanel));
+		this.pack();
+		DataEntryGUI.centerWindow(this);
+		this.repaint();
+	}
+
+	public void readMessagesIntoGUI (DbSource dbSource, MessageStatus status, MessageType type) {
+		
+		JFileChooser fd = new JFileChooser();
+		int result = fd.showOpenDialog(this);
+		if (result == JFileChooser.CANCEL_OPTION) 
+			return;
+		mMessagesFileOrDbName = fd.getSelectedFile().toString();
+		
+		System.out.println("messagefilename = " + mMessagesFileOrDbName);
+
+		mReader = new SmsReader(mMessagesFileOrDbName);
+
+		if (dbSource == DbSource.FILE) {
+			mReader.readFile();
+		} else {
+			mReader = new SmsReader();
+			mMessagesArray = mReader.getMessageByStatusAndType(mMessagesFileOrDbName, status, type);
+		}
 		
 		mFormPanel = new DataEntryForm(this);
 		mBeneficiary = new Beneficiary(mMessagesArray[0], Abbreviated.TRUE);
