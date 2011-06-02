@@ -46,8 +46,8 @@ import java.util.Scanner;
  */
 public class SmsReader {
 	
-	public enum MessageStatus {NEW, PENDING, PROCESSED, UNPROCESSED};
-	public enum MessageType {NEW, UPDATE};
+	public enum MessageStatus {NEW, PENDING, PROCESSED, DECLINED, ARCHIVED, ALL};
+	public enum MessageType {REGISTRATION, UPDATE, ALL};
 	public static final String TAG = "SmsReader";
 	public static final String DB_MESSAGE_TABLE = "message_log";
 	public static final String DB_MESSAGE_ID = "id";
@@ -121,8 +121,8 @@ public class SmsReader {
 			rs.next();
 			while(!rs.isAfterLast()) {
 				String msg = DB_MESSAGE_ID + "=" +  rs.getString(DB_MESSAGE_ID) + SEPARATOR 
-					+ DB_MESSAGE_STATUS + "=" + rs.getString(DB_MESSAGE_STATUS) + SEPARATOR
 					+ DB_MESSAGE_SENDER+"=" +rs.getString(DB_MESSAGE_SENDER) + SEPARATOR
+					+ DB_MESSAGE_STATUS + "=" + rs.getString(DB_MESSAGE_STATUS) + SEPARATOR
 					+ DB_MESSAGE_TYPE + "=" +rs.getString(DB_MESSAGE_TYPE) + SEPARATOR
 					+ DB_MESSAGE_CREATED_ON + ":" + rs.getString(DB_MESSAGE_CREATED_ON) + SEPARATOR
 					+ DB_MESSAGE_MODIFIED_ON  + ":" + rs.getString(DB_MESSAGE_MODIFIED_ON) + SEPARATOR
@@ -142,65 +142,35 @@ public class SmsReader {
 	}
 	
 	/**
-	 * Reads messages from an Sqlite database with the given status.
+	 * Reads messages from an Sqlite database with the given status and type.
 	 * @param dbName is the database path and name
 	 * @param status is the enum type containing status of the message
-	 * return the array containing messages with the given status
-	 */
-	public String[] getMessageByStatus(String dbName, MessageStatus status) {
-		int statusInt = status.ordinal();
-		ArrayList<String> statusmsg = new ArrayList<String>();
-		String arr[] = new String[0];
-		try {
-			Connection connection = connectDb(dbName);			
-			Statement statement = connection.createStatement();
-			statement.setQueryTimeout(30);  // set timeout to 30 sec.			
-			ResultSet rs = statement.executeQuery("select * from " + DB_MESSAGE_TABLE+" where "+ DB_MESSAGE_STATUS +"="+statusInt);
-			rs.next();
-			while(!rs.isAfterLast()) {
-				String msg = DB_MESSAGE_ID + "=" +  rs.getString(DB_MESSAGE_ID) + SEPARATOR 
-				+ DB_MESSAGE_STATUS + "=" + rs.getString(DB_MESSAGE_STATUS) + SEPARATOR
-				+ DB_MESSAGE_SENDER+"=" +rs.getString(DB_MESSAGE_SENDER) + SEPARATOR
-				+ DB_MESSAGE_TYPE + "=" +rs.getString(DB_MESSAGE_TYPE) + SEPARATOR
-				+ DB_MESSAGE_CREATED_ON + ":" + rs.getString(DB_MESSAGE_CREATED_ON) + SEPARATOR
-				+ DB_MESSAGE_MODIFIED_ON  + ":" + rs.getString(DB_MESSAGE_MODIFIED_ON) + SEPARATOR
-				+ rs.getString(DB_MESSAGE_COLUMN);
-				statusmsg.add(msg);
-				rs.next();
-			}
-			arr = new String[statusmsg.size()];
-			for (int k = 0; k < arr.length; k++) 
-				arr[k] = statusmsg.get(k);
-			if(connection != null)
-				connection.close();
-		} catch(SQLException e) {
-			// if the error message is "out of memory", 
-			// it probably means no database file is found
-			e.printStackTrace();
-		}
-		return arr;
-	}
-	
-	/**
-	 * Reads messages from an Sqlite database with the given message type.
-	 * @param dbName is the database path and name
 	 * @param type is the enum type containing type of the message
-	 * return the array containing messages with the given type
+	 * return the array containing messages with the given status and type
 	 */
-	public String[] getMessageByType(String dbName, MessageType type) {
+	public String[] getMessageByStatusAndType(String dbName, MessageStatus status, MessageType type) {
+		int statusInt = status.ordinal();
 		int typeInt = type.ordinal();
 		ArrayList<String> statusmsg = new ArrayList<String>();
 		String arr[] = new String[0];
 		try {
 			Connection connection = connectDb(dbName);			
 			Statement statement = connection.createStatement();
-			statement.setQueryTimeout(30);  // set timeout to 30 sec.			
-			ResultSet rs = statement.executeQuery("select * from " + DB_MESSAGE_TABLE+" where "+ DB_MESSAGE_TYPE +"="+ typeInt);
+			statement.setQueryTimeout(30);  // set timeout to 30 sec.
+			ResultSet rs = null;
+			if (statusInt == 5 && typeInt == 2)
+				rs = statement.executeQuery("select * from " + DB_MESSAGE_TABLE +";");			
+			else if (statusInt == 5 && typeInt != 2)
+				rs = statement.executeQuery("select * from " + DB_MESSAGE_TABLE+" where "+ DB_MESSAGE_TYPE +"="+typeInt+";");
+			else if (statusInt != 5 && typeInt == 2)
+				rs = statement.executeQuery("select * from " + DB_MESSAGE_TABLE+" where "+ DB_MESSAGE_STATUS +"="+statusInt+";");
+			else
+				rs = statement.executeQuery("select * from " + DB_MESSAGE_TABLE+" where "+ DB_MESSAGE_TYPE +"="+typeInt +" and " + DB_MESSAGE_STATUS+"="+statusInt+";");
 			rs.next();
 			while(!rs.isAfterLast()) {
 				String msg = DB_MESSAGE_ID + "=" +  rs.getString(DB_MESSAGE_ID) + SEPARATOR 
-				+ DB_MESSAGE_STATUS + "=" + rs.getString(DB_MESSAGE_STATUS) + SEPARATOR
 				+ DB_MESSAGE_SENDER+"=" +rs.getString(DB_MESSAGE_SENDER) + SEPARATOR
+				+ DB_MESSAGE_STATUS + "=" + rs.getString(DB_MESSAGE_STATUS) + SEPARATOR
 				+ DB_MESSAGE_TYPE + "=" +rs.getString(DB_MESSAGE_TYPE) + SEPARATOR
 				+ DB_MESSAGE_CREATED_ON + ":" + rs.getString(DB_MESSAGE_CREATED_ON) + SEPARATOR
 				+ DB_MESSAGE_MODIFIED_ON  + ":" + rs.getString(DB_MESSAGE_MODIFIED_ON) + SEPARATOR
@@ -220,7 +190,6 @@ public class SmsReader {
 		}
 		return arr;
 	}
-	
 	
 	/**
 	 * Reads an SMS message from the Db for the given id.
@@ -242,8 +211,8 @@ public class SmsReader {
 				return id + " NOT FOUND";
 
 			msg = DB_MESSAGE_ID + "=" +  rs.getString(DB_MESSAGE_ID) + SEPARATOR 
-			+ DB_MESSAGE_STATUS + "=" + rs.getString(DB_MESSAGE_STATUS) + SEPARATOR
 			+ DB_MESSAGE_SENDER+"=" +rs.getString(DB_MESSAGE_SENDER) + SEPARATOR
+			+ DB_MESSAGE_STATUS + "=" + rs.getString(DB_MESSAGE_STATUS) + SEPARATOR
 			+ DB_MESSAGE_TYPE + "=" +rs.getString(DB_MESSAGE_TYPE) + SEPARATOR
 			+ DB_MESSAGE_CREATED_ON + ":" + rs.getString(DB_MESSAGE_CREATED_ON) + SEPARATOR
 			+ DB_MESSAGE_MODIFIED_ON  + ":" + rs.getString(DB_MESSAGE_MODIFIED_ON) + SEPARATOR
@@ -262,12 +231,11 @@ public class SmsReader {
 	 * @param b is the Beneficiary object
 	 */
 	public void updateMessage(Beneficiary b, String dbName) {
-		String date_format = "yyyy-MM-dd HH:mm:ss";
-		Calendar cal = Calendar.getInstance();
-		SimpleDateFormat sdf = new SimpleDateFormat(date_format);
-		String time = sdf.format(cal.getTime());
+//		String date_format = "yyyy-MM-dd HH:mm:ss";
+//		Calendar cal = Calendar.getInstance();
+//		SimpleDateFormat sdf = new SimpleDateFormat(date_format);
+//		String time = sdf.format(cal.getTime());
 		Connection connection = connectDb(dbName);
-		
 		try {
 			Statement statement = connection.createStatement();
 			statement.setQueryTimeout(60); // set timeout to 30 sec.
@@ -431,18 +399,23 @@ public class SmsReader {
 	 * @throws Exception
 	 */
     public static void main (String args[]) throws Exception {
-    	if (args.length < 1) {
-    		System.out.println("Usage: java SmsReader <filename>");
-    		System.out.println("This assumes your database is in the /db directory of " +
-    				System.getProperty("user.dir").toString());
-    		return;
-    	}
+//    	if (args.length < 1) {
+//    		System.out.println("Usage: java SmsReader <filename>");
+//    		System.out.println("This assumes your database is in the /db directory of " +
+//    				System.getProperty("user.dir").toString());
+//    		return;
+//    	}
+    	/*
     	SmsReader reader = new SmsReader();
 		String filepath = System.getProperty("user.dir").toString()+ "/db/" + args[0];
 		System.out.println("Path = " + filepath);
 		for (MessageStatus st : MessageStatus.values()) {
     		System.out.println(st);
     		String[] test = reader.getMessageByStatus(filepath, st);
+    	for (MessageStatus st : MessageStatus.values()) {
+    		for (MessageType tp : MessageType.values()) {
+    		System.out.println(st+ " and " +tp);
+    		String[] test = reader.getMessageByStatusAndType(System.getProperty("user.dir").toString()+ "/db/haiti.db", st, tp);
     		//String[] arr = reader.convertToArray(test);
     		for (int i = 0; i < test.length; i ++) {
             	System.out.println(test[i]);
@@ -455,9 +428,49 @@ public class SmsReader {
     		//String[] arr = reader.convertToArray(test);
     		for (int i = 0; i < test.length; i ++) {
             	System.out.println(test[i]);
-            }
+    	}*/
+    	if(args.length < 3 || args.length > 3){
+    		System.out.println("usage: You need to give at least 3 arguments");
+    		System.out.println("java SmsReader filepath message_status message_type");
+    		return;
     	}
-    	    	
+    	String filepath = System.getProperty("user.dir").toString()+ "/db/"+args[0];
+    	System.out.println(filepath);
+    	System.out.println(args[1]+ " and " + args[2]);
+    	MessageStatus stat = null;
+    	MessageType typ = null;
+    	SmsReader reader = new SmsReader();
+    	for (MessageStatus st : MessageStatus.values()) {
+    		if(st.toString().equals(args[1])){
+    			stat = st;
+    			break;
+    		}
+    	}
+    	for (MessageType t : MessageType.values()) {
+    		if(t.toString().equals(args[2])){
+    			typ = t;
+    			break;
+    		}
+    	}
+
+    	if (stat == null){
+    		System.out.println(args[1] + " does not exit!");
+    		return;
+    	}
+    	if (typ == null){
+    		System.out.println(args[2] + " does not exit!");
+    		return;
+    	}
+    	String[] arr = reader.getMessageByStatusAndType(filepath, stat, typ);
+
+    	if (arr.length == 0){
+    		System.out.println("MATCH NOT FOUND!");
+    		return;
+    	}
+    	for (int i = 0; i < arr.length; i ++) {
+    		System.out.println(arr[i]);
+    	}
+
     	/*if (args.length < 1) {
     		reader = new SmsReader();
             reader.readUnprocessedMsgsFromDb("jdbc:sqlite:sample.db");

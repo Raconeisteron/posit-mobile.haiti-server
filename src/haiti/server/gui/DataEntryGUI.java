@@ -81,7 +81,7 @@ public class DataEntryGUI extends JFrame implements WindowListener, ListSelectio
     private String mMessagesFileOrDbName;
     private Beneficiary mBeneficiary;
     
-  //  private DataEntryForm mFormPanel;
+    private DataEntryForm mFormPanel;
     private BeneficiaryUpdateForm mUpdatePanel;
     
 	//public TextArea display;// = new TextArea();
@@ -188,16 +188,17 @@ public class DataEntryGUI extends JFrame implements WindowListener, ListSelectio
 		}
 		mMessagesArray = mReader.getMessagesAsArray();
 		
-	//	mFormPanel = new DataEntryForm(this);
-	//	mBeneficiary = new Beneficiary(mMessagesArray[0], Abbreviated.TRUE);
-	//	mFormPanel.fillInForm(mBeneficiary,mReader);
-		
-		mUpdatePanel = new BeneficiaryUpdateForm(this);
+		mFormPanel = new DataEntryForm(this);
 		mBeneficiary = new Beneficiary(mMessagesArray[0], Abbreviated.TRUE);
-		mUpdatePanel.fillInForm(mBeneficiary,mReader);
+		mFormPanel.fillInForm(mBeneficiary,mReader);
+		
+//		mUpdatePanel = new BeneficiaryUpdateForm(this);
+//		mBeneficiary = new Beneficiary(mMessagesArray[0], Abbreviated.TRUE);
+//		mUpdatePanel.fillInForm(mBeneficiary,mReader);
 			
 		this.getContentPane().remove(mWelcomePanel);
-		this.getContentPane().add(setUpSplitPane(mMessagesArray, mUpdatePanel));
+//		this.getContentPane().add(setUpSplitPane(mMessagesArray, mUpdatePanel));
+		this.getContentPane().add(setUpSplitPane(mMessagesArray, mFormPanel));
 		this.pack();
 		DataEntryGUI.centerWindow(this);
 		this.repaint();
