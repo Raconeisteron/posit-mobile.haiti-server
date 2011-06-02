@@ -46,6 +46,7 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
+import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTextField;
@@ -106,8 +107,8 @@ public class DataEntryGUI extends JFrame implements WindowListener, ListSelectio
 		this.setMinimumSize(new Dimension(500,300));
 
 		setResizable(true);
-		setSize(WIDTH, HEIGHT);
-		setSize(900,700);
+		//setSize(WIDTH, HEIGHT);
+		//setSize(900,700);
 		pack();
 		setVisible(true);
 		DataEntryGUI.centerWindow(this);
@@ -150,8 +151,16 @@ public class DataEntryGUI extends JFrame implements WindowListener, ListSelectio
         mMessageList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         mMessageList.setSelectedIndex(0);
         mMessageList.addListSelectionListener(this);
-        this.mListScrollPane = new JScrollPane(mMessageList);
+        this.mListScrollPane = new JScrollPane(mMessageList,
+        		JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
+        		JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+//        this.mListScrollPane.setHorizontalScrollBar(new JScrollBar());
+//        this.mListScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+
+        this.mListScrollPane.setMaximumSize(new Dimension(700,300));
+        this.mListScrollPane.setSize(700,300);
         this.mFormScrollPane = new JScrollPane(formPanel);
+        this.mFormScrollPane.setSize(700,300);
 		
         // See http://download.oracle.com/javase/tutorial/uiswing/components/splitpane.html
 		//Create a split pane with the two scroll panes in it.
@@ -159,6 +168,7 @@ public class DataEntryGUI extends JFrame implements WindowListener, ListSelectio
 		                           mListScrollPane, mFormScrollPane);
 		mSplitPane.setOneTouchExpandable(true);
 		mSplitPane.setDividerLocation(100);
+        this.mSplitPane.setSize(700,300);
 		return mSplitPane;
 	}
 	
