@@ -276,7 +276,8 @@ public class DataEntryGUI extends JFrame implements WindowListener, ListSelectio
 		JList list = (JList) e.getSource();
 		System.out.println("Clicked on  list item " + list.getSelectedValue());
 		mBeneficiary = new Beneficiary(list.getSelectedValue().toString(), Abbreviated.TRUE);
-		mUpdatePanel.fillInForm(mBeneficiary, mReader);	
+		//mUpdatePanel.fillInForm(mBeneficiary, mReader);
+		mFormPanel.fillInForm(mBeneficiary, mReader);
 	}
 	
 	/**
