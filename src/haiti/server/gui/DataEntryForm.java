@@ -33,6 +33,8 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
@@ -43,11 +45,13 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 
-public class DataEntryForm extends JPanel implements ActionListener {
+public class DataEntryForm extends JPanel implements ActionListener, KeyListener {
 
 	public static final String BUTTON_SAVE="Save";
 	public static final String BUTTON_DB_MGR = "DbMgr";
-		
+	public static final String LABEL_DOSSIER = "Dossier";
+
+	
 	public static final String BORDER_DATA_ENTRY = "DataEntryForm";
 	public static final String BORDER_GEN_INFO = "GeneralInfo";
 	public static final String BORDER_MCHN_INFO = "MCHNInfo";
@@ -76,7 +80,9 @@ public class DataEntryForm extends JPanel implements ActionListener {
 		guardianWomanJText, 
 		husbandJText, 
 		fatherJText, 
-		agriPersonJText; 
+		agriPersonJText,
+		dossierJText;
+	
 	private ButtonGroup 
 		sexGroup, 
 		infantGroup, 
@@ -120,7 +126,8 @@ public class DataEntryForm extends JPanel implements ActionListener {
 		visitLabel,
 		agr1Label,
 		agr2Label,
-		giveNameLabel;
+		giveNameLabel,
+		dossierLabel;
 
 
 	public DataEntryForm(DataEntryGUI gui) {
@@ -215,6 +222,7 @@ public class DataEntryForm extends JPanel implements ActionListener {
 		agr1Label.setText(LocaleManager.resources.getString(HaitiKeys.FORM_AGRICULTURE_1));
 		agr2Label.setText(LocaleManager.resources.getString(HaitiKeys.FORM_AGRICULTURE_2));
 		giveNameLabel.setText(LocaleManager.resources.getString(HaitiKeys.FORM_GIVE_NAME));
+		dossierLabel.setText(LocaleManager.resources.getString(LABEL_DOSSIER));
 	}
 	
 	/**
@@ -479,14 +487,25 @@ public class DataEntryForm extends JPanel implements ActionListener {
 		buttonPanel = new JPanel();
 		buttonPanel.setBorder(BorderFactory.createTitledBorder(LocaleManager.resources.getString(BORDER_CONTROLS)));
 		buttonPanel.setBackground(Color.WHITE);
+		
+		dossierLabel = new JLabel();
+		dossierLabel.setText(LocaleManager.resources.getString(LABEL_DOSSIER));
+		dossierJText = new JTextField(10);
+		dossierJText.addKeyListener(this);
+		
 		toDbButton = new JButton(LocaleManager.resources.getString(BUTTON_SAVE));
-		this.add(toDbButton);
+		toDbButton.setEnabled(false);
 		toDbMgrButton = new JButton(LocaleManager.resources.getString(BUTTON_DB_MGR));
+		toDbMgrButton.setEnabled(false);
 		toDbButton.addActionListener(this);
 		toDbMgrButton.addActionListener(this);
+		
 		this.add(geninfoPanel,"North");
 		this.add(mchnPanel,"Center");
 		this.add(buttonPanel,"South");
+		
+		buttonPanel.add(dossierLabel);
+		buttonPanel.add(dossierJText);
 		buttonPanel.add(toDbButton);
 		buttonPanel.add(toDbMgrButton);
 
@@ -498,18 +517,31 @@ public class DataEntryForm extends JPanel implements ActionListener {
 		    JButton button = (JButton)e.getSource();
 		    if (button.equals(toDbButton)) {
 		    	mGui.postMessageToTBS();
-//				mBeneficiary.setStatus(DB_STATUS_PROCESSED); // sets the status of the current Beneficiary item to processed
-//		    	mReader.updateMessage(mBeneficiary);
 		    }
 		    else if (button.equals(toDbMgrButton)) {
 		    	mGui.forwardMessageToDbMgr();
-//				mBeneficiary.setStatus(DB_STATUS_PENDING); // sets the status of the Beneficiary item to pending
-//		    	mReader.updateMessage(mBeneficiary);
-//		    	//TODO: This should write the message to a file for Db Manager
-//		    	System.out.println("Sent to the database manager");
 		    }
 		}
 		
+	}
+
+
+	public void keyPressed(KeyEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	public void keyReleased(KeyEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	public void keyTyped(KeyEvent arg0) {
+		// TODO Auto-generated method stub
+		toDbButton.setEnabled(true);
+		toDbMgrButton.setEnabled(true);
 	}
 
 	
