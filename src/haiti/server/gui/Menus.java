@@ -35,6 +35,10 @@ import java.io.File;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import java.applet.Applet;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+import javax.swing.KeyStroke;
 
 /**
  *  Implements a menu system for DataEntryGUI.
@@ -165,45 +169,67 @@ public class Menus implements ActionListener {
 			String selectedMenuItemText = e.getActionCommand();
 			System.out.println("Doing Menu Item:  " + selectedMenuItemText);
 
-			if (selectedMenuItemText.equals(LocaleManager.resources.getString(MENU_ABOUT))) 
+			if (selectedMenuItemText.equals(LocaleManager.resources.getString(MENU_ABOUT))) {
 				gui.showAboutBox();
+				createMenuBar();
+				gui.setMenuBar(Menus.getMenuBar());	
+				gui.repaint();				
+			}
 			else if (selectedMenuItemText.equals(LocaleManager.resources.getString(MENU_OPEN_FILE)))  {
 				gui.readMessagesIntoGUI(DbSource.FILE);
 			} 
 			else if (selectedMenuItemText.equals(LocaleManager.resources.getString(MENU_BENEFICIARY_FILTER_NEW))) {
 				gui.readMessagesIntoGUI(DbSource.DATA_BASE, SmsReader.MessageStatus.NEW, SmsReader.MessageType.REGISTRATION);
+				createMenuBar();
+				gui.setMenuBar(Menus.getMenuBar());	
 				gui.repaint();
 			} 
 			else if (selectedMenuItemText.equals(LocaleManager.resources.getString(MENU_BENEFICIARY_FILTER_PENDING))) {
 				gui.readMessagesIntoGUI(DbSource.DATA_BASE, SmsReader.MessageStatus.PENDING, SmsReader.MessageType.REGISTRATION);
+				createMenuBar();
+				gui.setMenuBar(Menus.getMenuBar());	
 				gui.repaint();
 			} 
 			else if (selectedMenuItemText.equals(LocaleManager.resources.getString(MENU_BENEFICIARY_FILTER_PROCESSED))) {
 				gui.readMessagesIntoGUI(DbSource.DATA_BASE, SmsReader.MessageStatus.PROCESSED, SmsReader.MessageType.REGISTRATION);
+				createMenuBar();
+				gui.setMenuBar(Menus.getMenuBar());	
 				gui.repaint();
 			} 
 			else if (selectedMenuItemText.equals(LocaleManager.resources.getString(MENU_BENEFICIARY_FILTER_ARCHIVED))) {
 				gui.readMessagesIntoGUI(DbSource.DATA_BASE, SmsReader.MessageStatus.ARCHIVED, SmsReader.MessageType.REGISTRATION);
+				createMenuBar();
+				gui.setMenuBar(Menus.getMenuBar());	
 				gui.repaint();
 			}  
 			else if (selectedMenuItemText.equals(LocaleManager.resources.getString(MENU_UPDATE_FILTER_NEW))) {
 				gui.readMessagesIntoGUI(DbSource.DATA_BASE, SmsReader.MessageStatus.NEW, SmsReader.MessageType.UPDATE);
+				createMenuBar();
+				gui.setMenuBar(Menus.getMenuBar());	
 				gui.repaint();
 			} 
 			else if (selectedMenuItemText.equals(LocaleManager.resources.getString(MENU_UPDATE_FILTER_PENDING))) {
 				gui.readMessagesIntoGUI(DbSource.DATA_BASE, SmsReader.MessageStatus.PENDING, SmsReader.MessageType.UPDATE);
+				createMenuBar();
+				gui.setMenuBar(Menus.getMenuBar());	
 				gui.repaint();
 			} 
 			else if (selectedMenuItemText.equals(LocaleManager.resources.getString(MENU_UPDATE_FILTER_PROCESSED))) {
 				gui.readMessagesIntoGUI(DbSource.DATA_BASE, SmsReader.MessageStatus.PROCESSED, SmsReader.MessageType.UPDATE);
+				createMenuBar();
+				gui.setMenuBar(Menus.getMenuBar());	
 				gui.repaint();
 			} 
 			else if (selectedMenuItemText.equals(LocaleManager.resources.getString(MENU_UPDATE_FILTER_ARCHIVED))) {
 				gui.readMessagesIntoGUI(DbSource.DATA_BASE, SmsReader.MessageStatus.ARCHIVED, SmsReader.MessageType.UPDATE);
+				createMenuBar();
+				gui.setMenuBar(Menus.getMenuBar());	
 				gui.repaint();
 			}  
 			else if (selectedMenuItemText.equals(LocaleManager.resources.getString(MENU_ALL))) {
 				gui.readMessagesIntoGUI(DbSource.DATA_BASE, SmsReader.MessageStatus.ALL, SmsReader.MessageType.ALL);
+				createMenuBar();
+				gui.setMenuBar(Menus.getMenuBar());	
 				gui.repaint();
 			}
 			else if (selectedMenuItemText.equals(LocaleManager.resources.getString(MENU_CREATE))) {
