@@ -45,6 +45,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollBar;
@@ -237,35 +238,43 @@ public class DataEntryGUI extends JFrame implements WindowListener, ListSelectio
 			mReader = new SmsReader();
 			mMessagesArray = mReader.getMessageByStatusAndType(mMessagesFileOrDbName, status, type);
 		}
-		
+
 		mFormPanel = new DataEntryForm(this);
-		mBeneficiary = new Beneficiary(mMessagesArray[0], Abbreviated.TRUE);
-		mFormPanel.fillInForm(mBeneficiary,mReader);
 		
-//		mUpdatePanel = new BeneficiaryUpdateForm(this);
-//		mBeneficiary = new Beneficiary(mMessagesArray[0], Abbreviated.TRUE);
-//		mUpdatePanel.fillInForm(mBeneficiary,mReader);
+		if (mMessagesArray.length == 0) {
+			mMessagesArray = new String[1];
+			mMessagesArray[0] = "{Empty}";
+		}
+		else {
+			mBeneficiary = new Beneficiary(mMessagesArray[0], Abbreviated.TRUE);
+			mFormPanel.fillInForm(mBeneficiary,mReader);
 			
+//			mUpdatePanel = new BeneficiaryUpdateForm(this);
+//			mBeneficiary = new Beneficiary(mMessagesArray[0], Abbreviated.TRUE);
+//			mUpdatePanel.fillInForm(mBeneficiary,mReader);
+		}
 		this.getContentPane().remove(mWelcomePanel);
 //		this.getContentPane().add(setUpSplitPane(mMessagesArray, mUpdatePanel));
 		this.getContentPane().add(setUpSplitPane(mMessagesArray, mFormPanel));
 		this.pack();
 		DataEntryGUI.centerWindow(this);
-		this.repaint();
+		this.repaint();			
 	}
+//        this.mSplitPane.setSize(700,300);
 
 	/**
 	 *  Displays the "About DataEntryGUI" blurb.
 	 */
 	void showAboutBox() {   
 		//	    display.append("About DataEntryGUI\n");
-		MessageDialog d = new MessageDialog(this, "About...", 
+		JOptionPane.showMessageDialog(this, 
 				"         DataEntryGUI " + "v0.1" + "\n" +
 				" \n" +
 				"Humanitarian FOSS Project\n" +
 				"Trinity College, Hartford, CT, USA\n" +
 				" \n" +
-		"DataEntryGUI is free software.");
+		"DataEntryGUI is free software.", 
+		"About...", 1);
 	}
 
 	/**
@@ -330,12 +339,16 @@ public class DataEntryGUI extends JFrame implements WindowListener, ListSelectio
 				this.mMessageList.setSelectedIndex(index++);
 				this.mMessageList.repaint();
 				System.out.println("Posted message to TBS Db");
+				JOptionPane.showMessageDialog(this, "Posted message to TBS Db", "Success", -1);
 			} else {
 				System.out.println("ERROR in Posting message to TBS Db");
+				JOptionPane.showMessageDialog(this, "ERROR in Posting message to TBS Db", "ERROR", 0);
 			}
 		} else {
 			System.out.println("ERROR: " + result);
+			JOptionPane.showMessageDialog(this, result, "ERROR", 0);
 		}
+		
 	}
 
 
@@ -355,9 +368,11 @@ public class DataEntryGUI extends JFrame implements WindowListener, ListSelectio
 			this.mListModel.set(index,msg);
 			this.mMessageList.setSelectedIndex(index++);
 			this.mMessageList.repaint();
-			System.out.println("Posted message to TBS Db");
+			System.out.println("Updated message in TBS Db");
+			JOptionPane.showMessageDialog(this, "Updated message status in Db", "Success", -1);
 		} else {
 			System.out.println("ERROR in Forwarding Message to Db Mgr");
+			JOptionPane.showMessageDialog(this, "ERROR in Forwarding message to Db Manager", "ERROR", 0);
 		}
 	}
 
@@ -395,7 +410,7 @@ public class DataEntryGUI extends JFrame implements WindowListener, ListSelectio
 		                                                 isSelected,
 		                                                 hasFocus);
 		    String entry = (String)value;
-		    if (entry.contains("status=2")) {
+		    if (entry.contains("status=" + Beneficiary.Status.PENDING)) {
 		    	label.setBackground(Color.RED);
 		    } else if (entry.contains("status=1")) {
 		    	label.setBackground(Color.YELLOW);

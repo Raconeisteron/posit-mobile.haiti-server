@@ -235,13 +235,14 @@ public class SmsReader {
 //		Calendar cal = Calendar.getInstance();
 //		SimpleDateFormat sdf = new SimpleDateFormat(date_format);
 //		String time = sdf.format(cal.getTime());
+		System.out.println("Upating beneficiary record " + b.getId());
 		Connection connection = connectDb(dbName);
 		try {
 			Statement statement = connection.createStatement();
 			statement.setQueryTimeout(60); // set timeout to 30 sec.
 
 			statement.execute("UPDATE " + DB_MESSAGE_TABLE + " SET "+ DB_MESSAGE_STATUS+"="
-					+ b.getStatus() + " where "+DB_MESSAGE_ID+"=" + b.getId() + ";");
+					+ "'" + b.getStatus() + "'" + " where "+DB_MESSAGE_ID+"=" + b.getId() + ";");
 			
 		} catch (SQLException e) {
 			// if the error message is "out of memory",
