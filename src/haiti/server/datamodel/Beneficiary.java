@@ -71,7 +71,7 @@ public class Beneficiary {
 	 */
 	public Beneficiary (String attributeValueString, Abbreviated abbreviatedAttributes) {
 		System.out.println("Splitting " + attributeValueString);
-		split(attributeValueString, "&", "=", abbreviatedAttributes);
+		split(attributeValueString, ",", "=", abbreviatedAttributes);
 		
 	}
 
@@ -256,7 +256,7 @@ public class Beneficiary {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		Beneficiary ben = new Beneficiary();
+		Beneficiary ben = new Beneficiary("AV=1,i=068MP-FAT,t=0,st=1,fn=Denisana,ln=Balthazar,a=Saint Michel,b=1947/11/31,s=F,c=P,d=24", Abbreviated.TRUE);
 		// System.out.println(ben.toString("&"));
 		// System.out.println(ben.toString());
 		System.out.println(ben.toString());
