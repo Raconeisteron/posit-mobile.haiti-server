@@ -103,7 +103,9 @@ public class HaitiKeys {
 	public static final String ABBREV_CONTROLS = "ctrl";
 	public static final String ABBREV_STATUS = "st";
 	public static final String ABBREV_ID = "id";
-	
+	public static final String ABBREV_AV = "AV";
+	public static final String ABBREV_TYPE = "t";
+
 	public static final String LONG_ATTRIBUTE = "attribute";
 	public static final String LONG_FIRST = "firstName";
 	public static final String LONG_LAST = "lastName";
@@ -141,6 +143,16 @@ public class HaitiKeys {
 	public static final String LONG_CONTROLS = "controls";
 	public static final String LONG_STATUS = "status";
 	public static final String LONG_ID = "id";
+	public static final String LONG_AV = "AV";
+	public static final String LONG_TYPE = "type";
 	
 	public static final String LONG_DOSSIER = "dossier";
+	
+	public static final String OUTER_DELIM = ",";
+	public static final String INNER_DELIM = "=";
+	public static final String URL_OUTER_DELIM = "%2C";
+	public static final String URL_INNER_DELIM = "%3D";
+	public static final String URL_PLUS = "%2B";
+	public static final String PLUS = "+";
+
 	}

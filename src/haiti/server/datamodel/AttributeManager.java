@@ -22,7 +22,9 @@
 
 package haiti.server.datamodel;
 
-import java.util.*;
+import haiti.server.modem.SmsMessage;
+
+import java.util.HashMap;
 
 /**
  * Manages attributes.
@@ -75,6 +77,8 @@ public class AttributeManager {
 		abbreviations.put(HaitiKeys.ABBREV_CONTROLS, HaitiKeys.LONG_CONTROLS);
 		abbreviations.put(HaitiKeys.ABBREV_STATUS,HaitiKeys.LONG_STATUS);
 		abbreviations.put(HaitiKeys.ABBREV_ID,HaitiKeys.LONG_ID);
+		abbreviations.put(HaitiKeys.ABBREV_AV, HaitiKeys.LONG_AV);
+		abbreviations.put(HaitiKeys.ABBREV_TYPE, HaitiKeys.LONG_TYPE);
 	}
 	
 	/**
@@ -85,6 +89,24 @@ public class AttributeManager {
 	 */
 	public String mapToLong(Beneficiary.Abbreviated abbreviatedAttributes, String s){
 		if (abbreviatedAttributes == Beneficiary.Abbreviated.TRUE) {
+			String str = abbreviations.get(s);
+			if (str != null)
+				return str;
+			else 
+				return "";
+		}
+		else
+			return s;
+	}
+	
+	/**
+	 * Maps the short form field names to long form
+	 * @param abbreviatedAttributes TRUE if abbreviated, FALSE if not
+	 * @param s the String to be mapped to long
+	 * @return the long form of the String
+	 */
+	public String mapToLong(SmsMessage.Abbreviated abbreviatedAttributes, String s){
+		if (abbreviatedAttributes == SmsMessage.Abbreviated.TRUE) {
 			String str = abbreviations.get(s);
 			if (str != null)
 				return str;

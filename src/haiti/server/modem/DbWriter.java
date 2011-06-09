@@ -71,22 +71,26 @@ public class DbWriter {
 	 *            is the Beneficiary object
 	 */
 
-	public void insertMessage(String message, String sender) {
+	public void insertMessage(SmsMessage message) {
 
-		Connection connection = connectDb(dbName);
-		try {
-			Statement statement = connection.createStatement();
-			statement.setQueryTimeout(60); // set timeout to 30 sec.
-			String type = "unknown"; // TODO: How to best deal with this?
-			statement.execute("INSERT into '" + DB_MESSAGE_TABLE + "' ('"
-					+ DB_MESSAGE_COLUMN + "', '" + DB_MESSAGE_SENDER + "', '"
-					+ DB_MESSAGE_TYPE + "', '" + DB_MESSAGE_STATUS + "') values ('"
-					+ message + "', '" + sender + "', '" + type + "', '"
-					+ DB_STATUS_NEW + "')"); 
-		} catch (SQLException e) {
-			// if the error message is "out of memory",
-			// it probably means no database file is found
-			e.printStackTrace();
+		if(message.getAVnum() == -1) {
+			System.out.println("Invalid Message");
+		}
+		else {
+			Connection connection = connectDb(dbName);
+			try {
+				Statement statement = connection.createStatement();
+				statement.setQueryTimeout(60); // set timeout to 30 sec.
+				statement.execute("INSERT into '" + DB_MESSAGE_TABLE + "' ('"
+						+ DB_MESSAGE_COLUMN + "', '" + DB_MESSAGE_SENDER + "', '"
+						+ DB_MESSAGE_TYPE + "', '" + DB_MESSAGE_STATUS + "') values ('"
+						+ message.getMessage() + "', '" + message.getSender() + "', '" + message.getType() + "', '"
+						+ message.getStatus() + "')"); 
+			} catch (SQLException e) {
+				// if the error message is "out of memory",
+				// it probably means no database file is found
+				e.printStackTrace();
+			}
 		}
 	}
 	
@@ -94,7 +98,9 @@ public class DbWriter {
 		
 		DbWriter dw = new DbWriter();
 		
-		dw.insertMessage(args[0],args[1]);
+		SmsMessage a= new SmsMessage(args[0], args[1]);
+		
+		dw.insertMessage(a);
 		
 	}
 }
