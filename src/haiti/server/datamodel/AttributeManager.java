@@ -20,15 +20,18 @@
  *
  */
 
-//package org.hfoss.posit.android.plugin.acdivoca;
 package haiti.server.datamodel;
-import java.util.HashMap;
+
 import haiti.server.modem.SmsMessage;
+
+import java.util.HashMap;
+import java.util.Iterator;
 
 //import org.hfoss.posit.android.R;
 //import org.hfoss.posit.android.api.FindPluginManager;
 //
 //import android.app.Activity;
+//import android.util.Log;
 
 /**
  * Manages attributes.
@@ -38,7 +41,6 @@ public class AttributeManager {
 	public static final String TAG = "AttributeManager";
 	
 	private static AttributeManager mInstance = null; 
-//	private Activity mMainActivity = null;
 	private static HashMap<String,String> abbreviations;
 
 	
@@ -88,80 +90,86 @@ public class AttributeManager {
 	public static final String FORM_WHY= "Why"; //"If so, why?:";
 	
 	
-	public static final String ABBREV_AV = "AV";
-	public static final String ABBREV_TYPE = "t";
-	public static final String ABBREV_STATUS = "st";
-	public static final String ABBREV_ID = "i";
 	public static final String ABBREV_ATTRIBUTE = "attr";
-	public static final String ABBREV_FIRST = "fn";
-	public static final String ABBREV_LAST = "ln";
+	public static final String ABBREV_FIRST = "f";  // "fn";
+	public static final String ABBREV_LAST = "l";   //"ln";
+	public static final String ABBREV_COMMUNE = "c";
+	public static final String ABBREV_COMMUNE_SECTION = "cs";
 	public static final String ABBREV_ADDRESS = "ad";
-	public static final String ABBREV_DATE_OF_BIRTH = "dob";
+	public static final String ABBREV_AGE = "a";
 	public static final String ABBREV_SEX = "s";
-	public static final String ABBREV_BENEFICIARY_CATEGORY = "bc";
+	public static final String ABBREV_BENEFICIARY = "b";
 	public static final String ABBREV_NUMBER_IN_HOME = "nih";
 	public static final String ABBREV_HEALTH_CENTER = "hc";
 	public static final String ABBREV_DISTRIBUTION_POST = "dp";
-	public static final String ABBREV_MOTHER_LEADER = "ml";
-	public static final String ABBREV_VISIT_MOTHER = "vm";
-	public static final String ABBREV_AGRICULTURE = "ag";
-	
-	
 	public static final String ABBREV_NAME_CHILD = "nc";
 	public static final String ABBREV_NAME_WOMAN = "nw";
 	public static final String ABBREV_HUSBAND = "h";
 	public static final String ABBREV_FATHER = "f";
+	public static final String ABBREV_MOTHER_LEADER = "ml";
+	public static final String ABBREV_VISIT_MOTHER = "vm";
+	public static final String ABBREV_AGRICULTURE_1 = "a1";
+	public static final String ABBREV_AGRICULTURE_2 = "a2";
 	public static final String ABBREV_GIVE_NAME = "gn";
 	public static final String ABBREV_YES = "y";
 	public static final String ABBREV_NO = "n";
 	public static final String ABBREV_MALE = "m";
 	public static final String ABBREV_FEMALE = "f";
+	public static final String ABBREV_INFANT_CATEGORY = "ic";
 	public static final String ABBREV_INFANT_MAL = "ia";
 	public static final String ABBREV_INFANT_PREVENTION = "ip";
+	public static final String ABBREV_MOTHER_CATEGORY = "mc";
 	public static final String ABBREV_MOTHER_EXPECTING = "me";
 	public static final String ABBREV_MOTHER_NURSING = "mn";
-	public static final String ABBREV_DATA = "da";
+	public static final String ABBREV_DATA = "d";
 	public static final String ABBREV_GENERAL_INFORMATION = "gi";
 	public static final String ABBREV_MCHN_INFORMATION = "mchn";
 	public static final String ABBREV_CONTROLS = "ctrl";
-	public static final String ABBREV_DOSSIER = "d";
+	public static final String ABBREV_STATUS = "st";
+	public static final String ABBREV_ID = "id";
+	public static final String ABBREV_AV = "AV";
+	public static final String ABBREV_TYPE = "t";
 
-	public static final String LONG_AV = "AV";
-	public static final String LONG_TYPE = "type";
-	public static final String LONG_STATUS = "status";
-	public static final String LONG_ID = "id";
 	public static final String LONG_ATTRIBUTE = "attribute";
 	public static final String LONG_FIRST = "firstName";
 	public static final String LONG_LAST = "lastName";
+	public static final String LONG_COMMUNE = "commune";
+	public static final String LONG_COMMUNE_SECTION = "communeSection";
 	public static final String LONG_ADDRESS = "address";
-	public static final String LONG_DATE_OF_BIRTH = "dateOfBirth";
+	public static final String LONG_AGE = "age";
 	public static final String LONG_SEX = "sex";
-	public static final String LONG_BENEFICIARY_CATEGORY = "beneficiaryCategory";
-	public static final String LONG_NUMBER_IN_HOME = "numberInHome";
-	public static final String LONG_HEALTH_CENTER = "healthCenter";
-	public static final String LONG_DISTRIBUTION_POST = "distributionPost";
-	public static final String LONG_MOTHER_LEADER = "motherLeader";
-	public static final String LONG_VISIT_MOTHER = "visitMotherLeader";
-	public static final String LONG_AGRICULTURE = "agriculture";
-	
-	
+	public static final String LONG_BENEFICIARY = "beneficiary";
+	public static final String LONG_NUMBER_IN_HOME = "NumberInHome";
+	public static final String LONG_HEALTH_CENTER = "HealthCenter";
+	public static final String LONG_DISTRIBUTION_POST = "DistributionPost";
 	public static final String LONG_NAME_CHILD = "nameChild";
 	public static final String LONG_NAME_WOMAN = "nameWoman";
 	public static final String LONG_HUSBAND = "husband";
 	public static final String LONG_FATHER = "father";
+	public static final String LONG_MOTHER_LEADER = "motherLeader";
+	public static final String LONG_VISIT_MOTHER = "visitMotherLeader";
+	public static final String LONG_AGRICULTURE_1 = "agriculture1";
+	public static final String LONG_AGRICULTURE_2 = "agriculture2";
 	public static final String LONG_GIVE_NAME = "giveName";
 	public static final String LONG_YES = "yes";
 	public static final String LONG_NO = "no";
 	public static final String LONG_MALE = "male";
 	public static final String LONG_FEMALE = "female";
-	public static final String LONG_INFANT_MAL = "infantMal";
-	public static final String LONG_INFANT_PREVENTION = "infantPrevention";
-	public static final String LONG_MOTHER_EXPECTING = "motherExpecting";
-	public static final String LONG_MOTHER_NURSING = "motherNursing";
+	public static final String LONG_INFANT_CATEGORY = "InfantCategory";
+	public static final String LONG_INFANT_MAL = "InfantMal";
+	public static final String LONG_INFANT_PREVENTION = "InfantPrevention";
+	public static final String LONG_MOTHER_CATEGORY = "MotherCategory";
+	public static final String LONG_MOTHER_EXPECTING = "MotherExpecting";
+	public static final String LONG_MOTHER_NURSING = "MotherNursing";
 	public static final String LONG_DATA = "data";
 	public static final String LONG_GENERAL_INFORMATION = "generalInformation";
 	public static final String LONG_MCHN_INFORMATION = "mchnInformation";
 	public static final String LONG_CONTROLS = "controls";
+	public static final String LONG_STATUS = "status";
+	public static final String LONG_ID = "id";
+	public static final String LONG_AV = "AV";
+	public static final String LONG_TYPE = "type";
+	
 	public static final String LONG_DOSSIER = "dossier";
 	
 	public static final String OUTER_DELIM = ",";
@@ -170,6 +178,29 @@ public class AttributeManager {
 	public static final String URL_INNER_DELIM = "%3D";
 	public static final String URL_PLUS = "%2B";
 	public static final String PLUS = "+";
+	public static final String FORM_BENEFICIARY = null;
+	
+	
+	// Added for mobile app
+	// This group refers to the abbreviated column names in the on-phone Db
+	public static final String FINDS_DOSSIER =  "dossier";
+	public static final String FINDS_TYPE =  "type";
+	public static final String FINDS_STATUS =  "status";
+	public static final String MESSAGE_TEXT =  "message";
+	public static final String FINDS_MESSAGE_STATUS =  "message_status";
+	public static final String FINDS_FIRSTNAME =  "firstname";
+	public static final String FINDS_LASTNAME =  "lastname";
+	public static final String FINDS_ADDRESS =  "address";
+	public static final String FINDS_DOB =  "dob";
+	public static final String FINDS_HOUSEHOLD_SIZE =  "household_size";
+	public static final String FINDS_BENEFICIARY_CATEGORY =  "beneficiary_category";
+	public static final String FINDS_SEX =  "sex";
+	public static final String FINDS_HEALTH_CENTER =  "health_center";
+	public static final String FINDS_DISTRIBUTION_POST =  "distribution_post";
+	public static final String MESSAGE_BENEFICIARY_ID =  "beneficiary_id";
+	public static final String MESSAGE_CREATED_AT =  "created_time";
+	public static final String MESSAGE_SENT_AT =  "sent_time";
+	public static final String MESSAGE_ACK_AT =  "acknowledged_time";
 
 	/**
 	 * Private constructor means it can't be instantiated.
@@ -194,8 +225,12 @@ public class AttributeManager {
 		abbreviations.put(ABBREV_ATTRIBUTE, LONG_ATTRIBUTE);
 		abbreviations.put(ABBREV_FIRST, LONG_FIRST);
 		abbreviations.put(ABBREV_LAST, LONG_LAST);
+		abbreviations.put(ABBREV_COMMUNE, LONG_COMMUNE);
+		abbreviations.put(ABBREV_COMMUNE_SECTION, LONG_COMMUNE_SECTION);
 		abbreviations.put(ABBREV_ADDRESS, LONG_ADDRESS);
+		abbreviations.put(ABBREV_AGE, LONG_AGE);
 		abbreviations.put(ABBREV_SEX, LONG_SEX);
+		abbreviations.put(ABBREV_BENEFICIARY, LONG_BENEFICIARY);
 		abbreviations.put(ABBREV_NUMBER_IN_HOME, LONG_NUMBER_IN_HOME);
 		abbreviations.put(ABBREV_HEALTH_CENTER, LONG_HEALTH_CENTER);
 		abbreviations.put(ABBREV_DISTRIBUTION_POST, LONG_DISTRIBUTION_POST);
@@ -205,13 +240,17 @@ public class AttributeManager {
 		abbreviations.put(ABBREV_FATHER, LONG_FATHER);
 		abbreviations.put(ABBREV_MOTHER_LEADER, LONG_MOTHER_LEADER);
 		abbreviations.put(ABBREV_VISIT_MOTHER, LONG_VISIT_MOTHER);
+		abbreviations.put(ABBREV_AGRICULTURE_1, LONG_AGRICULTURE_1);
+		abbreviations.put(ABBREV_AGRICULTURE_2, LONG_AGRICULTURE_2);
 		abbreviations.put(ABBREV_GIVE_NAME, LONG_GIVE_NAME);
 		abbreviations.put(ABBREV_YES, LONG_YES);
 		abbreviations.put(ABBREV_NO, LONG_NO);
 		abbreviations.put(ABBREV_MALE, LONG_MALE);
 		abbreviations.put(ABBREV_FEMALE, LONG_FEMALE);
+		abbreviations.put(ABBREV_INFANT_CATEGORY, LONG_INFANT_CATEGORY);
 		abbreviations.put(ABBREV_INFANT_MAL, LONG_INFANT_MAL);
 		abbreviations.put(ABBREV_INFANT_PREVENTION, LONG_INFANT_PREVENTION);
+		abbreviations.put(ABBREV_MOTHER_CATEGORY, LONG_MOTHER_CATEGORY);
 		abbreviations.put(ABBREV_MOTHER_EXPECTING, LONG_MOTHER_EXPECTING);
 		abbreviations.put(ABBREV_MOTHER_NURSING, LONG_MOTHER_NURSING);
 		abbreviations.put(ABBREV_DATA, LONG_DATA);
@@ -223,26 +262,48 @@ public class AttributeManager {
 		abbreviations.put(ABBREV_AV, LONG_AV);
 		abbreviations.put(ABBREV_TYPE, LONG_TYPE);
 		
+		
+		// This group maps SMS abbreviations to full attribute names (for the server)
+		abbreviations.put("i", FINDS_DOSSIER);
+		abbreviations.put("t", FINDS_TYPE);
+		abbreviations.put( "s", FINDS_STATUS);
+		abbreviations.put("t", MESSAGE_TEXT);
+		abbreviations.put( "m", FINDS_MESSAGE_STATUS);
+		abbreviations.put("f", FINDS_FIRSTNAME);
+		abbreviations.put("l", FINDS_LASTNAME);
+		abbreviations.put("a", FINDS_ADDRESS);
+		abbreviations.put("b", FINDS_DOB);
+		abbreviations.put("n", FINDS_HOUSEHOLD_SIZE);
+		abbreviations.put("c", FINDS_BENEFICIARY_CATEGORY);
+		abbreviations.put("g", FINDS_SEX);
+		abbreviations.put("h", FINDS_HEALTH_CENTER);
+		abbreviations.put("d", FINDS_DISTRIBUTION_POST);
+		abbreviations.put("#", MESSAGE_BENEFICIARY_ID);
+		abbreviations.put("t1", MESSAGE_CREATED_AT);
+		abbreviations.put("t2", MESSAGE_SENT_AT);
+		abbreviations.put("t3", MESSAGE_ACK_AT);
+		
+		
 		// Added for mobile app
-		// This group refers to the column names in the on-phone Db
-//		abbreviations.put(AcdiVocaDbHelper.FINDS_DOSSIER, "i");
-//		abbreviations.put(AcdiVocaDbHelper.FINDS_TYPE, "t");
-//		abbreviations.put(AcdiVocaDbHelper.FINDS_STATUS, "s");
-//		abbreviations.put(AcdiVocaDbHelper.MESSAGE_TEXT, "t");
-//		abbreviations.put(AcdiVocaDbHelper.FINDS_MESSAGE_STATUS, "m");
-//		abbreviations.put(AcdiVocaDbHelper.FINDS_FIRSTNAME, "f");
-//		abbreviations.put(AcdiVocaDbHelper.FINDS_LASTNAME, "l");
-//		abbreviations.put(AcdiVocaDbHelper.FINDS_ADDRESS, "a");
-//		abbreviations.put(AcdiVocaDbHelper.FINDS_DOB, "b");
-//		abbreviations.put(AcdiVocaDbHelper.FINDS_HOUSEHOLD_SIZE, "n");
-//		abbreviations.put(AcdiVocaDbHelper.FINDS_BENEFICIARY_CATEGORY, "c");
-//		abbreviations.put(AcdiVocaDbHelper.FINDS_SEX, "g");
-//		abbreviations.put(AcdiVocaDbHelper.FINDS_HEALTH_CENTER, "h");
-//		abbreviations.put(AcdiVocaDbHelper.FINDS_DISTRIBUTION_POST, "d");
-//		abbreviations.put(AcdiVocaDbHelper.MESSAGE_BENEFICIARY_ID, "#");
-//		abbreviations.put(AcdiVocaDbHelper.MESSAGE_CREATED_AT, "t1");
-//		abbreviations.put(AcdiVocaDbHelper.MESSAGE_SENT_AT, "t2");
-//		abbreviations.put(AcdiVocaDbHelper.MESSAGE_ACK_AT, "t3");
+		// This group maps Db column names in the on-phone Db to SMS abbreviations
+		abbreviations.put(FINDS_DOSSIER, "i");
+		abbreviations.put(FINDS_TYPE, "t");
+		abbreviations.put(FINDS_STATUS, "s");
+		abbreviations.put(MESSAGE_TEXT, "t");
+		abbreviations.put(FINDS_MESSAGE_STATUS, "m");
+		abbreviations.put(FINDS_FIRSTNAME, "f");
+		abbreviations.put(FINDS_LASTNAME, "l");
+		abbreviations.put(FINDS_ADDRESS, "a");
+		abbreviations.put(FINDS_DOB, "b");
+		abbreviations.put(FINDS_HOUSEHOLD_SIZE, "n");
+		abbreviations.put(FINDS_BENEFICIARY_CATEGORY, "c");
+		abbreviations.put(FINDS_SEX, "g");
+		abbreviations.put(FINDS_HEALTH_CENTER, "h");
+		abbreviations.put(FINDS_DISTRIBUTION_POST, "d");
+		abbreviations.put(MESSAGE_BENEFICIARY_ID, "#");
+		abbreviations.put(MESSAGE_CREATED_AT, "t1");
+		abbreviations.put(MESSAGE_SENT_AT, "t2");
+		abbreviations.put(MESSAGE_ACK_AT, "t3");
 		
 		// These correspond to data values represented as Enums in the server app
 		abbreviations.put("FEMALE", "F");
@@ -254,7 +315,8 @@ public class AttributeManager {
 		abbreviations.put("PREVENTION", "P");
 		abbreviations.put("Enfant Prevention", "P");		
 		abbreviations.put("MALNOURISHED", "M");
-		abbreviations.put("Enfant Mal", "M");	}
+		abbreviations.put("Enfant Mal", "M");	
+	}
 	
 	/**
 	 * Maps the short form field names to long form
@@ -320,6 +382,15 @@ public class AttributeManager {
 			return val;
 	}
 	
+	
+	public void testAllAttributes() {
+		Iterator<String> it = abbreviations.values().iterator();
+		while (it.hasNext()) { 
+			String s = it.next();
+			
+			System.out.println(s +  " = " + abbreviations.get(s));
+		}
+	}
 	/**
 	 * TODO:  This method should thoroughly test this class. For example, 
 	 * print out all mappings of short to long.
@@ -327,8 +398,10 @@ public class AttributeManager {
 	 */
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
+		System.out.println("Hello Attribute Manager");
 		AttributeManager am = AttributeManager.getInstance(); // new AttributeManager();
 		System.out.print(am.mapToLong(Beneficiary.Abbreviated.FALSE, "f"));
+		am.testAllAttributes();
 	}
 
 }
