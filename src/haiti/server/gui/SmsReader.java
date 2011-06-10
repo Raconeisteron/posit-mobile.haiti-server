@@ -31,9 +31,9 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.text.SimpleDateFormat;
+//import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
+//import java.util.Calendar;
 import java.util.Scanner;
 
 
@@ -250,8 +250,29 @@ public class SmsReader {
 			e.printStackTrace();
 		}
 	}
+	/*
+	 * updateMessage method update the status and modified time for given
+	 * Beneficiary object in database
+	 * @param b is the Beneficiary object
+	 */
+	public void insertMessage(String message, String sender, String dbName) {
+		System.out.println("Inserting beneficiary record " + message);
+		Connection connection = connectDb(dbName);
+		try {
+			Statement statement = connection.createStatement();
+			statement.setQueryTimeout(60); // set timeout to 30 sec.
 
-	
+			statement.execute("INSERT INTO " + DB_MESSAGE_TABLE + " ( "
+					+ DB_MESSAGE_COLUMN + "," + DB_MESSAGE_STATUS + ","
+					+ DB_MESSAGE_SENDER + ") VALUES ('" + message + "' , "
+					+ DB_STATUS_NEW + ", '" + sender + "')");
+			
+		} catch (SQLException e) {
+			// if the error message is "out of memory",
+			// it probably means no database file is found
+			e.printStackTrace();
+		}
+	}
 	/** 
 	 * Reads the file line by line into the arraylist. 
 	 */
