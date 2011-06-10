@@ -4,5 +4,9 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="res"/>
 	<classpathentry kind="lib" path="sample-data/sqlite-jdbc-3.7.2.jar"/>
+	<classpathentry kind="lib" path="C:/Program Files/Java/jdk1.6.0_25/lib/comm.jar"/>
+	<classpathentry kind="lib" path="C:/Documents and Settings/cslab/Desktop/log4j-1.2.16.jar"/>
+	<classpathentry kind="lib" path="C:/Documents and Settings/cslab/Desktop/jsmpp-2.1.0.jar"/>
+	<classpathentry kind="lib" path="C:/Documents and Settings/cslab/Desktop/smslib-v3.5.1/SMSLib/dist/classes"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
