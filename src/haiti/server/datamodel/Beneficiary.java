@@ -71,7 +71,7 @@ public class Beneficiary {
 	 */
 	public Beneficiary (String attributeValueString, Abbreviated abbreviatedAttributes) {
 		System.out.println("Splitting " + attributeValueString);
-		split(attributeValueString, ",", "=", abbreviatedAttributes);
+		split(attributeValueString, HaitiKeys.OUTER_DELIM, HaitiKeys.INNER_DELIM, abbreviatedAttributes);
 		
 	}
 
@@ -106,7 +106,7 @@ public class Beneficiary {
 		for (int k = 0; k < attrvalPairs.length; k++) {
 			String attrval[] = attrvalPairs[k].split(innerDelim);	// Puts attr in 0 and val in 1
 			
-			AttributeManager am = new AttributeManager();
+			AttributeManager am = AttributeManager.getInstance();
 			String longAttr = am.mapToLong(abbreviated, attrval[0]);
 			
 			try {

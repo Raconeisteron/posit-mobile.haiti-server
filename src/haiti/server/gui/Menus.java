@@ -90,7 +90,6 @@ public class Menus implements ActionListener {
 		Menu openDbMenu = new Menu(LocaleManager.resources.getString(MENU_OPEN_DB));
 		addMenuItem(fileMenu, LocaleManager.resources.getString(MENU_OPEN_FILE), KeyEvent.VK_N, false);
 		fileMenu.add(openDbMenu);
-		addMenuItem(fileMenu, LocaleManager.resources.getString(MENU_OPEN_DB), KeyEvent.VK_O, false);
 		addMenuItem(fileMenu, LocaleManager.resources.getString(MENU_QUIT), KeyEvent.VK_Q, false);
 
 		Menu localeMenu = new Menu(LocaleManager.resources.getString(MENU_LOCALE));
@@ -124,6 +123,7 @@ public class Menus implements ActionListener {
 		mbar = new MenuBar();
 		mbar.add(fileMenu);
 		mbar.add(localeMenu);
+		mbar.add(adminMenu);
 		mbar.setHelpMenu(helpMenu);
 		gui.setMenuBar(mbar);
 	}

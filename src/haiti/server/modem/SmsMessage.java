@@ -36,7 +36,7 @@ public class SmsMessage {
 		for (int k = 0; k < attrvalPairs.length; k++) {
 			String attrval[] = attrvalPairs[k].split(innerDelim);	// Puts attr in 0 and val in 1
 			
-			AttributeManager am = new AttributeManager();
+			AttributeManager am = AttributeManager.getInstance();
 			String longAttr = am.mapToLong(abbreviated, attrval[0]);
 			
 			if (longAttr.equals(HaitiKeys.LONG_AV))
