@@ -33,7 +33,7 @@ public class HaitiKeys {
 	public static final String FORM_MALE="Male";
 	public static final String FORM_FEMALE="Female";
 
-	public static final String FORM_BENEFICIARY="Beneficiary";
+	public static final String FORM_BENEFICIARY_CATEGORY="BeneficiaryCategory";
 	public static final String FORM_NUMBER_IN_HOUSE= "NumberInHome"; // "Number of persons in the house:";
 	public static final String FORM_HEALTH_CENTER="HealthCenter";
 	public static final String FORM_DISTRIBUTION_POST="DistributionPost";
@@ -154,5 +154,6 @@ public class HaitiKeys {
 	public static final String URL_INNER_DELIM = "%3D";
 	public static final String URL_PLUS = "%2B";
 	public static final String PLUS = "+";
+	public static final String FORM_BENEFICIARY = null;
 
 	}

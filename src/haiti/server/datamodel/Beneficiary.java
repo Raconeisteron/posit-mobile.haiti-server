@@ -109,30 +109,34 @@ public class Beneficiary {
 			AttributeManager am = new AttributeManager();
 			String longAttr = am.mapToLong(abbreviated, attrval[0]);
 			
-			if (longAttr.equals(HaitiKeys.LONG_ID))
-				id = Integer.parseInt(attrval[1]);
-			else if (longAttr.equals(HaitiKeys.LONG_STATUS))
-				status = Status.valueOf(attrval[1]);
-			else if (longAttr.equals(HaitiKeys.LONG_FIRST))
-				firstName=attrval[1];
-			else if (longAttr.equals(HaitiKeys.LONG_LAST))
-				lastName=attrval[1];
-			else if (longAttr.equals(HaitiKeys.LONG_ADDRESS))
-				address = attrval[1];
-			else if (longAttr.equals(HaitiKeys.LONG_COMMUNE))
-				commune=attrval[1];
-			else if (longAttr.equals(HaitiKeys.LONG_COMMUNE_SECTION))
-				communeSection=attrval[1];
-			else if (longAttr.equals(HaitiKeys.LONG_INFANT_CATEGORY))
-				infantCategory=InfantCategory.valueOf(attrval[1]);
-			else if (longAttr.equals(HaitiKeys.LONG_MOTHER_CATEGORY))
-				motherCategory=MotherCategory.valueOf(attrval[1]);
-			else if (longAttr.equals(HaitiKeys.LONG_SEX))
-				sex=Sex.valueOf(attrval[1]);
-			else if (longAttr.equals(HaitiKeys.LONG_AGE))
-				age=Integer.parseInt(attrval[1]);
-			else if (longAttr.equals(HaitiKeys.LONG_NUMBER_IN_HOME))
-				numberInHome=Integer.parseInt(attrval[1]);
+			try {
+				if (longAttr.equals(HaitiKeys.LONG_ID))
+					id = Integer.parseInt(attrval[1]);
+				else if (longAttr.equals(HaitiKeys.LONG_STATUS))
+					status = Status.valueOf(attrval[1]);
+				else if (longAttr.equals(HaitiKeys.LONG_FIRST))
+					firstName=attrval[1];
+				else if (longAttr.equals(HaitiKeys.LONG_LAST))
+					lastName=attrval[1];
+				else if (longAttr.equals(HaitiKeys.LONG_ADDRESS))
+					address = attrval[1];
+				else if (longAttr.equals(HaitiKeys.LONG_COMMUNE))
+					commune=attrval[1];
+				else if (longAttr.equals(HaitiKeys.LONG_COMMUNE_SECTION))
+					communeSection=attrval[1];
+				else if (longAttr.equals(HaitiKeys.LONG_INFANT_CATEGORY))
+					infantCategory=InfantCategory.valueOf(attrval[1]);
+				else if (longAttr.equals(HaitiKeys.LONG_MOTHER_CATEGORY))
+					motherCategory=MotherCategory.valueOf(attrval[1]);
+				else if (longAttr.equals(HaitiKeys.LONG_SEX))
+					sex=Sex.valueOf(attrval[1]);
+				else if (longAttr.equals(HaitiKeys.LONG_AGE))
+					age=Integer.parseInt(attrval[1]);
+				else if (longAttr.equals(HaitiKeys.LONG_NUMBER_IN_HOME))
+					numberInHome=Integer.parseInt(attrval[1]);
+			} catch (NumberFormatException e) {
+				e.printStackTrace();
+			}
 //			else if (longAttr.equals("id"))
 //				id = Integer.parseInt(attrval[1]);
 //			else if (longAttr.equals("status"))
