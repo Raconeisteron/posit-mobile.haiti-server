@@ -71,7 +71,7 @@ public class Beneficiary {
 	 */
 	public Beneficiary (String attributeValueString, Abbreviated abbreviatedAttributes) {
 		System.out.println("Splitting " + attributeValueString);
-		split(attributeValueString, "&", "=", abbreviatedAttributes);
+		split(attributeValueString, HaitiKeys.OUTER_DELIM, HaitiKeys.INNER_DELIM, abbreviatedAttributes);
 		
 	}
 
@@ -106,33 +106,37 @@ public class Beneficiary {
 		for (int k = 0; k < attrvalPairs.length; k++) {
 			String attrval[] = attrvalPairs[k].split(innerDelim);	// Puts attr in 0 and val in 1
 			
-			AttributeManager am = new AttributeManager();
+			AttributeManager am = AttributeManager.getInstance();
 			String longAttr = am.mapToLong(abbreviated, attrval[0]);
 			
-			if (longAttr.equals(HaitiKeys.LONG_ID))
-				id = Integer.parseInt(attrval[1]);
-			else if (longAttr.equals(HaitiKeys.LONG_STATUS))
-				status = Status.valueOf(attrval[1]);
-			else if (longAttr.equals(HaitiKeys.LONG_FIRST))
-				firstName=attrval[1];
-			else if (longAttr.equals(HaitiKeys.LONG_LAST))
-				lastName=attrval[1];
-			else if (longAttr.equals(HaitiKeys.LONG_ADDRESS))
-				address = attrval[1];
-			else if (longAttr.equals(HaitiKeys.LONG_COMMUNE))
-				commune=attrval[1];
-			else if (longAttr.equals(HaitiKeys.LONG_COMMUNE_SECTION))
-				communeSection=attrval[1];
-			else if (longAttr.equals(HaitiKeys.LONG_INFANT_CATEGORY))
-				infantCategory=InfantCategory.valueOf(attrval[1]);
-			else if (longAttr.equals(HaitiKeys.LONG_MOTHER_CATEGORY))
-				motherCategory=MotherCategory.valueOf(attrval[1]);
-			else if (longAttr.equals(HaitiKeys.LONG_SEX))
-				sex=Sex.valueOf(attrval[1]);
-			else if (longAttr.equals(HaitiKeys.LONG_AGE))
-				age=Integer.parseInt(attrval[1]);
-			else if (longAttr.equals(HaitiKeys.LONG_NUMBER_IN_HOME))
-				numberInHome=Integer.parseInt(attrval[1]);
+			try {
+				if (longAttr.equals(HaitiKeys.LONG_ID))
+					id = Integer.parseInt(attrval[1]);
+				else if (longAttr.equals(HaitiKeys.LONG_STATUS))
+					status = Status.valueOf(attrval[1]);
+				else if (longAttr.equals(HaitiKeys.LONG_FIRST))
+					firstName=attrval[1];
+				else if (longAttr.equals(HaitiKeys.LONG_LAST))
+					lastName=attrval[1];
+				else if (longAttr.equals(HaitiKeys.LONG_ADDRESS))
+					address = attrval[1];
+				else if (longAttr.equals(HaitiKeys.LONG_COMMUNE))
+					commune=attrval[1];
+				else if (longAttr.equals(HaitiKeys.LONG_COMMUNE_SECTION))
+					communeSection=attrval[1];
+				else if (longAttr.equals(HaitiKeys.LONG_INFANT_CATEGORY))
+					infantCategory=InfantCategory.valueOf(attrval[1]);
+				else if (longAttr.equals(HaitiKeys.LONG_MOTHER_CATEGORY))
+					motherCategory=MotherCategory.valueOf(attrval[1]);
+				else if (longAttr.equals(HaitiKeys.LONG_SEX))
+					sex=Sex.valueOf(attrval[1]);
+				else if (longAttr.equals(HaitiKeys.LONG_AGE))
+					age=Integer.parseInt(attrval[1]);
+				else if (longAttr.equals(HaitiKeys.LONG_NUMBER_IN_HOME))
+					numberInHome=Integer.parseInt(attrval[1]);
+			} catch (NumberFormatException e) {
+				e.printStackTrace();
+			}
 //			else if (longAttr.equals("id"))
 //				id = Integer.parseInt(attrval[1]);
 //			else if (longAttr.equals("status"))
@@ -256,7 +260,7 @@ public class Beneficiary {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		Beneficiary ben = new Beneficiary();
+		Beneficiary ben = new Beneficiary("AV=1,i=068MP-FAT,t=0,st=1,fn=Denisana,ln=Balthazar,a=Saint Michel,b=1947/11/31,s=F,c=P,d=24", Abbreviated.TRUE);
 		// System.out.println(ben.toString("&"));
 		// System.out.println(ben.toString());
 		System.out.println(ben.toString());

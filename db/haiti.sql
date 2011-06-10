@@ -1,0 +1,33 @@
+DROP TABLE IF EXISTS "abbreviation";
+CREATE TABLE "abbreviation" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL ,"abbreviation" VARCHAR NOT NULL ,"attribute_name" VARCHAR);
+DROP TABLE IF EXISTS "beneficiary_category";
+CREATE TABLE "beneficiary_category" ("id" INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL , "name" VARCHAR NOT NULL );
+DROP TABLE IF EXISTS "commune";
+CREATE TABLE "commune" ("id" INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL , "name" VARCHAR NOT NULL , "abbreviation" VARCHAR);
+DROP TABLE IF EXISTS "commune_section";
+CREATE TABLE "commune_section" ("id" INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL , "name" VARCHAR NOT NULL , "commune_id" INTEGER, "abbreviation" VARCHAR);
+DROP TABLE IF EXISTS "health_center";
+CREATE TABLE "health_center" ("id" INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL , "name" VARCHAR NOT NULL , "descriptor" VARCHAR);
+DROP TABLE IF EXISTS "message_log";
+CREATE TABLE "message_log" ("id" INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL , "message_text" VARCHAR NOT NULL , "status" INTEGER NOT NULL , "created_on" DATETIME NOT NULL  DEFAULT CURRENT_TIMESTAMP, "modified_on" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP, 'sender' varchar(12), "message_type" INTEGER);
+INSERT INTO "message_log" VALUES(41,'fn=Ralph&ln=Morelli&dob=7/6/1947&s=MALE&ad=11 Fairview&c=Thiotte&cs=La vallee&ic=MALNOURISHED&nih=2',0,'2011-05-28 16:27:59','2011-05-28 16:27:59','18608748128',1);
+INSERT INTO "message_log" VALUES(42,'fn=Mary&ln=Smith&dob=6/4/2009&s=FEMALE&ad=1 Bank&c=Belle Anse&cs=La vallee&mc=NURSING&nih=3',0,'2011-05-28 16:30:20','2011-05-28 16:30:20','18608748128',1);
+INSERT INTO "message_log" VALUES(43,'fn=Alicia&ln=Morelli&dob=1/6/1982&s=FEMALE&ad=11 Fairview&a=29&c=La vallee&cs=Grand Gosier&mc=EXPECTING&nih=2',0,'2011-05-28 19:07:48','2011-05-28 19:07:48','18608748128',1);
+INSERT INTO "message_log" VALUES(44,'fn=Randy&ln=Neuman&dob=4/28/2008&s=MALE&ad=11 fairview&a=2&c=Thiotte&cs=Grand Gosier&ic=PREVENTION&nih=3',0,'2011-05-28 19:50:36','2011-05-28 19:50:36','18608748128',0);
+INSERT INTO "message_log" VALUES(45,'fn=Jean&ln=Lejeune&dob=2/27/2010&s=MALE&ad=6 Rue Maisonette &a=1&c=Grand Gosier&cs=Belle Anse&mc=EXPECTING&nih=5',0,'2011-05-29 14:41:58','2011-05-29 14:41:58','18608748128',1);
+INSERT INTO "message_log" VALUES(46,'fn=Marie&ln=Lejeune&dob=5/23/2009&s=FEMALE&ad=5 Rue Barger &a=2&c=Belle Anse&cs=Bainet&ic=PREVENTION&nih=5',0,'2011-05-29 14:43:46','2011-05-29 14:43:46','18608748128',0);
+INSERT INTO "message_log" VALUES(47,'fn=Randy&ln=Neuman&dob=4/28/2008&s=MALE&ad=11 fairview&a=2&c=Thiotte&cs=Grand Gosier&mc=EXPECTING&nih=3',0,'2011-05-29 14:43:58','2011-05-29 14:43:58','18608748128',0);
+INSERT INTO "message_log" VALUES(48,'fn=Rene&ln=Prevalee&dob=1/24/2009&s=MALE&ad=3 Rue Trinity &a=2&c=Anse a Pitres&cs=Anse a Pitres&mc=NURSING&nih=3',0,'2011-05-30 02:57:58','2011-05-30 02:57:58','18608748128',0);
+INSERT INTO "message_log" VALUES(49,'fn=Rachel&ln=Foecking&dob=2/12/1912&s=FEMALE&ad=300 Summit Street&c=Thiotte&cs=La vallee&ic=MALNOURISHED&nih=2',0,'2011-05-31 18:15:07','2011-05-31 18:15:07',18608748128,1);
+INSERT INTO "message_log" VALUES(50,'fn=Alecks&ln=Zhang&dob=2/24/1991&s=MALE&ad=329 Summit Street&c=Thiotte&cs=La vallee&mc=NURSING&nih=2',0,'2011-05-31 18:16:44','2011-05-31 18:16:44',18608748128,1);
+INSERT INTO "message_log" VALUES(51,'fn=Jason&ln=Baird&dob=2/27/1991&s=MALE&ad=322 Summit Street&c=Anse a Pitres&cs=La vallee&ic=PREVENTION&nih=2',0,'2011-05-31 18:17:51','2011-05-31 18:17:51',18608748128,0);
+INSERT INTO "message_log" VALUES(52,'fn=Megan&ln=Chiu&dob=2/27/1991&s=FEMALE&ad=322 Summit Street&c=Thiotte&cs=La vallee&mc=NURSING&nih=2',0,'2011-05-31 18:18:28','2011-05-31 18:18:28',18608748128,0);
+INSERT INTO "message_log" VALUES(53,'fn=Sheena&ln=Elveus&dob=2/27/1990&s=FEMALE&ad=322 Summit Street&c=Cote de fer&cs=La vallee&ic=MALNOURISHED&nih=2',0,'2011-05-31 18:18:52','2011-05-31 18:18:52',18608748128,0);
+INSERT INTO "message_log" VALUES(54,'fn=Nyi&ln=Htet&dob=2/27/1990&s=MALE&ad=320 Summit Street&c=Thiotte&cs=La vallee&ic=MALNOURISHED&mc=NURSING&nih=2',0,'2011-05-31 18:19:28','2011-05-31 18:19:28',18608748128,1);
+INSERT INTO "message_log" VALUES(55,'fn=Tina&ln=Lipson&dob=2/27/1990&s=FEMALE&ad=320 Summit Street&c=Thiotte&cs=La vallee&ic=MALNOURISHED&nih=2',0,'2011-05-31 18:19:47','2011-05-31 18:19:47',18608748128,1);
+INSERT INTO "message_log" VALUES(56,'fn=Danny&ln=Lopes&dob=2/27/1990&s=MALE&ad=320 Summit Street&c=Grand Gosier&cs=La vallee&ic=MALNOURISHED&mc=NURSING&nih=2',0,'2011-05-31 18:20:05','2011-05-31 18:20:05',18608748128,0);
+INSERT INTO "message_log" VALUES(57,'fn=Conan&ln=Conan&dob=2/27/1990&s=MALE&ad=320 Summit Street&c=Bainet&cs=La vallee&ic=PREVENTION&nih=2',0,'2011-05-31 18:21:20','2011-05-31 18:21:20',18608748128,1);
+CREATE TRIGGER update_modified_on UPDATE ON message_log
+BEGIN
+  UPDATE message_log SET modified_on = CURRENT_TIMESTAMP where id=new.id;
+END;

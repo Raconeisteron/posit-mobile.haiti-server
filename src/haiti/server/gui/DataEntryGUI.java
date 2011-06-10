@@ -84,7 +84,7 @@ public class DataEntryGUI extends JFrame implements WindowListener, ListSelectio
     private String mMessagesFileOrDbName;
     private Beneficiary mBeneficiary;
     
-    private DataEntryForm mFormPanel;
+    private DataEntryFormStatic mFormPanel; 
     private BeneficiaryUpdateForm mUpdatePanel;
     
 	//public TextArea display;// = new TextArea();
@@ -154,7 +154,7 @@ public class DataEntryGUI extends JFrame implements WindowListener, ListSelectio
 	    mMessageList.setCellRenderer(new CustomRenderer());
         mMessageList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         mMessageList.setSelectedIndex(0);
-        mMessageList.addListSelectionListener(this);
+        mMessageList.addListSelectionListener(this);        
         this.mListScrollPane = new JScrollPane(mMessageList,
         		JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
         		JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
@@ -204,7 +204,7 @@ public class DataEntryGUI extends JFrame implements WindowListener, ListSelectio
 		}
 		mMessagesArray = mReader.getMessagesAsArray();
 		
-		mFormPanel = new DataEntryForm(this);
+		mFormPanel = new DataEntryFormStatic(this);
 		mBeneficiary = new Beneficiary(mMessagesArray[0], Abbreviated.TRUE);
 		mFormPanel.fillInForm(mBeneficiary,mReader);
 		
@@ -239,8 +239,7 @@ public class DataEntryGUI extends JFrame implements WindowListener, ListSelectio
 			mMessagesArray = mReader.getMessageByStatusAndType(mMessagesFileOrDbName, status, type);
 		}
 
-		mFormPanel = new DataEntryForm(this);
-		
+		mFormPanel = new DataEntryFormStatic(this);
 		if (mMessagesArray.length == 0) {
 			mMessagesArray = new String[1];
 			mMessagesArray[0] = "{Empty}";
@@ -253,7 +252,8 @@ public class DataEntryGUI extends JFrame implements WindowListener, ListSelectio
 //			mBeneficiary = new Beneficiary(mMessagesArray[0], Abbreviated.TRUE);
 //			mUpdatePanel.fillInForm(mBeneficiary,mReader);
 		}
-		this.getContentPane().remove(mWelcomePanel);
+		this.getContentPane().removeAll(); //WIN!!!!! Yours Truly, Alex and Danny
+//		this.getContentPane().remove(mWelcomePanel);
 //		this.getContentPane().add(setUpSplitPane(mMessagesArray, mUpdatePanel));
 		this.getContentPane().add(setUpSplitPane(mMessagesArray, mFormPanel));
 		this.pack();
@@ -285,8 +285,8 @@ public class DataEntryGUI extends JFrame implements WindowListener, ListSelectio
 		JList list = (JList) e.getSource();
 		System.out.println("Clicked on  list item " + list.getSelectedValue());
 		mBeneficiary = new Beneficiary(list.getSelectedValue().toString(), Abbreviated.TRUE);
+		mFormPanel.fillInForm(mBeneficiary, mReader);	
 		//mUpdatePanel.fillInForm(mBeneficiary, mReader);
-		mFormPanel.fillInForm(mBeneficiary, mReader);
 	}
 	
 	/**

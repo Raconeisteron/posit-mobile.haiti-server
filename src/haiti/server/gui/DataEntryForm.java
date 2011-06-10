@@ -114,7 +114,7 @@ public class DataEntryForm extends JPanel implements ActionListener, KeyListener
 		addressLabel,
 		ageLabel,
 		sexLabel,
-		beneficiaryLabel,
+		beneficiaryCategoryLabel,
 		nInHouseLabel,
 		healthCenterLabel,
 		distributionLabel,
@@ -202,7 +202,7 @@ public class DataEntryForm extends JPanel implements ActionListener, KeyListener
 		radioMale.setText(LocaleManager.resources.getString(HaitiKeys.FORM_MALE));
 		radioFemale.setText(LocaleManager.resources.getString(HaitiKeys.FORM_FEMALE));
 
-		beneficiaryLabel.setText(LocaleManager.resources.getString(HaitiKeys.FORM_BENEFICIARY));
+		beneficiaryCategoryLabel.setText(LocaleManager.resources.getString(HaitiKeys.FORM_BENEFICIARY_CATEGORY));
 		radioInfantMal.setText(LocaleManager.resources.getString(HaitiKeys.LONG_INFANT_MAL));
 		radioInfantPrev.setText(LocaleManager.resources.getString(HaitiKeys.LONG_INFANT_PREVENTION));
 		radioMotherExp.setText(LocaleManager.resources.getString(HaitiKeys.LONG_MOTHER_EXPECTING));
@@ -321,8 +321,8 @@ public class DataEntryForm extends JPanel implements ActionListener, KeyListener
 		//Beneficiary radio buttons
 		c.gridy = 4;
 		c.gridx=0;
-		beneficiaryLabel = new JLabel(LocaleManager.resources.getString(HaitiKeys.FORM_BENEFICIARY));
-		geninfoPanel.add(beneficiaryLabel,c);
+		beneficiaryCategoryLabel = new JLabel(LocaleManager.resources.getString(HaitiKeys.FORM_BENEFICIARY_CATEGORY));
+		geninfoPanel.add(beneficiaryCategoryLabel,c);
 		infantGroup = new ButtonGroup();
 		radioInfantMal = new JRadioButton(LocaleManager.resources.getString(HaitiKeys.LONG_INFANT_MAL),false);
 		radioInfantPrev = new JRadioButton(LocaleManager.resources.getString(HaitiKeys.LONG_INFANT_PREVENTION),false);
