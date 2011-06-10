@@ -148,7 +148,7 @@ public class HaitiKeys {
 	
 	public static final String LONG_DOSSIER = "dossier";
 	
-	public static final String OUTER_DELIM = ",";
+	public static final String OUTER_DELIM = "&";
 	public static final String INNER_DELIM = "=";
 	public static final String URL_OUTER_DELIM = "%2C";
 	public static final String URL_INNER_DELIM = "%3D";
