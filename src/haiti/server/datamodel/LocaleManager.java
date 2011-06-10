@@ -22,8 +22,6 @@
 
 package haiti.server.datamodel;
 
-import haiti.server.gui.DataEntryGUI;
-
 import java.util.Locale;
 import java.util.ResourceBundle;
 
