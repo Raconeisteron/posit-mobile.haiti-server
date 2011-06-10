@@ -3,7 +3,7 @@ package haiti.server.gui;
 import haiti.server.datamodel.Beneficiary;
 import java.sql.*;
 
-import com.sun.tools.javac.util.Log;
+//import com.sun.tools.javac.util.Log;
 
 public class TbsManager {
 	public static final String TAG = "TbsManager";
