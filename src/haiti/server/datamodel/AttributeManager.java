@@ -95,13 +95,13 @@ public class AttributeManager {
 	public static final String ABBREV_LAST = "l";   //"ln";
 	public static final String ABBREV_COMMUNE = "c";
 	public static final String ABBREV_COMMUNE_SECTION = "cs";
-	public static final String ABBREV_ADDRESS = "ad";
-	public static final String ABBREV_AGE = "a";
-	public static final String ABBREV_SEX = "s";
-	public static final String ABBREV_BENEFICIARY = "b";
-	public static final String ABBREV_NUMBER_IN_HOME = "nih";
-	public static final String ABBREV_HEALTH_CENTER = "hc";
-	public static final String ABBREV_DISTRIBUTION_POST = "dp";
+	public static final String ABBREV_ADDRESS = "a"; //"ad";
+	public static final String ABBREV_AGE = "b"; //"a";
+	public static final String ABBREV_SEX = "g"; //"s";
+	public static final String ABBREV_BENEFICIARY = "e";
+	public static final String ABBREV_NUMBER_IN_HOME = "n"; // "nih";
+	public static final String ABBREV_HEALTH_CENTER = "h"; // "hc";
+	public static final String ABBREV_DISTRIBUTION_POST = "d"; //"dp";
 	public static final String ABBREV_NAME_CHILD = "nc";
 	public static final String ABBREV_NAME_WOMAN = "nw";
 	public static final String ABBREV_HUSBAND = "h";
@@ -113,23 +113,35 @@ public class AttributeManager {
 	public static final String ABBREV_GIVE_NAME = "gn";
 	public static final String ABBREV_YES = "y";
 	public static final String ABBREV_NO = "n";
-	public static final String ABBREV_MALE = "m";
-	public static final String ABBREV_FEMALE = "f";
+	public static final String ABBREV_MALE = "M"; //"m";
+	public static final String ABBREV_FEMALE = "F"; //"f";
 	public static final String ABBREV_INFANT_CATEGORY = "ic";
 	public static final String ABBREV_INFANT_MAL = "ia";
-	public static final String ABBREV_INFANT_PREVENTION = "ip";
+	public static final String ABBREV_INFANT_PREVENTION = "P"; //"ip";
 	public static final String ABBREV_MOTHER_CATEGORY = "mc";
-	public static final String ABBREV_MOTHER_EXPECTING = "me";
-	public static final String ABBREV_MOTHER_NURSING = "mn";
+	public static final String ABBREV_MOTHER_EXPECTING = "E"; //"me";
+	public static final String ABBREV_MOTHER_NURSING = "N"; //"mn";
 	public static final String ABBREV_DATA = "d";
 	public static final String ABBREV_GENERAL_INFORMATION = "gi";
 	public static final String ABBREV_MCHN_INFORMATION = "mchn";
 	public static final String ABBREV_CONTROLS = "ctrl";
-	public static final String ABBREV_STATUS = "st";
-	public static final String ABBREV_ID = "id";
+	public static final String ABBREV_STATUS = "s"; //"st";
+	public static final String ABBREV_ID = "#"; //"id";
 	public static final String ABBREV_AV = "AV";
 	public static final String ABBREV_TYPE = "t";
+	
+	// These correspond to SMS attributes
+	public static final String ABBREV_DOSSIER = "i";
+	public static final String ABBREV_MESSAGE_TEXT = "T";
+	public static final String ABBREV_MESSAGE_STATUS = "M";
+	public static final String ABBREV_CREATED_AT = "t1";
+	public static final String ABBREV_SENT_AT = "t2";
+	public static final String ABBREV_ACK_AT = "t3";
 
+	// These correspond to data values represented as Enums
+	public static final String ABBREV_MALNOURISHED = "M";
+	
+	//
 	public static final String LONG_ATTRIBUTE = "attribute";
 	public static final String LONG_FIRST = "firstName";
 	public static final String LONG_LAST = "lastName";
@@ -289,8 +301,8 @@ public class AttributeManager {
 		abbreviations.put(FINDS_DOSSIER, "i");
 		abbreviations.put(FINDS_TYPE, "t");
 		abbreviations.put(FINDS_STATUS, "s");
-		abbreviations.put(MESSAGE_TEXT, "t");
-		abbreviations.put(FINDS_MESSAGE_STATUS, "m");
+		abbreviations.put(MESSAGE_TEXT, "T");
+		abbreviations.put(FINDS_MESSAGE_STATUS, "M");
 		abbreviations.put(FINDS_FIRSTNAME, "f");
 		abbreviations.put(FINDS_LASTNAME, "l");
 		abbreviations.put(FINDS_ADDRESS, "a");
@@ -307,7 +319,9 @@ public class AttributeManager {
 		
 		// These correspond to data values represented as Enums in the server app
 		abbreviations.put("FEMALE", "F");
+		abbreviations.put("F", "FEMALE");
 		abbreviations.put("MALE", "M");
+		abbreviations.put("M", "MALE");
 		abbreviations.put("EXPECTING", "E");
 		abbreviations.put("Femme Enceinte", "E");
 		abbreviations.put("NURSING", "N");
@@ -324,7 +338,7 @@ public class AttributeManager {
 	 * @param s the String to be mapped to long
 	 * @return the long form of the String
 	 */
-	public String mapToLong(Beneficiary.Abbreviated abbreviatedAttributes, String s){
+	public static String mapToLong(Beneficiary.Abbreviated abbreviatedAttributes, String s){
 		if (abbreviatedAttributes == Beneficiary.Abbreviated.TRUE) {
 			String str = abbreviations.get(s);
 			if (str != null)

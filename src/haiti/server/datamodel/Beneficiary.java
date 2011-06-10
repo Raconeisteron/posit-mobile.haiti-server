@@ -71,7 +71,7 @@ public class Beneficiary {
 	 */
 	public Beneficiary (String attributeValueString, Abbreviated abbreviatedAttributes) {
 		System.out.println("Splitting " + attributeValueString);
-		split(attributeValueString, HaitiKeys.OUTER_DELIM, HaitiKeys.INNER_DELIM, abbreviatedAttributes);
+		split(attributeValueString, AttributeManager.OUTER_DELIM, AttributeManager.INNER_DELIM, abbreviatedAttributes);
 		
 	}
 
@@ -105,42 +105,54 @@ public class Beneficiary {
 		String attrvalPairs[] = s.split(outerDelim);				// Pairs like attr1=val1
 		for (int k = 0; k < attrvalPairs.length; k++) {
 			String attrval[] = attrvalPairs[k].split(innerDelim);	// Puts attr in 0 and val in 1
-			
+
 			AttributeManager am = AttributeManager.getInstance();
 			String longAttr = am.mapToLong(abbreviated, attrval[0]);
-			
+			if (attrval.length < 2) {
+				System.out.println("Missing data value for " + attrvalPairs[k]);
+				continue;
+			}
+			System.out.println("attr=" + attrval[0] + " val=" + attrval[1]);
 			try {
-				if (longAttr.equals(HaitiKeys.LONG_ID))
+				if (longAttr.equals(AttributeManager.LONG_ID))
 					id = Integer.parseInt(attrval[1]);
-				else if (longAttr.equals(HaitiKeys.LONG_STATUS))
-					status = Status.valueOf(attrval[1]);
-				else if (longAttr.equals(HaitiKeys.LONG_FIRST))
-					firstName=attrval[1];
-				else if (longAttr.equals(HaitiKeys.LONG_LAST))
-					lastName=attrval[1];
-				else if (longAttr.equals(HaitiKeys.LONG_ADDRESS))
+				else if (longAttr.equals(AttributeManager.LONG_STATUS)){
+					if (Integer.parseInt(attrval[1]) == Status.NEW.ordinal())
+						status = Status.NEW;
+					else if (Integer.parseInt(attrval[1]) == Status.PENDING.ordinal())
+						status = Status.PENDING;
+					else if (Integer.parseInt(attrval[1]) == Status.PROCESSED.ordinal())
+						status = Status.PROCESSED;
+					else 
+						status = Status.UNKNOWN;
+				}
+//				else if (longAttr.equals(AttributeManager.LONG_FIRST))
+//					firstName=attrval[1];
+				else if (attrval[0].equals(AttributeManager.ABBREV_FIRST))
+					firstName=  attrval[1];
+				else if (attrval[0].equals(AttributeManager.ABBREV_LAST))
+					lastName = attrval[1];
+				else if (attrval[0].equals(AttributeManager.LONG_ADDRESS))
 					address = attrval[1];
-				else if (longAttr.equals(HaitiKeys.LONG_COMMUNE))
+				else if (longAttr.equals(AttributeManager.LONG_COMMUNE))
 					commune=attrval[1];
-				else if (longAttr.equals(HaitiKeys.LONG_COMMUNE_SECTION))
+				else if (longAttr.equals(AttributeManager.LONG_COMMUNE_SECTION))
 					communeSection=attrval[1];
-				else if (longAttr.equals(HaitiKeys.LONG_INFANT_CATEGORY))
+				else if (longAttr.equals(AttributeManager.LONG_INFANT_CATEGORY))
 					infantCategory=InfantCategory.valueOf(attrval[1]);
-				else if (longAttr.equals(HaitiKeys.LONG_MOTHER_CATEGORY))
+				else if (longAttr.equals(AttributeManager.LONG_MOTHER_CATEGORY))
 					motherCategory=MotherCategory.valueOf(attrval[1]);
-				else if (longAttr.equals(HaitiKeys.LONG_SEX))
-					sex=Sex.valueOf(attrval[1]);
-				else if (longAttr.equals(HaitiKeys.LONG_AGE))
+				else if (longAttr.equals(AttributeManager.LONG_SEX))
+					sex = Sex.valueOf(AttributeManager.mapToLong(Beneficiary.Abbreviated.TRUE, attrval[1]));
+					//sex=Sex.valueOf(attrval[1]);
+				else if (longAttr.equals(AttributeManager.LONG_AGE))
 					age=Integer.parseInt(attrval[1]);
-				else if (longAttr.equals(HaitiKeys.LONG_NUMBER_IN_HOME))
+				else if (longAttr.equals(AttributeManager.LONG_NUMBER_IN_HOME))
 					numberInHome=Integer.parseInt(attrval[1]);
 			} catch (NumberFormatException e) {
 				e.printStackTrace();
+				System.out.println("Number format exception");
 			}
-//			else if (longAttr.equals("id"))
-//				id = Integer.parseInt(attrval[1]);
-//			else if (longAttr.equals("status"))
-//				status = Integer.parseInt(attrval[1]);
 		}
 	}
 	

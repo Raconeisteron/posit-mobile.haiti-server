@@ -22,6 +22,7 @@
 
 package haiti.server.gui;
 
+import haiti.server.datamodel.AttributeManager;
 import haiti.server.datamodel.Beneficiary;
 
 import java.io.FileInputStream;
@@ -57,7 +58,7 @@ public class SmsReader {
 	public static final String DB_MESSAGE_MODIFIED_ON = "modified_on";
 	public static final String DB_MESSAGE_TYPE = "message_type";
 	public static final String DB_MESSAGE_SENDER = "sender";
-	public static final String SEPARATOR = "&";
+	//public static final String AttributeManager.PAIRS_SEPARATOR = AttributeManager.;
 	
 	public static final int DB_STATUS_NEW = 0;
 	public static final int DB_STATUS_PENDING = 1;
@@ -120,12 +121,12 @@ public class SmsReader {
 			ResultSet rs = statement.executeQuery("select * from " + DB_MESSAGE_TABLE);
 			rs.next();
 			while(!rs.isAfterLast()) {
-				String msg = DB_MESSAGE_ID + "=" +  rs.getString(DB_MESSAGE_ID) + SEPARATOR 
-					+ DB_MESSAGE_SENDER+"=" +rs.getString(DB_MESSAGE_SENDER) + SEPARATOR
-					+ DB_MESSAGE_STATUS + "=" + rs.getString(DB_MESSAGE_STATUS) + SEPARATOR
-					+ DB_MESSAGE_TYPE + "=" +rs.getString(DB_MESSAGE_TYPE) + SEPARATOR
-					+ DB_MESSAGE_CREATED_ON + ":" + rs.getString(DB_MESSAGE_CREATED_ON) + SEPARATOR
-					+ DB_MESSAGE_MODIFIED_ON  + ":" + rs.getString(DB_MESSAGE_MODIFIED_ON) + SEPARATOR
+				String msg = DB_MESSAGE_ID + "=" +  rs.getString(DB_MESSAGE_ID) + AttributeManager.PAIRS_SEPARATOR
+					+ DB_MESSAGE_SENDER+"=" +rs.getString(DB_MESSAGE_SENDER) + AttributeManager.PAIRS_SEPARATOR
+					+ DB_MESSAGE_STATUS + "=" + rs.getString(DB_MESSAGE_STATUS) + AttributeManager.PAIRS_SEPARATOR
+					+ DB_MESSAGE_TYPE + "=" +rs.getString(DB_MESSAGE_TYPE) + AttributeManager.PAIRS_SEPARATOR
+					+ DB_MESSAGE_CREATED_ON + ":" + rs.getString(DB_MESSAGE_CREATED_ON) + AttributeManager.PAIRS_SEPARATOR
+					+ DB_MESSAGE_MODIFIED_ON  + ":" + rs.getString(DB_MESSAGE_MODIFIED_ON) + AttributeManager.PAIRS_SEPARATOR
 					+ rs.getString(DB_MESSAGE_COLUMN);
 				System.out.println(msg);
 
@@ -168,12 +169,12 @@ public class SmsReader {
 				rs = statement.executeQuery("select * from " + DB_MESSAGE_TABLE+" where "+ DB_MESSAGE_TYPE +"="+typeInt +" and " + DB_MESSAGE_STATUS+"="+statusInt+";");
 			rs.next();
 			while(!rs.isAfterLast()) {
-				String msg = DB_MESSAGE_ID + "=" +  rs.getString(DB_MESSAGE_ID) + SEPARATOR 
-				+ DB_MESSAGE_SENDER+"=" +rs.getString(DB_MESSAGE_SENDER) + SEPARATOR
-				+ DB_MESSAGE_STATUS + "=" + rs.getString(DB_MESSAGE_STATUS) + SEPARATOR
-				+ DB_MESSAGE_TYPE + "=" +rs.getString(DB_MESSAGE_TYPE) + SEPARATOR
-				+ DB_MESSAGE_CREATED_ON + ":" + rs.getString(DB_MESSAGE_CREATED_ON) + SEPARATOR
-				+ DB_MESSAGE_MODIFIED_ON  + ":" + rs.getString(DB_MESSAGE_MODIFIED_ON) + SEPARATOR
+				String msg = DB_MESSAGE_ID + "=" +  rs.getString(DB_MESSAGE_ID) + AttributeManager.PAIRS_SEPARATOR 
+				+ DB_MESSAGE_SENDER+"=" +rs.getString(DB_MESSAGE_SENDER) + AttributeManager.PAIRS_SEPARATOR
+				+ DB_MESSAGE_STATUS + "=" + rs.getString(DB_MESSAGE_STATUS) + AttributeManager.PAIRS_SEPARATOR
+				+ DB_MESSAGE_TYPE + "=" +rs.getString(DB_MESSAGE_TYPE) + AttributeManager.PAIRS_SEPARATOR
+				+ DB_MESSAGE_CREATED_ON + ":" + rs.getString(DB_MESSAGE_CREATED_ON) + AttributeManager.PAIRS_SEPARATOR
+				+ DB_MESSAGE_MODIFIED_ON  + ":" + rs.getString(DB_MESSAGE_MODIFIED_ON) + AttributeManager.PAIRS_SEPARATOR
 				+ rs.getString(DB_MESSAGE_COLUMN);
 				statusmsg.add(msg);
 				rs.next();
@@ -210,12 +211,12 @@ public class SmsReader {
 			if (rs.isAfterLast())
 				return id + " NOT FOUND";
 
-			msg = DB_MESSAGE_ID + "=" +  rs.getString(DB_MESSAGE_ID) + SEPARATOR 
-			+ DB_MESSAGE_SENDER+"=" +rs.getString(DB_MESSAGE_SENDER) + SEPARATOR
-			+ DB_MESSAGE_STATUS + "=" + rs.getString(DB_MESSAGE_STATUS) + SEPARATOR
-			+ DB_MESSAGE_TYPE + "=" +rs.getString(DB_MESSAGE_TYPE) + SEPARATOR
-			+ DB_MESSAGE_CREATED_ON + ":" + rs.getString(DB_MESSAGE_CREATED_ON) + SEPARATOR
-			+ DB_MESSAGE_MODIFIED_ON  + ":" + rs.getString(DB_MESSAGE_MODIFIED_ON) + SEPARATOR
+			msg = DB_MESSAGE_ID + "=" +  rs.getString(DB_MESSAGE_ID) + AttributeManager.PAIRS_SEPARATOR 
+			+ DB_MESSAGE_SENDER+"=" +rs.getString(DB_MESSAGE_SENDER) + AttributeManager.PAIRS_SEPARATOR
+			+ DB_MESSAGE_STATUS + "=" + rs.getString(DB_MESSAGE_STATUS) + AttributeManager.PAIRS_SEPARATOR
+			+ DB_MESSAGE_TYPE + "=" +rs.getString(DB_MESSAGE_TYPE) + AttributeManager.PAIRS_SEPARATOR
+			+ DB_MESSAGE_CREATED_ON + ":" + rs.getString(DB_MESSAGE_CREATED_ON) + AttributeManager.PAIRS_SEPARATOR
+			+ DB_MESSAGE_MODIFIED_ON  + ":" + rs.getString(DB_MESSAGE_MODIFIED_ON) + AttributeManager.PAIRS_SEPARATOR
 			+ rs.getString(DB_MESSAGE_COLUMN);
 			
 		} catch (SQLException e) {
@@ -289,7 +290,7 @@ public class SmsReader {
 		finally{
 			scanner.close();
 		}
-		log("Text read from " + filename + " : " + System.getProperty("line.separator") + toString());
+		log("Text read from " + filename + " : " + System.getProperty("line.AttributeManager.PAIRS_SEPARATOR") + toString());
 	}
 	
 	public String getFilename() {
@@ -326,7 +327,7 @@ public class SmsReader {
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		for (int k = 0; k < messages.size(); k++) 
-			sb.append(messages.get(k) + System.getProperty("line.separator"));
+			sb.append(messages.get(k) + System.getProperty("line.AttributeManager.PAIRS_SEPARATOR"));
 		return sb.toString();
 	}
 	

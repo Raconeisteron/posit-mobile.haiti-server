@@ -1,7 +1,6 @@
 package haiti.server.modem;
 
 import haiti.server.datamodel.AttributeManager;
-import haiti.server.datamodel.HaitiKeys;
 
 public class SmsMessage {
 
@@ -19,11 +18,11 @@ public class SmsMessage {
 		message = rawMsg;
 		sender = rawSender;
 		
-		message = decodeUrl(message, HaitiKeys.URL_INNER_DELIM, HaitiKeys.INNER_DELIM);
-		message = decodeUrl(message, HaitiKeys.URL_OUTER_DELIM, HaitiKeys.OUTER_DELIM);
-		sender = decodeUrl(sender, HaitiKeys.URL_PLUS, HaitiKeys.PLUS);
+		message = decodeUrl(message, AttributeManager.URL_INNER_DELIM, AttributeManager.INNER_DELIM);
+		message = decodeUrl(message, AttributeManager.URL_OUTER_DELIM, AttributeManager.OUTER_DELIM);
+		sender = decodeUrl(sender, AttributeManager.URL_PLUS, AttributeManager.PLUS);
 		
-		split(message, HaitiKeys.OUTER_DELIM, HaitiKeys.INNER_DELIM, Abbreviated.TRUE);
+		split(message, AttributeManager.OUTER_DELIM, AttributeManager.INNER_DELIM, Abbreviated.TRUE);
 	}
 	
 	private String decodeUrl(String s, String urlSym, String regSym) {
@@ -39,9 +38,9 @@ public class SmsMessage {
 			AttributeManager am = AttributeManager.getInstance();
 			String longAttr = am.mapToLong(abbreviated, attrval[0]);
 			
-			if (longAttr.equals(HaitiKeys.LONG_AV))
+			if (longAttr.equals(AttributeManager.LONG_AV))
 				AVnum = Integer.parseInt(attrval[1]);
-			else if (longAttr.equals(HaitiKeys.LONG_STATUS)) {
+			else if (longAttr.equals(AttributeManager.LONG_STATUS)) {
 				int i = Integer.parseInt(attrval[1]);
 				switch (i) {
 					case 0: status = Status.NEW; break;
@@ -49,7 +48,7 @@ public class SmsMessage {
 					case 2: status = Status.PROCESSED; break;
 				}
 			}
-			else if (longAttr.equals(HaitiKeys.LONG_TYPE)) {
+			else if (longAttr.equals(AttributeManager.LONG_TYPE)) {
 				switch (Integer.parseInt(attrval[1])) {
 					case 0: type = Type.BENEFICIARY; break;
 					case 1: type = Type.UPDATE; break;

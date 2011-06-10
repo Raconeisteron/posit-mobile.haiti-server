@@ -12,6 +12,10 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Scanner;
 
+/**
+ * @author cslab
+ *
+ */
 public class DbWriter {
 
 	private static final String dbName = "C:\\Documents and Settings\\cslab\\Desktop\\haitidb\\haiti.db";
@@ -93,7 +97,12 @@ public class DbWriter {
 			}
 		}
 	}
-	
+	/**
+	 * Called by Frontline SMS whenever a new message is received by the
+	 * modem.
+	 * @param args[0] is the message text 
+	 * @param args[1] is the sender
+	 */
 	public static void main(String args[]) {
 		
 		DbWriter dw = new DbWriter();
