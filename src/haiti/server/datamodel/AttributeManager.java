@@ -47,6 +47,15 @@ public class AttributeManager {
 	public static final String ATTR_VAL_SEPARATOR = "=";
 	public static final String PAIRS_SEPARATOR = ",";
 	
+	public static final String OUTER_DELIM = PAIRS_SEPARATOR;
+	public static final String INNER_DELIM = ATTR_VAL_SEPARATOR;
+	
+	public static final String URL_OUTER_DELIM = "%2C";
+	public static final String URL_INNER_DELIM = "%3D";
+	public static final String URL_PLUS = "%2B";
+	public static final String PLUS = "+";
+	public static final String FORM_BENEFICIARY = null;
+	
 	public static final String FORM_FIRST_NAME="FirstName";
 	public static final String FORM_LAST_NAME="LastName";
 	public static final String FORM_COMMUNE="Commune";
@@ -90,18 +99,23 @@ public class AttributeManager {
 	public static final String FORM_WHY= "Why"; //"If so, why?:";
 	
 	
-	public static final String ABBREV_ATTRIBUTE = "attr";
-	public static final String ABBREV_FIRST = "f";  // "fn";
-	public static final String ABBREV_LAST = "l";   //"ln";
-	public static final String ABBREV_COMMUNE = "c";
+//	public static final String ABBREV_ATTRIBUTE = "attr";
+	public static final String ABBREV_FIRST = "f";     // "fn";
+	public static final String ABBREV_LAST = "l";      //"ln";
+	public static final String ABBREV_COMMUNE = "cm";
 	public static final String ABBREV_COMMUNE_SECTION = "cs";
-	public static final String ABBREV_ADDRESS = "a"; //"ad";
-	public static final String ABBREV_AGE = "b"; //"a";
-	public static final String ABBREV_SEX = "g"; //"s";
-	public static final String ABBREV_BENEFICIARY = "e";
-	public static final String ABBREV_NUMBER_IN_HOME = "n"; // "nih";
-	public static final String ABBREV_HEALTH_CENTER = "h"; // "hc";
-	public static final String ABBREV_DISTRIBUTION_POST = "d"; //"dp";
+	public static final String ABBREV_LOCALITY = "a";    //"ad";
+	public static final String ABBREV_DOB = "b";        //"a";
+	public static final String ABBREV_SEX = "g";         //"s";
+	public static final String ABBREV_CATEGORY = "c";
+	public static final String ABBREV_IS_MOTHERLEADER = "ml";
+	public static final String ABBREV_VISIT_MOTHERLEADER = "mv";
+	public static final String ABBREV_IS_AGRI = "ag";
+
+	public static final String ABBREV_NUMBER_IN_HOME = "n";     // "nih";
+	public static final String ABBREV_HEALTH_CENTER = "h";      // "hc";
+	public static final String ABBREV_DISTRIBUTION_POST = "d";  //"dp";
+	
 	public static final String ABBREV_NAME_CHILD = "nc";
 	public static final String ABBREV_NAME_WOMAN = "nw";
 	public static final String ABBREV_HUSBAND = "h";
@@ -126,7 +140,7 @@ public class AttributeManager {
 	public static final String ABBREV_MCHN_INFORMATION = "mchn";
 	public static final String ABBREV_CONTROLS = "ctrl";
 	public static final String ABBREV_STATUS = "s"; //"st";
-	public static final String ABBREV_ID = "#"; //"id";
+	public static final String ABBREV_ID = "id"; //"id";
 	public static final String ABBREV_AV = "AV";
 	public static final String ABBREV_TYPE = "t";
 	
@@ -142,7 +156,7 @@ public class AttributeManager {
 	public static final String ABBREV_MALNOURISHED = "M";
 	
 	//
-	public static final String LONG_ATTRIBUTE = "attribute";
+//	public static final String LONG_ATTRIBUTE = "attribute";
 	public static final String LONG_FIRST = "firstName";
 	public static final String LONG_LAST = "lastName";
 	public static final String LONG_COMMUNE = "commune";
@@ -183,16 +197,7 @@ public class AttributeManager {
 	public static final String LONG_TYPE = "type";
 	
 	public static final String LONG_DOSSIER = "dossier";
-	
-	public static final String OUTER_DELIM = ",";
-	public static final String INNER_DELIM = "=";
-	public static final String URL_OUTER_DELIM = "%2C";
-	public static final String URL_INNER_DELIM = "%3D";
-	public static final String URL_PLUS = "%2B";
-	public static final String PLUS = "+";
-	public static final String FORM_BENEFICIARY = null;
-	
-	
+		
 	// Added for mobile app
 	// This group refers to the abbreviated column names in the on-phone Db
 	public static final String FINDS_DOSSIER =  "dossier";
@@ -234,15 +239,15 @@ public class AttributeManager {
 //	public AttributeManager() {
 	public static void init() {
 		abbreviations = new HashMap<String, String>();
-		abbreviations.put(ABBREV_ATTRIBUTE, LONG_ATTRIBUTE);
+//		abbreviations.put(ABBREV_ATTRIBUTE, LONG_ATTRIBUTE);
 		abbreviations.put(ABBREV_FIRST, LONG_FIRST);
 		abbreviations.put(ABBREV_LAST, LONG_LAST);
 		abbreviations.put(ABBREV_COMMUNE, LONG_COMMUNE);
 		abbreviations.put(ABBREV_COMMUNE_SECTION, LONG_COMMUNE_SECTION);
-		abbreviations.put(ABBREV_ADDRESS, LONG_ADDRESS);
-		abbreviations.put(ABBREV_AGE, LONG_AGE);
+		abbreviations.put(ABBREV_LOCALITY, LONG_ADDRESS);
+		abbreviations.put(ABBREV_DOB, LONG_AGE);
 		abbreviations.put(ABBREV_SEX, LONG_SEX);
-		abbreviations.put(ABBREV_BENEFICIARY, LONG_BENEFICIARY);
+		abbreviations.put(ABBREV_CATEGORY, LONG_BENEFICIARY);
 		abbreviations.put(ABBREV_NUMBER_IN_HOME, LONG_NUMBER_IN_HOME);
 		abbreviations.put(ABBREV_HEALTH_CENTER, LONG_HEALTH_CENTER);
 		abbreviations.put(ABBREV_DISTRIBUTION_POST, LONG_DISTRIBUTION_POST);
@@ -318,17 +323,21 @@ public class AttributeManager {
 		abbreviations.put(MESSAGE_ACK_AT, "t3");
 		
 		// These correspond to data values represented as Enums in the server app
-		abbreviations.put("FEMALE", "F");
-		abbreviations.put("F", "FEMALE");
-		abbreviations.put("MALE", "M");
-		abbreviations.put("M", "MALE");
+//		abbreviations.put("FEMALE", "F");
+//		abbreviations.put("F", "FEMALE");
+//		abbreviations.put("MALE", "M");
+//		abbreviations.put("M", "MALE");
 		abbreviations.put("EXPECTING", "E");
+		abbreviations.put("E", "EXPECTING");
 		abbreviations.put("Femme Enceinte", "E");
 		abbreviations.put("NURSING", "N");
+		abbreviations.put("N", "NURSING");
 		abbreviations.put("Femme Allaitante", "N");	
 		abbreviations.put("PREVENTION", "P");
+		abbreviations.put("P", "PREVENTION");
 		abbreviations.put("Enfant Prevention", "P");		
 		abbreviations.put("MALNOURISHED", "M");
+		abbreviations.put("M", "MALNOURISHED");
 		abbreviations.put("Enfant Mal", "M");	
 	}
 	
@@ -383,7 +392,7 @@ public class AttributeManager {
 	}
 	
 	/**
-	 * Convert a a value to an abbreviated value. This is mostly
+	 * Convert a value to an abbreviated value. This is mostly
 	 * used for the names of health centers and distribution posts.
 	 * @param val a String of the form "Name of Some Health Center"
 	 * @return a String of the form "1" representing that health center
@@ -396,9 +405,27 @@ public class AttributeManager {
 			return val;
 	}
 	
+	/**
+	 * Convert a value to an abbreviated value. This is mostly
+	 * used for the names of health centers and distribution posts.
+	 * @param val a String of the form "Name of Some Health Center"
+	 * @return a String of the form "1" representing that health center
+	 */
+	public static String getMapping(String val) {
+		System.out.println("val = " + val);
+		String result = abbreviations.get(val);
+		if (result != null)
+			return result;
+		else 
+			return val;
+	}
 	
+	/**
+	 * A simple test method.
+	 */
 	public void testAllAttributes() {
-		Iterator<String> it = abbreviations.values().iterator();
+		Iterator<String> it = abbreviations.keySet().iterator();
+		//Iterator<String> it = abbreviations.values().iterator();
 		while (it.hasNext()) { 
 			String s = it.next();
 			
@@ -416,6 +443,7 @@ public class AttributeManager {
 		AttributeManager am = AttributeManager.getInstance(); // new AttributeManager();
 		System.out.print(am.mapToLong(Beneficiary.Abbreviated.FALSE, "f"));
 		am.testAllAttributes();
+		System.out.println("Str= " + am.abbreviations.get("M"));
 	}
 
 }

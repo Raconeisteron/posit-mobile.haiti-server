@@ -91,24 +91,9 @@ public class DataEntryFormStatic extends JPanel implements ActionListener, KeyLi
 		dossier;
 	
 	private ButtonGroup 
-//		sexGroup, 
-//		infantGroup, 
 		agriGroup, 
 		motherGroup, 
 		motherVisitGroup;
-//	private JRadioButton 
-//		radioMale, 
-//		radioFemale,
-//		radioInfantMal,
-//		radioInfantPrev,
-//		radioMotherExp,
-//		radioMotherNurs,
-//		radioMotherLeaderYes, 
-//		radioMotherLeaderNo, 
-//		radioVisitYes, 
-//		radioVisitNo, 
-//		radioAgriYes, 
-//		radioAgriNo;
 
 	private JLabel
 		communeBox, 
@@ -149,26 +134,26 @@ public class DataEntryFormStatic extends JPanel implements ActionListener, KeyLi
 	 * @param beneficiary 
 	 */
 	public void fillInForm(Beneficiary beneficiary, SmsReader reader) {
+		System.out.println("Filling in form with beneficiary = \n" + beneficiary);
 		this.firstName.setText(beneficiary.getFirstName());
 		this.lastName.setText(beneficiary.getLastName());
 		
 		this.communeBox.setText(beneficiary.getCommune());
 		this.communeSectionBox.setText(beneficiary.getCommuneSection());
 		this.address.setText(beneficiary.getAddress());
-		this.age.setText(Integer.toString(beneficiary.getAge()));
+		this.age.setText(beneficiary.getDob());
 		this.peopleInHouse.setText(Integer.toString(beneficiary.getNumberInHome()));
 		
-		if (beneficiary.getMotherCategory().equals(Beneficiary.MotherCategory.EXPECTING)) 
+		if (beneficiary.getBeneficiaryCategory().equals(Beneficiary.BeneficiaryCategory.EXPECTING)) 
 			this.beneficiaryCategory.setText(AttributeManager.BUTTON_MOTHER_EXPECTING);
-		else 
+		if (beneficiary.getBeneficiaryCategory().equals(Beneficiary.BeneficiaryCategory.NURSING)) 
 			this.beneficiaryCategory.setText(AttributeManager.BUTTON_MOTHER_NURSING);
-
-		if (beneficiary.getInfantCategory().equals(Beneficiary.InfantCategory.MALNOURISHED)) 
+		if (beneficiary.getBeneficiaryCategory().equals(Beneficiary.BeneficiaryCategory.MALNOURISHED)) 
 			this.beneficiaryCategory.setText(AttributeManager.BUTTON_INFANT_MAL);
-		else 
+		if (beneficiary.getBeneficiaryCategory().equals(Beneficiary.BeneficiaryCategory.PREVENTION)) 
 			this.beneficiaryCategory.setText(AttributeManager.BUTTON_INFANT_PREVENTION);
-		
-		if (beneficiary.getSex().equals(Beneficiary.Sex.MALE))
+				
+		if (beneficiary.getSex().equals(Beneficiary.Sex.M))
 			this.sex.setText(AttributeManager.FORM_MALE);
 		else
 			this.sex.setText(AttributeManager.FORM_FEMALE);
@@ -308,53 +293,6 @@ public class DataEntryFormStatic extends JPanel implements ActionListener, KeyLi
 		c.gridx=3;
 		geninfoPanel.add(beneficiaryCategory,c);
 
-		
-		
-		//Sex radio buttons
-//		c.gridy=3;
-//		c.gridx=0;
-//		sexLabel = new JLabel();
-//		sexLabel.setText(LocaleManager.resources.getString(AttributeManager.FORM_SEX));
-//		geninfoPanel.add(sexLabel,c);
-//		sexGroup = new ButtonGroup();
-//		radioMale = new JRadioButton(LocaleManager.resources.getString(AttributeManager.FORM_MALE),false);
-//		radioFemale = new JRadioButton(LocaleManager.resources.getString(AttributeManager.FORM_FEMALE),false);
-//		sexGroup.add(radioMale);
-//		sexGroup.add(radioFemale);
-//		c.gridy=3;
-//		c.gridx=1;
-//		geninfoPanel.add(radioMale,c);
-//		c.gridy=3;
-//		c.gridx=2;
-//		geninfoPanel.add(radioFemale,c);
-
-		
-		//Beneficiary radio buttons
-//		c.gridy = 4;
-//		c.gridx=0;
-//		beneficiaryLabel = new JLabel(LocaleManager.resources.getString(AttributeManager.FORM_BENEFICIARY));
-//		geninfoPanel.add(beneficiaryLabel,c);
-//		infantGroup = new ButtonGroup();
-//		radioInfantMal = new JRadioButton(LocaleManager.resources.getString(AttributeManager.LONG_INFANT_MAL),false);
-//		radioInfantPrev = new JRadioButton(LocaleManager.resources.getString(AttributeManager.LONG_INFANT_PREVENTION),false);
-//		radioMotherExp = new JRadioButton(LocaleManager.resources.getString(AttributeManager.LONG_MOTHER_EXPECTING),false);
-//		radioMotherNurs = new JRadioButton(LocaleManager.resources.getString(AttributeManager.LONG_MOTHER_NURSING),false);
-//		infantGroup.add(radioInfantMal);
-//		infantGroup.add(radioInfantPrev);
-//		infantGroup.add(radioMotherExp);
-//		infantGroup.add(radioMotherNurs);
-//		c.gridy=4;
-//		c.gridx=1;
-//		geninfoPanel.add(radioInfantMal,c);
-//		c.gridy=4;
-//		c.gridx=2;
-//		geninfoPanel.add(radioInfantPrev,c);
-//		c.gridy=4;
-//		c.gridx=3;
-//		geninfoPanel.add(radioMotherExp,c);
-//		c.gridy=4;
-//		c.gridx=4;
-//		geninfoPanel.add(radioMotherNurs,c);
 	
 		//People in house
 		c.gridy = 5;
@@ -422,11 +360,6 @@ public class DataEntryFormStatic extends JPanel implements ActionListener, KeyLi
 		c.gridx=3;
 		mchnPanel.add(father,c);
 
-//		motherGroup = new ButtonGroup();
-//		radioMotherLeaderYes = new JRadioButton(LocaleManager.resources.getString(AttributeManager.BUTTON_YES),false);
-//		radioMotherLeaderNo = new JRadioButton(LocaleManager.resources.getString(AttributeManager.BUTTON_NO),false);
-//		motherGroup.add(radioMotherLeaderYes);
-//		motherGroup.add(radioMotherLeaderNo); 
 		motherLeader = new JLabel();
 		c.gridy=3;
 		c.gridx=0;
@@ -438,13 +371,7 @@ public class DataEntryFormStatic extends JPanel implements ActionListener, KeyLi
 //		mchnPanel.add(radioMotherLeaderYes,c);
 		c.gridy=3;
 		c.gridx=2;
-//		mchnPanel.add(radioMotherLeaderNo,c);
 
-//		motherVisitGroup = new ButtonGroup();
-//		radioVisitYes = new JRadioButton(LocaleManager.resources.getString(AttributeManager.BUTTON_YES),false);
-//		radioVisitNo = new JRadioButton(LocaleManager.resources.getString(AttributeManager.BUTTON_NO),false);
-//		motherVisitGroup.add(radioVisitYes);
-//		motherVisitGroup.add(radioVisitNo);
 		motherVisit = new JLabel();
 		c.gridy=4;
 		c.gridx=0;
@@ -458,11 +385,6 @@ public class DataEntryFormStatic extends JPanel implements ActionListener, KeyLi
 		c.gridx=2;
 //		mchnPanel.add(radioVisitNo,c);
 
-//		agriGroup = new ButtonGroup();
-//		radioAgriYes = new JRadioButton(LocaleManager.resources.getString(AttributeManager.BUTTON_YES),false);
-//		radioAgriNo = new JRadioButton(LocaleManager.resources.getString(AttributeManager.BUTTON_NO),false);
-//		agriGroup.add(radioAgriYes);
-//		agriGroup.add(radioAgriNo);
 		agri1 = new JLabel();
 		c.gridy=5;
 		c.gridx=0;

@@ -30,130 +30,214 @@ import java.util.ResourceBundle;
 
 public class Beneficiary {
 	
-	public enum Sex {MALE, FEMALE, UNKNOWN};
-	public enum InfantCategory {MALNOURISHED, PREVENTION, UNKNOWN};
-	public enum MotherCategory {EXPECTING, NURSING, UNKNOWN};
+	public enum Sex {U, M, F};
+	public enum YnQuestion { U, Y, N};
+	
+	public enum BeneficiaryCategory {
+		UNKNOWN(-1), EXPECTING(0), NURSING(1), PREVENTION(2),  MALNOURISHED(3);
+		
+		private int code;
+		private BeneficiaryCategory(int code) {
+			this.code = code;
+		}
+		public int getCode() {
+			return code;
+		}
+	}
+	
+	
 	public enum Abbreviated {TRUE, FALSE};
-	public enum Status {NEW, PENDING, PROCESSED, UNKNOWN};
+	
+	public enum Status {
+		UNKNOWN(-1), NEW(0), UPDATED(1), PENDING(2), PROCESSED(3);
+		private int code;
+		private Status(int code) {
+			this.code = code;
+		}
+		public int getCode() {
+			return code;
+		}
+	};
 
-	private String firstName = "";
-	private String lastName = "";
-	private String address = "";
-	private String commune = "";
-	private String communeSection = "";
-	private int age = -1;
-	private Sex sex = Sex.UNKNOWN; 
-	private int numberInHome = -1;
-	private InfantCategory infantCategory = InfantCategory.UNKNOWN;
-	private MotherCategory motherCategory = MotherCategory.UNKNOWN;
+	// Bookeeping attributes
 	private int id = -1;
 	private Status status = Status.UNKNOWN;
-	//private int status ;
-
+	
+	// Attributes in the order of the form on the phone
+	private String firstName = "";
+	private String lastName = "";
+	private String locality = "";
+	private String dob = "";
+	private Sex sex = Sex.U; 
+	private int numberInHome = -1;
+	private BeneficiaryCategory beneficiaryCategory = BeneficiaryCategory.UNKNOWN;
+	
+	// MCHN Information
+	private String healthCenter = "";
+	private String distributionPost = "";
+	private String commune = "";
+	private String communeSection = "";
+	
+	
+	private YnQuestion isMotherLeader = YnQuestion.U;
+	private YnQuestion visitMotherLeader  = YnQuestion.U;
+	private YnQuestion isParticipatingAgri = YnQuestion.U;
+	
+	// Agriculture categories
+	
+	private double amountOfLand = -1;
+	
+	private YnQuestion isFarmer = YnQuestion.U;
+	private YnQuestion isMuso = YnQuestion.U;
+	private YnQuestion isRancher = YnQuestion.U;
+	private YnQuestion isMerchant = YnQuestion.U;
+	private YnQuestion isFisherman = YnQuestion.U;
+	private YnQuestion isOther = YnQuestion.U;
+	
+	private YnQuestion getsVeggies = YnQuestion.U;
+	private YnQuestion getsCereal = YnQuestion. U;
+	private YnQuestion getsTubers = YnQuestion.U;
+	private YnQuestion getsTrees = YnQuestion.U;
+	
+	private YnQuestion getsHoe = YnQuestion.U;
+	private YnQuestion getsPickax = YnQuestion.U;
+	private YnQuestion getsWheelbarrow = YnQuestion.U;  // Brouette
+	private YnQuestion getsMachete = YnQuestion.U;
+	private YnQuestion getsSerpette = YnQuestion.U;
+	private YnQuestion getsPelle = YnQuestion.U;
+	private YnQuestion getsBarreAMines = YnQuestion.U;
 
 	/**
 	 * Default constructor
 	 */
-	public Beneficiary() {
-		this("first","last", 
-				"commune", "section",
-				0, 
-				Sex.MALE,
-				InfantCategory.PREVENTION, MotherCategory.NURSING, 
-				0);
-	}
+	public Beneficiary() { }
 
+	
 	/**
-	 * Constructs a beneficiary from a string of attribute=value pairs of
-	 * the following form: attr1=value1&attr2=val2& ... &attrN=valueN
-	 * @param attributeValueString
-	 * @param abbreviatedAttributes true iff the attribute names are abbreviated, eg. fn
+	 * Constructs an instance from an SMS string of the form:
+	 *      attr1=value1&attr2=val2& ... &attrN=valueN
+	 * @param smsString
 	 */
-	public Beneficiary (String attributeValueString, Abbreviated abbreviatedAttributes) {
-		System.out.println("Splitting " + attributeValueString);
-		split(attributeValueString, AttributeManager.OUTER_DELIM, AttributeManager.INNER_DELIM, abbreviatedAttributes);
+	public Beneficiary (String smsString) {
+		System.out.println("Creating instance from SMS: " + smsString);
+		String attrvalPairs[] = smsString.split(AttributeManager.PAIRS_SEPARATOR);
 		
-	}
+		for (int k = 0; k < attrvalPairs.length; k++) {
+			String attrval[] = attrvalPairs[k].split(AttributeManager.ATTR_VAL_SEPARATOR);
+			String attr = "", val = "";
+			if (attrval.length == 2) {
+				attr = attrval[0];
+				val = attrval[1];
+			} else if (attrval.length == 1) {
+				attr = attrval[0];
+			}
+			
+			System.out.println("Attr= " + attr + " val= " + val);
+			
+			try {
+				if (attr.equals(AttributeManager.ABBREV_ID)) 
+					id = Integer.parseInt(val);
+				else if (attr.equals(AttributeManager.ABBREV_FIRST)) 
+					firstName = val;
+				else if (attr.equalsIgnoreCase(AttributeManager.ABBREV_LAST)) 
+					lastName = val;
+				else if (attr.equalsIgnoreCase(AttributeManager.ABBREV_LOCALITY))
+					locality = val;
+				else if (attr.equalsIgnoreCase(AttributeManager.ABBREV_DOB))
+					dob = val;		
+				else if (attr.equalsIgnoreCase(AttributeManager.ABBREV_SEX))
+					sex = Sex.valueOf(val.toUpperCase());
+				else if (attr.equalsIgnoreCase(AttributeManager.ABBREV_NUMBER_IN_HOME))
+					numberInHome = Integer.parseInt(val);
+				else if (attr.equalsIgnoreCase(AttributeManager.ABBREV_CATEGORY))
+					beneficiaryCategory = 
+						BeneficiaryCategory.valueOf( AttributeManager.getMapping(val.toUpperCase()));
+				else if (attr.equalsIgnoreCase(AttributeManager.ABBREV_HEALTH_CENTER))
+					healthCenter = val;
+				else if (attr.equalsIgnoreCase(AttributeManager.ABBREV_IS_MOTHERLEADER))
+					isMotherLeader = YnQuestion.valueOf(val.toUpperCase());
+				else if (attr.equalsIgnoreCase(AttributeManager.ABBREV_VISIT_MOTHERLEADER))
+					visitMotherLeader = YnQuestion.valueOf(val.toUpperCase());			
+				else if (attr.equalsIgnoreCase(AttributeManager.ABBREV_IS_AGRI))
+					visitMotherLeader = YnQuestion.valueOf(val.toUpperCase());	
+			} catch (NumberFormatException e) {
+				System.out.println("Number format exception");
+				e.printStackTrace();
+				continue;
+			} catch (NullPointerException e) {
+				System.out.println("Null pointer exception");
+				e.printStackTrace();
+				continue;				
+			}
+			
+// Here are all the attributes that need assignments of the right type. 
+//  There should be an ABBREV_   constant in AttributeManager for each one.
+			
+//				+ firstName + ", lastName=" + lastName + ", locality="
+//				+ locality + ", dob=" + dob + ", sex=" + sex
+//				+ ", numberInHome=" + numberInHome + ", beneficiaryCategory="
+//				+ beneficiaryCategory + ", healthCenter=" + healthCenter
+//				+ ", distributionPost=" + distributionPost + ", commune="
+//				+ commune + ", communeSection=" + communeSection
+//				+ ", isMotherLeader=" + isMotherLeader + ", visitMotherLeader="
+//				+ visitMotherLeader + ", isParticipatingAgri="
+//				+ isParticipatingAgri + ", amountOfLand=" + amountOfLand
+//				+ ", isFarmer=" + isFarmer + ", isMuso=" + isMuso
+//				+ ", isRancher=" + isRancher + ", isMerchant=" + isMerchant
+//				+ ", isFisherman=" + isFisherman + ", isOther=" + isOther
+//				+ ", getsVeggies=" + getsVeggies + ", getsCereal=" + getsCereal
+//				+ ", getsTubers=" + getsTubers + ", getsTrees=" + getsTrees
+//				+ ", getsHoe=" + getsHoe + ", getsPickax=" + getsPickax
+//				+ ", getsWheelbarrow=" + getsWheelbarrow + ", getsMachete="
+//				+ getsMachete + ", getsSerpette=" + getsSerpette
+//				+ ", getsPelle=" + getsPelle + ", getsBarreAMines="
+//				+ getsBarreAMines + "]";
+		
+				
+				
+				
+		}
 
-	public String getRandomDossierNumber(){
-		return "" + (int)(Math.random() * 1000000);
 	}
+		
 	public Beneficiary(String firstName, String lastName, 
 			String commune, String communeSection,
 			int age,
 			Sex sex, 
-			InfantCategory infantCategory, 
-			MotherCategory motherCategory, 
+			BeneficiaryCategory beneCategory, 
 			int numberInHome) {
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.commune = commune;
 		this.communeSection = communeSection;
 		this.sex = sex;
-		this.infantCategory = infantCategory;
-		this.motherCategory = motherCategory;
+		this.beneficiaryCategory = beneCategory;
 		this.numberInHome = numberInHome;
 	}
-	
-	/**
-	 * Splits a string of the form attr1=value1&attr2=val2& ... &attrN=valueN
-	 * @param s is the string being split
-	 * @param outerDelim defines the delimiter
-	 * @param abbreviated are the attributes abbreviated
-	 */
-	private void split(String s, String outerDelim, String innerDelim, Abbreviated abbreviated) {
-		String attrvalPairs[] = s.split(outerDelim);				// Pairs like attr1=val1
-		for (int k = 0; k < attrvalPairs.length; k++) {
-			String attrval[] = attrvalPairs[k].split(innerDelim);	// Puts attr in 0 and val in 1
 
-			AttributeManager am = AttributeManager.getInstance();
-			String longAttr = am.mapToLong(abbreviated, attrval[0]);
-			if (attrval.length < 2) {
-				System.out.println("Missing data value for " + attrvalPairs[k]);
-				continue;
-			}
-			System.out.println("attr=" + attrval[0] + " val=" + attrval[1]);
-			try {
-				if (longAttr.equals(AttributeManager.LONG_ID))
-					id = Integer.parseInt(attrval[1]);
-				else if (longAttr.equals(AttributeManager.LONG_STATUS)){
-					if (Integer.parseInt(attrval[1]) == Status.NEW.ordinal())
-						status = Status.NEW;
-					else if (Integer.parseInt(attrval[1]) == Status.PENDING.ordinal())
-						status = Status.PENDING;
-					else if (Integer.parseInt(attrval[1]) == Status.PROCESSED.ordinal())
-						status = Status.PROCESSED;
-					else 
-						status = Status.UNKNOWN;
-				}
-//				else if (longAttr.equals(AttributeManager.LONG_FIRST))
-//					firstName=attrval[1];
-				else if (attrval[0].equals(AttributeManager.ABBREV_FIRST))
-					firstName=  attrval[1];
-				else if (attrval[0].equals(AttributeManager.ABBREV_LAST))
-					lastName = attrval[1];
-				else if (attrval[0].equals(AttributeManager.LONG_ADDRESS))
-					address = attrval[1];
-				else if (longAttr.equals(AttributeManager.LONG_COMMUNE))
-					commune=attrval[1];
-				else if (longAttr.equals(AttributeManager.LONG_COMMUNE_SECTION))
-					communeSection=attrval[1];
-				else if (longAttr.equals(AttributeManager.LONG_INFANT_CATEGORY))
-					infantCategory=InfantCategory.valueOf(attrval[1]);
-				else if (longAttr.equals(AttributeManager.LONG_MOTHER_CATEGORY))
-					motherCategory=MotherCategory.valueOf(attrval[1]);
-				else if (longAttr.equals(AttributeManager.LONG_SEX))
-					sex = Sex.valueOf(AttributeManager.mapToLong(Beneficiary.Abbreviated.TRUE, attrval[1]));
-					//sex=Sex.valueOf(attrval[1]);
-				else if (longAttr.equals(AttributeManager.LONG_AGE))
-					age=Integer.parseInt(attrval[1]);
-				else if (longAttr.equals(AttributeManager.LONG_NUMBER_IN_HOME))
-					numberInHome=Integer.parseInt(attrval[1]);
-			} catch (NumberFormatException e) {
-				e.printStackTrace();
-				System.out.println("Number format exception");
-			}
-		}
+	/**
+	 * For temporary development purposes only.
+	 * @return
+	 */
+	public String getRandomDossierNumber(){
+		return "" + (int)(Math.random() * 1000000);
+	}
+
+	
+	public Status getStatus() {
+		return status;
+	}
+
+	public void setStatus(Status status) {
+		this.status = status;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
 	}
 	
 	public String getFirstName() {
@@ -173,11 +257,11 @@ public class Beneficiary {
 	}
 	
 	public String getAddress() {
-		return address;
+		return locality;
 	}
 
 	public void setAddress(String address) {
-		this.address = address;
+		this.locality = address;
 	}
 	public String getCommune() {
 		return commune;
@@ -193,14 +277,6 @@ public class Beneficiary {
 
 	public void setCommuneSection(String communeSection) {
 		this.communeSection = communeSection;
-	}
-
-	public int getAge() {
-		return age;
-	}
-
-	public void setAge(int age) {
-		this.age = age;
 	}
 
 	public Sex getSex() {
@@ -219,38 +295,264 @@ public class Beneficiary {
 		this.numberInHome = numberInHome;
 	}
 
-	public InfantCategory getInfantCategory() {
-		return infantCategory;
+	public BeneficiaryCategory getBeneficiaryCategory() {
+		return beneficiaryCategory;
 	}
 
-	public void setInfantCategory(InfantCategory infantCategory) {
-		this.infantCategory = infantCategory;
-	}
-
-	public MotherCategory getMotherCategory() {
-		return motherCategory;
-	}
-
-	public void setMotherCategory(MotherCategory motherCategory) {
-		this.motherCategory = motherCategory;
+	public void setBeneficiaryCategory(BeneficiaryCategory beneficiaryCategory) {
+		this.beneficiaryCategory = beneficiaryCategory;
 	}
 	
-	public Status getStatus() {
-		return status;
+	public String getLocality() {
+		return locality;
 	}
 
-	public void setStatus(Status status) {
-		this.status = status;
+
+	public void setLocality(String locality) {
+		this.locality = locality;
 	}
 
-	public int getId() {
-		return id;
+
+	public String getDob() {
+		return dob;
 	}
 
-	public void setId(int id) {
-		this.id = id;
+
+	public void setDob(String dob) {
+		this.dob = dob;
 	}
-	
+
+
+	public String getHealthCenter() {
+		return healthCenter;
+	}
+
+
+	public void setHealthCenter(String healthCenter) {
+		this.healthCenter = healthCenter;
+	}
+
+
+	public String getDistributionPost() {
+		return distributionPost;
+	}
+
+
+	public void setDistributionPost(String distributionPost) {
+		this.distributionPost = distributionPost;
+	}
+
+
+	public YnQuestion getIsMotherLeader() {
+		return isMotherLeader;
+	}
+
+
+	public void setIsMotherLeader(YnQuestion isMotherLeader) {
+		this.isMotherLeader = isMotherLeader;
+	}
+
+
+	public YnQuestion getVisitMotherLeader() {
+		return visitMotherLeader;
+	}
+
+
+	public void setVisitMotherLeader(YnQuestion visitMotherLeader) {
+		this.visitMotherLeader = visitMotherLeader;
+	}
+
+
+	public YnQuestion getIsParticipatingAgri() {
+		return isParticipatingAgri;
+	}
+
+
+	public void setIsParticipatingAgri(YnQuestion isParticipatingAgri) {
+		this.isParticipatingAgri = isParticipatingAgri;
+	}
+
+
+	public double getAmountOfLand() {
+		return amountOfLand;
+	}
+
+
+	public void setAmountOfLand(double amountOfLand) {
+		this.amountOfLand = amountOfLand;
+	}
+
+
+	public YnQuestion getIsFarmer() {
+		return isFarmer;
+	}
+
+
+	public void setIsFarmer(YnQuestion isFarmer) {
+		this.isFarmer = isFarmer;
+	}
+
+
+	public YnQuestion getIsMuso() {
+		return isMuso;
+	}
+
+
+	public void setIsMuso(YnQuestion isMuso) {
+		this.isMuso = isMuso;
+	}
+
+
+	public YnQuestion getIsRancher() {
+		return isRancher;
+	}
+
+
+	public void setIsRancher(YnQuestion isRancher) {
+		this.isRancher = isRancher;
+	}
+
+
+	public YnQuestion getIsMerchant() {
+		return isMerchant;
+	}
+
+
+	public void setIsMerchant(YnQuestion isMerchant) {
+		this.isMerchant = isMerchant;
+	}
+
+
+	public YnQuestion getIsFisherman() {
+		return isFisherman;
+	}
+
+
+	public void setIsFisherman(YnQuestion isFisherman) {
+		this.isFisherman = isFisherman;
+	}
+
+
+	public YnQuestion getIsOther() {
+		return isOther;
+	}
+
+
+	public void setIsOther(YnQuestion isOther) {
+		this.isOther = isOther;
+	}
+
+
+	public YnQuestion getGetsVeggies() {
+		return getsVeggies;
+	}
+
+
+	public void setGetsVeggies(YnQuestion getsVeggies) {
+		this.getsVeggies = getsVeggies;
+	}
+
+
+	public YnQuestion getGetsCereal() {
+		return getsCereal;
+	}
+
+
+	public void setGetsCereal(YnQuestion getsCereal) {
+		this.getsCereal = getsCereal;
+	}
+
+
+	public YnQuestion getGetsTubers() {
+		return getsTubers;
+	}
+
+
+	public void setGetsTubers(YnQuestion getsTubers) {
+		this.getsTubers = getsTubers;
+	}
+
+
+	public YnQuestion getGetsTrees() {
+		return getsTrees;
+	}
+
+
+	public void setGetsTrees(YnQuestion getsTrees) {
+		this.getsTrees = getsTrees;
+	}
+
+
+	public YnQuestion getGetsHoe() {
+		return getsHoe;
+	}
+
+
+	public void setGetsHoe(YnQuestion getsHoe) {
+		this.getsHoe = getsHoe;
+	}
+
+
+	public YnQuestion getGetsPickax() {
+		return getsPickax;
+	}
+
+
+	public void setGetsPickax(YnQuestion getsPickax) {
+		this.getsPickax = getsPickax;
+	}
+
+
+	public YnQuestion getGetsWheelbarrow() {
+		return getsWheelbarrow;
+	}
+
+
+	public void setGetsWheelbarrow(YnQuestion getsWheelbarrow) {
+		this.getsWheelbarrow = getsWheelbarrow;
+	}
+
+
+	public YnQuestion getGetsMachete() {
+		return getsMachete;
+	}
+
+
+	public void setGetsMachete(YnQuestion getsMachete) {
+		this.getsMachete = getsMachete;
+	}
+
+
+	public YnQuestion getGetsSerpette() {
+		return getsSerpette;
+	}
+
+
+	public void setGetsSerpette(YnQuestion getsSerpette) {
+		this.getsSerpette = getsSerpette;
+	}
+
+
+	public YnQuestion getGetsPelle() {
+		return getsPelle;
+	}
+
+
+	public void setGetsPelle(YnQuestion getsPelle) {
+		this.getsPelle = getsPelle;
+	}
+
+
+	public YnQuestion getGetsBarreAMines() {
+		return getsBarreAMines;
+	}
+
+
+	public void setGetsBarreAMines(YnQuestion getsBarreAMines) {
+		this.getsBarreAMines = getsBarreAMines;
+	}
+
+
 	public String toString(String separator) {
 		return "id = " + id + separator + 
 		"status = " + status + separator + 
@@ -258,24 +560,52 @@ public class Beneficiary {
 		"lastName = " + lastName + separator +
 		"commune = " + commune + separator +
 		"communeSection = " + communeSection + separator +
-		"age = " + age + separator +
 		"numberInHome = " + numberInHome + separator +
-		"infantCategory = " + infantCategory + separator +
-		"motherCategory = " + motherCategory;
+		"beneficiaryCategory = " + beneficiaryCategory;
 	}
 	
+	@Override
 	public String toString() {
-		return toString(System.getProperty("line.separator"));
+		return "Beneficiary [id=" + id + ", status=" + status + ", firstName="
+				+ firstName + ", lastName=" + lastName + ", locality="
+				+ locality + ", dob=" + dob + ", sex=" + sex
+				+ ", numberInHome=" + numberInHome + ", beneficiaryCategory="
+				+ beneficiaryCategory + ", healthCenter=" + healthCenter
+				+ ", distributionPost=" + distributionPost + ", commune="
+				+ commune + ", communeSection=" + communeSection
+				+ ", isMotherLeader=" + isMotherLeader + ", visitMotherLeader="
+				+ visitMotherLeader + ", isParticipatingAgri="
+				+ isParticipatingAgri + ", amountOfLand=" + amountOfLand
+				+ ", isFarmer=" + isFarmer + ", isMuso=" + isMuso
+				+ ", isRancher=" + isRancher + ", isMerchant=" + isMerchant
+				+ ", isFisherman=" + isFisherman + ", isOther=" + isOther
+				+ ", getsVeggies=" + getsVeggies + ", getsCereal=" + getsCereal
+				+ ", getsTubers=" + getsTubers + ", getsTrees=" + getsTrees
+				+ ", getsHoe=" + getsHoe + ", getsPickax=" + getsPickax
+				+ ", getsWheelbarrow=" + getsWheelbarrow + ", getsMachete="
+				+ getsMachete + ", getsSerpette=" + getsSerpette
+				+ ", getsPelle=" + getsPelle + ", getsBarreAMines="
+				+ getsBarreAMines + "]";
 	}
+
 
 	/**
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		Beneficiary ben = new Beneficiary("AV=1,i=068MP-FAT,t=0,st=1,fn=Denisana,ln=Balthazar,a=Saint Michel,b=1947/11/31,s=F,c=P,d=24", Abbreviated.TRUE);
+//		Beneficiary ben = new Beneficiary("AV=1,i=068MP-FAT,t=0,st=1,fn=Denisana,ln=Balthazar,a=Saint Michel,b=1947/11/31,s=F,c=P,d=24", Abbreviated.TRUE);
 		// System.out.println(ben.toString("&"));
 		// System.out.println(ben.toString());
-		System.out.println(ben.toString());
+//		System.out.println(ben.toString());
+		
+		String s = "=";
+		System.out.println(s.split("=").length);
+		
+		// If you comment out the next line, it will generate a null pointer exception when
+		// it calls map in AttributeManager.  
+		//AttributeManager.init();
+		// This string contains some number format exceptions.
+		Beneficiary b = new Beneficiary("id=$153,c=M,h=Centre de sante une, sender=+18605022947,status=0,message_type=0,created_on=2011-06-10 21:38:47,modified_on=2011-06-10 21:38:47,AV=27,t=0,s=0,m=0,n=$4,f=Rachel,l=Foecking,a=25699 Yeoman Drive,b=1989/1/11,g=F,d=Repartition des postes une,");
 	}
 
 }

@@ -150,20 +150,19 @@ public class DataEntryForm extends JPanel implements ActionListener, KeyListener
 	//	this.communeBox.setText(beneficiary.getCommune());
 	//	this.communeSectionBox.setText(beneficiary.getCommuneSection());
 		this.addressJText.setText(beneficiary.getAddress());
-		this.ageJText.setText(Integer.toString(beneficiary.getAge()));
+//		this.ageJText.setText(Integer.toString(beneficiary.getAge()));
 		this.peopleInHouseJText.setText(Integer.toString(beneficiary.getNumberInHome()));
 		
-		if (beneficiary.getMotherCategory().equals(Beneficiary.MotherCategory.EXPECTING)) 
+		if (beneficiary.getBeneficiaryCategory().equals(Beneficiary.BeneficiaryCategory.EXPECTING)) 
 			this.radioMotherExp.setSelected(true);
-		else 
+		if (beneficiary.getBeneficiaryCategory().equals(Beneficiary.BeneficiaryCategory.NURSING)) 
 			this.radioMotherNurs.setSelected(true); 
-
-		if (beneficiary.getInfantCategory().equals(Beneficiary.InfantCategory.MALNOURISHED)) 
+		if (beneficiary.getBeneficiaryCategory().equals(Beneficiary.BeneficiaryCategory.MALNOURISHED)) 
 			this.radioInfantMal.setSelected(true);
-		else 
+		if (beneficiary.getBeneficiaryCategory().equals(Beneficiary.BeneficiaryCategory.PREVENTION)) 
 			this.radioInfantPrev.setSelected(true);
 		
-		if (beneficiary.getSex().equals(Beneficiary.Sex.MALE)) {
+		if (beneficiary.getSex().equals(Beneficiary.Sex.M)) {
 			this.radioMale.setSelected(true);
 		} else {
 			this.radioFemale.setSelected(true);

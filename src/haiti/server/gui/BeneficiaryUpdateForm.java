@@ -125,17 +125,14 @@ public class BeneficiaryUpdateForm extends JPanel implements ActionListener {
 		this.firstNameJText.setText(beneficiary.getFirstName());
 		this.lastNameJText.setText(beneficiary.getLastName());
 		
-		if (beneficiary.getMotherCategory().equals(Beneficiary.MotherCategory.EXPECTING)) 
+		if (beneficiary.getBeneficiaryCategory().equals(Beneficiary.BeneficiaryCategory.EXPECTING)) 
 			this.radioMotherExp.setSelected(true);
-		else 
+		if (beneficiary.getBeneficiaryCategory().equals(Beneficiary.BeneficiaryCategory.NURSING)) 
 			this.radioMotherNurs.setSelected(true); 
-
-		if (beneficiary.getInfantCategory().equals(Beneficiary.InfantCategory.MALNOURISHED)) 
+		if (beneficiary.getBeneficiaryCategory().equals(Beneficiary.BeneficiaryCategory.MALNOURISHED)) 
 			this.radioInfantMal.setSelected(true);
-		else 
+		if (beneficiary.getBeneficiaryCategory().equals(Beneficiary.BeneficiaryCategory.PREVENTION)) 
 			this.radioInfantPrev.setSelected(true);
-		
-
 	}
 	
 	/**
