@@ -20,6 +20,7 @@
  */
 package haiti.server.gui;
 
+import haiti.server.datamodel.AttributeManager;
 import haiti.server.datamodel.Beneficiary;
 import haiti.server.datamodel.Beneficiary.Abbreviated;
 import haiti.server.datamodel.LocaleManager;
@@ -205,7 +206,8 @@ public class DataEntryGUI extends JFrame implements WindowListener, ListSelectio
 		mMessagesArray = mReader.getMessagesAsArray();
 		
 		mFormPanel = new DataEntryFormStatic(this);
-		mBeneficiary = new Beneficiary(mMessagesArray[0], Abbreviated.TRUE);
+//		mBeneficiary = new Beneficiary(mMessagesArray[0], Abbreviated.TRUE);
+		mBeneficiary = new Beneficiary(mMessagesArray[0]);
 		mFormPanel.fillInForm(mBeneficiary,mReader);
 		
 //		mUpdatePanel = new BeneficiaryUpdateForm(this);
@@ -245,7 +247,8 @@ public class DataEntryGUI extends JFrame implements WindowListener, ListSelectio
 			mMessagesArray[0] = "{Empty}";
 		}
 		else {
-			mBeneficiary = new Beneficiary(mMessagesArray[0], Abbreviated.TRUE);
+			mBeneficiary = new Beneficiary(mMessagesArray[0]);
+//			mBeneficiary = new Beneficiary(mMessagesArray[0], Abbreviated.TRUE);
 			mFormPanel.fillInForm(mBeneficiary,mReader);
 			
 //			mUpdatePanel = new BeneficiaryUpdateForm(this);
@@ -284,7 +287,9 @@ public class DataEntryGUI extends JFrame implements WindowListener, ListSelectio
 	public void valueChanged(ListSelectionEvent e) {
 		JList list = (JList) e.getSource();
 		System.out.println("Clicked on  list item " + list.getSelectedValue());
-		mBeneficiary = new Beneficiary(list.getSelectedValue().toString(), Abbreviated.TRUE);
+		mBeneficiary = new Beneficiary(list.getSelectedValue().toString());
+//		mBeneficiary = new Beneficiary(list.getSelectedValue().toString(), Abbreviated.TRUE);
+//		mBeneficiary = new Beneficiary(list.getSelectedValue().toString(), Abbreviated.TRUE);
 		mFormPanel.fillInForm(mBeneficiary, mReader);	
 		//mUpdatePanel.fillInForm(mBeneficiary, mReader);
 	}
@@ -424,6 +429,7 @@ public class DataEntryGUI extends JFrame implements WindowListener, ListSelectio
 	 *  Creates an instance of DataEntryGUI and when run in application mode.
 	 */
 	public static void main(String args[]) {  //main method
+		AttributeManager.init();
 		DataEntryGUI gui = new DataEntryGUI(); 
 	}  //end main()
 
