@@ -22,7 +22,7 @@ public class SmsMessage {
 		message = decodeUrl(message, AttributeManager.URL_OUTER_DELIM, AttributeManager.OUTER_DELIM);
 		sender = decodeUrl(sender, AttributeManager.URL_PLUS, AttributeManager.PLUS);
 		
-		split(message, AttributeManager.OUTER_DELIM, AttributeManager.INNER_DELIM, Abbreviated.TRUE);
+		split(message, AttributeManager.OUTER_DELIM, AttributeManager.INNER_DELIM, true);
 	}
 	
 	private String decodeUrl(String s, String urlSym, String regSym) {
@@ -30,7 +30,8 @@ public class SmsMessage {
 		return s;
 	}
 	
-	private void split(String s, String outerDelim, String innerDelim, Abbreviated abbreviated) {
+	//private void split(String s, String outerDelim, String innerDelim, Abbreviated abbreviated) {
+	private void split(String s, String outerDelim, String innerDelim, boolean abbreviated) {
 		String attrvalPairs[] = s.split(outerDelim);				// Pairs like attr1=val1
 		for (int k = 0; k < attrvalPairs.length; k++) {
 			String attrval[] = attrvalPairs[k].split(innerDelim);	// Puts attr in 0 and val in 1
