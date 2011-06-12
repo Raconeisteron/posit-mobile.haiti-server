@@ -168,6 +168,10 @@ public class Beneficiary {
 				System.out.println("Null pointer exception");
 				e.printStackTrace();
 				continue;				
+			} catch (IllegalArgumentException e) {
+				System.out.println("Illegal argument exception");
+				e.printStackTrace();
+				continue;				
 			}
 			
 // Here are all the attributes that need assignments of the right type. 
