@@ -47,8 +47,30 @@ import java.util.Scanner;
  */
 public class SmsReader {
 	
-	public enum MessageStatus {NEW, PENDING, PROCESSED, DECLINED, ARCHIVED, ALL};
-	public enum MessageType {REGISTRATION, UPDATE, ALL};
+	public enum MessageStatus {
+		UNKNOWN(-1), NEW(0), PENDING(1), PROCESSED(2),  DECLINED(3), ARCHIVED(4), ALL(5);
+		
+		private int code;
+		private MessageStatus(int code) {
+			this.code = code;
+		}
+		public int getCode() {
+			return code;
+		}
+	}
+	
+	public enum MessageType {
+		UNKNOWN(-1), REGISTRATION(0), UPDATE(1), ALL(2);
+		
+		private int code;
+		private MessageType(int code) {
+			this.code = code;
+		}
+		public int getCode() {
+			return code;
+		}
+	}
+	
 	public static final String TAG = "SmsReader";
 	public static final String DB_MESSAGE_TABLE = "message_log";
 	public static final String DB_MESSAGE_ID = "id";
@@ -91,8 +113,8 @@ public class SmsReader {
 	public Connection connectDb(String filename){
 		Connection connection = null;
 		try {
-			Class.forName("org.sqlite.JDBC");
-			connection = DriverManager.getConnection("jdbc:sqlite:" + filename);
+			Class.forName(AttributeManager.DB_HOST);
+			connection = DriverManager.getConnection(AttributeManager.DB_NAME + filename);
 			return connection;
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
@@ -118,15 +140,15 @@ public class SmsReader {
 			Statement statement = connection.createStatement();
 			statement.setQueryTimeout(30);  // set timeout to 30 sec.
 			
-			ResultSet rs = statement.executeQuery("select * from " + DB_MESSAGE_TABLE);
+			ResultSet rs = statement.executeQuery(AttributeManager.SELECT_FROM + DB_MESSAGE_TABLE);
 			rs.next();
 			while(!rs.isAfterLast()) {
-				String msg = DB_MESSAGE_ID + "=" +  rs.getString(DB_MESSAGE_ID) + AttributeManager.PAIRS_SEPARATOR
-					+ DB_MESSAGE_SENDER+"=" +rs.getString(DB_MESSAGE_SENDER) + AttributeManager.PAIRS_SEPARATOR
-					+ DB_MESSAGE_STATUS + "=" + rs.getString(DB_MESSAGE_STATUS) + AttributeManager.PAIRS_SEPARATOR
-					+ DB_MESSAGE_TYPE + "=" +rs.getString(DB_MESSAGE_TYPE) + AttributeManager.PAIRS_SEPARATOR
-					+ DB_MESSAGE_CREATED_ON + ":" + rs.getString(DB_MESSAGE_CREATED_ON) + AttributeManager.PAIRS_SEPARATOR
-					+ DB_MESSAGE_MODIFIED_ON  + ":" + rs.getString(DB_MESSAGE_MODIFIED_ON) + AttributeManager.PAIRS_SEPARATOR
+				String msg = DB_MESSAGE_ID + AttributeManager.ATTR_VAL_SEPARATOR +  rs.getString(DB_MESSAGE_ID) + AttributeManager.PAIRS_SEPARATOR
+					+ DB_MESSAGE_SENDER+AttributeManager.ATTR_VAL_SEPARATOR +rs.getString(DB_MESSAGE_SENDER) + AttributeManager.PAIRS_SEPARATOR
+					+ DB_MESSAGE_STATUS + AttributeManager.ATTR_VAL_SEPARATOR + rs.getString(DB_MESSAGE_STATUS) + AttributeManager.PAIRS_SEPARATOR
+					+ DB_MESSAGE_TYPE + AttributeManager.ATTR_VAL_SEPARATOR +rs.getString(DB_MESSAGE_TYPE) + AttributeManager.PAIRS_SEPARATOR
+					+ DB_MESSAGE_CREATED_ON + AttributeManager.DATE_SEPARATOR + rs.getString(DB_MESSAGE_CREATED_ON) + AttributeManager.PAIRS_SEPARATOR
+					+ DB_MESSAGE_MODIFIED_ON  + AttributeManager.DATE_SEPARATOR + rs.getString(DB_MESSAGE_MODIFIED_ON) + AttributeManager.PAIRS_SEPARATOR
 					+ rs.getString(DB_MESSAGE_COLUMN);
 				System.out.println(msg);
 
@@ -150,8 +172,8 @@ public class SmsReader {
 	 * return the array containing messages with the given status and type
 	 */
 	public String[] getMessageByStatusAndType(String dbName, MessageStatus status, MessageType type) {
-		int statusInt = status.ordinal();
-		int typeInt = type.ordinal();
+		//int statusInt = status.ordinal();
+		//int typeInt = type.ordinal();
 		ArrayList<String> statusmsg = new ArrayList<String>();
 		String arr[] = new String[0];
 		try {
@@ -159,22 +181,22 @@ public class SmsReader {
 			Statement statement = connection.createStatement();
 			statement.setQueryTimeout(30);  // set timeout to 30 sec.
 			ResultSet rs = null;
-			if (statusInt == 5 && typeInt == 2)
-				rs = statement.executeQuery("select * from " + DB_MESSAGE_TABLE +";");			
-			else if (statusInt == 5 && typeInt != 2)
-				rs = statement.executeQuery("select * from " + DB_MESSAGE_TABLE+" where "+ DB_MESSAGE_TYPE +"="+typeInt+";");
-			else if (statusInt != 5 && typeInt == 2)
-				rs = statement.executeQuery("select * from " + DB_MESSAGE_TABLE+" where "+ DB_MESSAGE_STATUS +"="+statusInt+";");
+			if (status.getCode() == 5 && type.getCode() == 2)
+				rs = statement.executeQuery(AttributeManager.SELECT_FROM + DB_MESSAGE_TABLE +AttributeManager.LINE_ENDER);			
+			else if (status.getCode() == 5 && type.getCode() != 2)
+				rs = statement.executeQuery(AttributeManager.SELECT_FROM + DB_MESSAGE_TABLE+AttributeManager.WHERE+ DB_MESSAGE_TYPE +AttributeManager.ATTR_VAL_SEPARATOR+type.getCode()+AttributeManager.LINE_ENDER);
+			else if (status.getCode() != 5 && type.getCode() == 2)
+				rs = statement.executeQuery(AttributeManager.SELECT_FROM + DB_MESSAGE_TABLE+AttributeManager.WHERE+ DB_MESSAGE_STATUS +AttributeManager.ATTR_VAL_SEPARATOR+status.getCode()+AttributeManager.LINE_ENDER);
 			else
-				rs = statement.executeQuery("select * from " + DB_MESSAGE_TABLE+" where "+ DB_MESSAGE_TYPE +"="+typeInt +" and " + DB_MESSAGE_STATUS+"="+statusInt+";");
+				rs = statement.executeQuery(AttributeManager.SELECT_FROM + DB_MESSAGE_TABLE+AttributeManager.WHERE+ DB_MESSAGE_TYPE +AttributeManager.ATTR_VAL_SEPARATOR+type.getCode() +AttributeManager.CONJUNCTION + DB_MESSAGE_STATUS+AttributeManager.ATTR_VAL_SEPARATOR+status.getCode()+AttributeManager.LINE_ENDER);
 			rs.next();
 			while(!rs.isAfterLast()) {
-				String msg = DB_MESSAGE_ID + "=" +  rs.getString(DB_MESSAGE_ID) + AttributeManager.PAIRS_SEPARATOR 
-				+ DB_MESSAGE_SENDER+"=" +rs.getString(DB_MESSAGE_SENDER) + AttributeManager.PAIRS_SEPARATOR
-				+ DB_MESSAGE_STATUS + "=" + rs.getString(DB_MESSAGE_STATUS) + AttributeManager.PAIRS_SEPARATOR
-				+ DB_MESSAGE_TYPE + "=" +rs.getString(DB_MESSAGE_TYPE) + AttributeManager.PAIRS_SEPARATOR
-				+ DB_MESSAGE_CREATED_ON + ":" + rs.getString(DB_MESSAGE_CREATED_ON) + AttributeManager.PAIRS_SEPARATOR
-				+ DB_MESSAGE_MODIFIED_ON  + ":" + rs.getString(DB_MESSAGE_MODIFIED_ON) + AttributeManager.PAIRS_SEPARATOR
+				String msg = DB_MESSAGE_ID + AttributeManager.ATTR_VAL_SEPARATOR +  rs.getString(DB_MESSAGE_ID) + AttributeManager.PAIRS_SEPARATOR 
+				+ DB_MESSAGE_SENDER+ AttributeManager.ATTR_VAL_SEPARATOR +rs.getString(DB_MESSAGE_SENDER) + AttributeManager.PAIRS_SEPARATOR
+				+ DB_MESSAGE_STATUS + AttributeManager.ATTR_VAL_SEPARATOR + rs.getString(DB_MESSAGE_STATUS) + AttributeManager.PAIRS_SEPARATOR
+				+ DB_MESSAGE_TYPE + AttributeManager.ATTR_VAL_SEPARATOR +rs.getString(DB_MESSAGE_TYPE) + AttributeManager.PAIRS_SEPARATOR
+				+ DB_MESSAGE_CREATED_ON + AttributeManager.DATE_SEPARATOR + rs.getString(DB_MESSAGE_CREATED_ON) + AttributeManager.PAIRS_SEPARATOR
+				+ DB_MESSAGE_MODIFIED_ON  + AttributeManager.DATE_SEPARATOR + rs.getString(DB_MESSAGE_MODIFIED_ON) + AttributeManager.PAIRS_SEPARATOR
 				+ rs.getString(DB_MESSAGE_COLUMN);
 				statusmsg.add(msg);
 				rs.next();
@@ -206,17 +228,17 @@ public class SmsReader {
 		try {
 			statement = connection.createStatement();
 			statement.setQueryTimeout(30);  // set timeout to 30 sec	
-			ResultSet rs = statement.executeQuery("select * from " + DB_MESSAGE_TABLE + " where "+DB_MESSAGE_ID+" = " + id);
+			ResultSet rs = statement.executeQuery(AttributeManager.SELECT_FROM + DB_MESSAGE_TABLE + AttributeManager.WHERE+DB_MESSAGE_ID+ AttributeManager.ATTR_VAL_SEPARATOR + id);
 			rs.next();
 			if (rs.isAfterLast())
-				return id + " NOT FOUND";
+				return id + AttributeManager.NOT_FOUND;
 
-			msg = DB_MESSAGE_ID + "=" +  rs.getString(DB_MESSAGE_ID) + AttributeManager.PAIRS_SEPARATOR 
-			+ DB_MESSAGE_SENDER+"=" +rs.getString(DB_MESSAGE_SENDER) + AttributeManager.PAIRS_SEPARATOR
-			+ DB_MESSAGE_STATUS + "=" + rs.getString(DB_MESSAGE_STATUS) + AttributeManager.PAIRS_SEPARATOR
-			+ DB_MESSAGE_TYPE + "=" +rs.getString(DB_MESSAGE_TYPE) + AttributeManager.PAIRS_SEPARATOR
-			+ DB_MESSAGE_CREATED_ON + ":" + rs.getString(DB_MESSAGE_CREATED_ON) + AttributeManager.PAIRS_SEPARATOR
-			+ DB_MESSAGE_MODIFIED_ON  + ":" + rs.getString(DB_MESSAGE_MODIFIED_ON) + AttributeManager.PAIRS_SEPARATOR
+			msg = DB_MESSAGE_ID + AttributeManager.ATTR_VAL_SEPARATOR +  rs.getString(DB_MESSAGE_ID) + AttributeManager.PAIRS_SEPARATOR 
+			+ DB_MESSAGE_SENDER+AttributeManager.ATTR_VAL_SEPARATOR +rs.getString(DB_MESSAGE_SENDER) + AttributeManager.PAIRS_SEPARATOR
+			+ DB_MESSAGE_STATUS + AttributeManager.ATTR_VAL_SEPARATOR + rs.getString(DB_MESSAGE_STATUS) + AttributeManager.PAIRS_SEPARATOR
+			+ DB_MESSAGE_TYPE + AttributeManager.ATTR_VAL_SEPARATOR +rs.getString(DB_MESSAGE_TYPE) + AttributeManager.PAIRS_SEPARATOR
+			+ DB_MESSAGE_CREATED_ON + AttributeManager.DATE_SEPARATOR + rs.getString(DB_MESSAGE_CREATED_ON) + AttributeManager.PAIRS_SEPARATOR
+			+ DB_MESSAGE_MODIFIED_ON  + AttributeManager.DATE_SEPARATOR + rs.getString(DB_MESSAGE_MODIFIED_ON) + AttributeManager.PAIRS_SEPARATOR
 			+ rs.getString(DB_MESSAGE_COLUMN);
 			
 		} catch (SQLException e) {
@@ -242,8 +264,8 @@ public class SmsReader {
 			Statement statement = connection.createStatement();
 			statement.setQueryTimeout(60); // set timeout to 30 sec.
 
-			statement.execute("UPDATE " + DB_MESSAGE_TABLE + " SET "+ DB_MESSAGE_STATUS+"="
-					+ "'" + b.getStatus() + "'" + " where "+DB_MESSAGE_ID+"=" + b.getId() + ";");
+			statement.execute(AttributeManager.UPDATE + DB_MESSAGE_TABLE + AttributeManager.SET+ DB_MESSAGE_STATUS+AttributeManager.ATTR_VAL_SEPARATOR
+					+ AttributeManager.SINGLE_QUOTE + b.getStatus() + AttributeManager.SINGLE_QUOTE + AttributeManager.WHERE+DB_MESSAGE_ID+AttributeManager.ATTR_VAL_SEPARATOR + b.getId() + AttributeManager.LINE_ENDER);
 			
 		} catch (SQLException e) {
 			// if the error message is "out of memory",
@@ -263,10 +285,10 @@ public class SmsReader {
 			Statement statement = connection.createStatement();
 			statement.setQueryTimeout(60); // set timeout to 30 sec.
 
-			statement.execute("INSERT INTO " + DB_MESSAGE_TABLE + " ( "
-					+ DB_MESSAGE_COLUMN + "," + DB_MESSAGE_STATUS + ","
-					+ DB_MESSAGE_SENDER + ") VALUES ('" + message + "' , "
-					+ DB_STATUS_NEW + ", '" + sender + "')");
+			statement.execute(AttributeManager.INSERT + DB_MESSAGE_TABLE + AttributeManager.OPEN_PAREN
+					+ DB_MESSAGE_COLUMN + AttributeManager.PAIRS_SEPARATOR + DB_MESSAGE_STATUS + AttributeManager.PAIRS_SEPARATOR
+					+ DB_MESSAGE_SENDER + AttributeManager.CLOSE_PAREN + AttributeManager.VALUES + AttributeManager.OPEN_PAREN + AttributeManager.SINGLE_QUOTE + message + AttributeManager.SINGLE_QUOTE + AttributeManager.PAIRS_SEPARATOR
+					+ DB_STATUS_NEW + AttributeManager.PAIRS_SEPARATOR +  AttributeManager.SINGLE_QUOTE + sender + AttributeManager.SINGLE_QUOTE + AttributeManager.CLOSE_PAREN );
 			
 		} catch (SQLException e) {
 			// if the error message is "out of memory",
@@ -340,80 +362,80 @@ public class SmsReader {
 //		messages.add(s);
 //	}
 	
-	public String[] getCommune(){
-		String[] commune = {"Anse a Pitres","Bainet","Belle Anse","Cote de fer","Grand Gosier","La vallee","Thiotte"};
-		return commune;
-		
-	} 
-	
-	public String[] getCommuneSection(String commune){
-		String[] communeSection;
-		if (commune.equals("Anse a Pitres")) {
-			communeSection = new String[5];
-			communeSection[0] = "Anse a Pitres";
-			communeSection[1] = "Bois d_Orme";
-			communeSection[2] = "BoucanGuillaume";
-			communeSection[3] = "Centre de Sante Anse a Pitres";
-			communeSection[4] = "Platon Cedre";
-		}
-		else if (commune.equals("Bainet")) {
-			communeSection = new String[12];
-			communeSection[0] = "11eme La vallee";
-			communeSection[1] = "3eme La vallee";
-			communeSection[2] = "4eme La vallee";
-			communeSection[3] = "5eme Haut Gandou";
-			communeSection[4] = "6eme Bas de la croix";
-			communeSection[5] = "8eme orangers";
-			communeSection[6] = "9eme Bas gris gris";
-			communeSection[7] = "Bas Grandou";
-			communeSection[8] = "Bras de gauche";
-			communeSection[9] = "Bresilienne";
-			communeSection[10] = "Haut Grandou";
-			communeSection[11] = "Tou mahot";
-		}
-		else if (commune.equals("Belle Anse")) {
-			communeSection = new String[7];
-			communeSection[0] = "Baie d_Orange";
-			communeSection[1] = "BelAir";
-			communeSection[2] = "Callumette";
-			communeSection[3] = "CorailLamothe";
-			communeSection[4] = "Mabriole";
-			communeSection[5] = "Mapou";
-			communeSection[6] = "Pichon";
-		}
-		else if (commune.equals("Cote de fer")) {
-			communeSection = new String[8];
-			communeSection[0] = "3eme Bras de gauche";
-			communeSection[1] = "6eme Jamais-Vu";
-			communeSection[2] = "Amazone";
-			communeSection[3] = "Boucan Belier";
-			communeSection[4] = "Cote de fer";
-			communeSection[5] = "Gris-Gris";
-			communeSection[6] = "Jamais vus";
-			communeSection[7] = "Labich";
-		}
-		else if (commune.equals("Grand Gosier")) {
-			communeSection = new String[3];
-			communeSection[0] = "Bodarie";
-			communeSection[1] = "CollinedesChaines";
-			communeSection[2] = "Grand Gosier";
-		}		
-		else if (commune.equals("La vallee")) {
-			communeSection = new String[2];
-			communeSection[0] = "1ere Musac";
-			communeSection[1] = "Morne a Brule";
-		}		
-		else if (commune.equals("Thiotte")) {
-			communeSection = new String[2];
-			communeSection[0] = "Pot de Chambre/2eMareMirande";
-			communeSection[1] = "Thiotte 1ereColombier";
-		}
-		else {
-			communeSection = new String[0];
-		}
-		return communeSection;
-		
-	}
+//	public String[] getCommune(){
+//		String[] commune = {"Anse a PitresAttributeManger.PAIRS_SEPARATORBainetAttributeManger.PAIRS_SEPARATORBelle AnseAttributeManger.PAIRS_SEPARATORCote de ferAttributeManger.PAIRS_SEPARATORGrand GosierAttributeManger.PAIRS_SEPARATORLa valleeAttributeManger.PAIRS_SEPARATORThiotte"};
+//		return commune;
+//		
+//	} 
+//	
+//	public String[] getCommuneSection(String commune){
+//		String[] communeSection;
+//		if (commune.equals("Anse a Pitres")) {
+//			communeSection = new String[5];
+//			communeSection[0] = "Anse a Pitres";
+//			communeSection[1] = "Bois d_Orme";
+//			communeSection[2] = "BoucanGuillaume";
+//			communeSection[3] = "Centre de Sante Anse a Pitres";
+//			communeSection[4] = "Platon Cedre";
+//		}
+//		else if (commune.equals("Bainet")) {
+//			communeSection = new String[12];
+//			communeSection[0] = "11eme La vallee";
+//			communeSection[1] = "3eme La vallee";
+//			communeSection[2] = "4eme La vallee";
+//			communeSection[3] = "5eme Haut Gandou";
+//			communeSection[4] = "6eme Bas de la croix";
+//			communeSection[5] = "8eme orangers";
+//			communeSection[6] = "9eme Bas gris gris";
+//			communeSection[7] = "Bas Grandou";
+//			communeSection[8] = "Bras de gauche";
+//			communeSection[9] = "Bresilienne";
+//			communeSection[10] = "Haut Grandou";
+//			communeSection[11] = "Tou mahot";
+//		}
+//		else if (commune.equals("Belle Anse")) {
+//			communeSection = new String[7];
+//			communeSection[0] = "Baie d_Orange";
+//			communeSection[1] = "BelAir";
+//			communeSection[2] = "Callumette";
+//			communeSection[3] = "CorailLamothe";
+//			communeSection[4] = "Mabriole";
+//			communeSection[5] = "Mapou";
+//			communeSection[6] = "Pichon";
+//		}
+//		else if (commune.equals("Cote de fer")) {
+//			communeSection = new String[8];
+//			communeSection[0] = "3eme Bras de gauche";
+//			communeSection[1] = "6eme Jamais-Vu";
+//			communeSection[2] = "Amazone";
+//			communeSection[3] = "Boucan Belier";
+//			communeSection[4] = "Cote de fer";
+//			communeSection[5] = "Gris-Gris";
+//			communeSection[6] = "Jamais vus";
+//			communeSection[7] = "Labich";
+//		}
+//		else if (commune.equals("Grand Gosier")) {
+//			communeSection = new String[3];
+//			communeSection[0] = "Bodarie";
+//			communeSection[1] = "CollinedesChaines";
+//			communeSection[2] = "Grand Gosier";
+//		}		
+//		else if (commune.equals("La vallee")) {
+//			communeSection = new String[2];
+//			communeSection[0] = "1ere Musac";
+//			communeSection[1] = "Morne a Brule";
+//		}		
+//		else if (commune.equals("Thiotte")) {
+//			communeSection = new String[2];
+//			communeSection[0] = "Pot de Chambre/2eMareMirande";
+//			communeSection[1] = "Thiotte 1ereColombier";
+//		}
+//		else {
+//			communeSection = new String[0];
+//		}
+//		return communeSection;
+//		
+//	}
 	 
    
 	/**
@@ -425,20 +447,20 @@ public class SmsReader {
 //    	if (args.length < 1) {
 //    		System.out.println("Usage: java SmsReader <filename>");
 //    		System.out.println("This assumes your database is in the /db directory of " +
-//    				System.getProperty("user.dir").toString());
+//    				System.getProperty(AttributeManager.USER_DIRECTORY).toString());
 //    		return;
 //    	}
     	/*
     	SmsReader reader = new SmsReader();
-		String filepath = System.getProperty("user.dir").toString()+ "/db/" + args[0];
+		String filepath = System.getProperty(AttributeManager.USER_DIRECTORY).toString()+ AttributeManager.DATABASE_PATHNAME + args[0];
 		System.out.println("Path = " + filepath);
 		for (MessageStatus st : MessageStatus.values()) {
     		System.out.println(st);
     		String[] test = reader.getMessageByStatus(filepath, st);
     	for (MessageStatus st : MessageStatus.values()) {
     		for (MessageType tp : MessageType.values()) {
-    		System.out.println(st+ " and " +tp);
-    		String[] test = reader.getMessageByStatusAndType(System.getProperty("user.dir").toString()+ "/db/haiti.db", st, tp);
+    		System.out.println(st+ AttributeManager.CONJUNCTION +tp);
+    		String[] test = reader.getMessageByStatusAndType(System.getProperty(AttributeManager.USER_DIRECTORY).toString()+ "/db/haiti.db", st, tp);
     		//String[] arr = reader.convertToArray(test);
     		for (int i = 0; i < test.length; i ++) {
             	System.out.println(test[i]);
@@ -457,9 +479,9 @@ public class SmsReader {
     		System.out.println("java SmsReader filepath message_status message_type");
     		return;
     	}
-    	String filepath = System.getProperty("user.dir").toString()+ "/db/"+args[0];
+    	String filepath = System.getProperty(AttributeManager.USER_DIRECTORY).toString()+ AttributeManager.DATABASE_PATHNAME+args[0];
     	System.out.println(filepath);
-    	System.out.println(args[1]+ " and " + args[2]);
+    	System.out.println(args[1]+ AttributeManager.CONJUNCTION + args[2]);
     	MessageStatus stat = null;
     	MessageType typ = null;
     	SmsReader reader = new SmsReader();
@@ -477,17 +499,17 @@ public class SmsReader {
     	}
 
     	if (stat == null){
-    		System.out.println(args[1] + " does not exit!");
+    		System.out.println(args[1] + AttributeManager.DOES_NOT_EXIST);
     		return;
     	}
     	if (typ == null){
-    		System.out.println(args[2] + " does not exit!");
+    		System.out.println(args[2] + AttributeManager.DOES_NOT_EXIST);
     		return;
     	}
     	String[] arr = reader.getMessageByStatusAndType(filepath, stat, typ);
 
     	if (arr.length == 0){
-    		System.out.println("MATCH NOT FOUND!");
+    		System.out.println(AttributeManager.MATCH_NOT_FOUND);
     		return;
     	}
     	for (int i = 0; i < arr.length; i ++) {

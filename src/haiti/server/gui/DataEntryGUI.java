@@ -334,7 +334,7 @@ public class DataEntryGUI extends JFrame implements WindowListener, ListSelectio
 		String result = tbs.postNewBeneficiary(mBeneficiary);
 		
 		if (result.equals(TbsManager.RESULT_OK)) {
-			mBeneficiary.setStatus(Beneficiary.Status.PROCESSED); // sets the status of the current Beneficiary item to processed
+			mBeneficiary.setStatus(Beneficiary.MessageStatus.PROCESSED); // sets the status of the current Beneficiary item to processed
 			mReader.updateMessage(mBeneficiary, this.mMessagesFileOrDbName);
 			int index = this.mMessageList.getSelectedIndex();
 			String msg = mReader.getMessageById(mBeneficiary.getId(), this.mMessagesFileOrDbName);
@@ -364,7 +364,7 @@ public class DataEntryGUI extends JFrame implements WindowListener, ListSelectio
 	public void forwardMessageToDbMgr() {
 		// TODO Auto-generated method stub
 		System.out.println(mBeneficiary.toString());
-		mBeneficiary.setStatus(Beneficiary.Status.PENDING); // sets the status of the current Beneficiary item to processed
+		mBeneficiary.setStatus(Beneficiary.MessageStatus.PENDING); // sets the status of the current Beneficiary item to processed
 		mReader.updateMessage(mBeneficiary, this.mMessagesFileOrDbName);
 		int index = this.mMessageList.getSelectedIndex();
 		String msg = mReader.getMessageById(mBeneficiary.getId(), this.mMessagesFileOrDbName);
@@ -415,7 +415,7 @@ public class DataEntryGUI extends JFrame implements WindowListener, ListSelectio
 		                                                 isSelected,
 		                                                 hasFocus);
 		    String entry = (String)value;
-		    if (entry.contains("status=" + Beneficiary.Status.PENDING)) {
+		    if (entry.contains("status=" + Beneficiary.MessageStatus.PENDING)) {
 		    	label.setBackground(Color.RED);
 		    } else if (entry.contains("status=1")) {
 		    	label.setBackground(Color.YELLOW);

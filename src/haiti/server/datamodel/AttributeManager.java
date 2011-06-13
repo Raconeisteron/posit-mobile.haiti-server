@@ -47,7 +47,27 @@ public class AttributeManager {
 	
 	public static final String ATTR_VAL_SEPARATOR = "=";
 	public static final String PAIRS_SEPARATOR = ",";
-	public static final String LIST_SEPARATOR = "/";  // Don't use '|'
+	public static final String LIST_SEPARATOR = "/";  // Don't use '|'\
+	public static final String NOT_FOUND = " NOT FOUND"; 
+	public static final String WHERE = " where ";
+	public static final String SELECT_FROM = "select * from ";
+	public static final String DATE_SEPARATOR = ":";
+	public static final String LINE_ENDER = ";";
+	public static final String CONJUNCTION = " and ";
+	public static final String DOES_NOT_EXIST = " does not exist!";
+	public static final String MATCH_NOT_FOUND = "MATCH NOT FOUND!";
+	public static final String UPDATE = "UPDATE ";
+	public static final String SET = " SET ";
+	public static final String SINGLE_QUOTE = "'";
+	public static final String OPEN_PAREN = "(";
+	public static final String CLOSE_PAREN = ")";
+	public static final String DB_HOST = "org.sqlite.JDBC";
+	public static final String DB_NAME = "jdbc:sqlite:";
+	public static final String INSERT = "INSERT INTO ";
+	public static final String VALUES = "VALUES ";
+	public static final String USER_DIRECTORY = "user.dir"; 
+	public static final String DATABASE_PATHNAME = "/db/";
+	
 
 	public static final String OUTER_DELIM = PAIRS_SEPARATOR;
 	public static final String INNER_DELIM = ATTR_VAL_SEPARATOR;
@@ -110,14 +130,14 @@ public class AttributeManager {
 	public static final String ABBREV_DOSSIER = "i";
 	public static final String ABBREV_MESSAGE_TEXT = "tx";
 	public static final String ABBREV_MESSAGE_STATUS = "ms";
+	public static final String ABBREV_MESSAGE_TYPE = "t";
+	public static final String ABBREV_BENEFICIARY_TYPE = "bt";
 	public static final String ABBREV_CREATED_AT = "t1";
 	public static final String ABBREV_SENT_AT = "t2";
 	public static final String ABBREV_ACK_AT = "t3";
 	
-	public static final String ABBREV_STATUS = "s"; 
 	public static final String ABBREV_ID = "id";    
 	public static final String ABBREV_AV = "AV";
-	public static final String ABBREV_TYPE = "t";
 	
 	public static final String ABBREV_FIRST = "f";     
 	public static final String ABBREV_LAST = "l";      
@@ -214,7 +234,8 @@ public class AttributeManager {
 	//  Using the data defined here, it would be encoded as
 	// 'f=joe,l=smith,...,g=M'
 	public static final String FINDS_DOSSIER =  "dossier";
-	public static final String FINDS_TYPE =  "type";
+	public static final String FINDS_BENEFICIARY_TYPE =  "type";
+	public static final String FINDS_MESSAGE_TYPE = "message_type";
 	public static final String FINDS_STATUS =  "status";
 	public static final String MESSAGE_TEXT =  "message";
 	public static final String FINDS_MESSAGE_STATUS =  "message_status";
@@ -321,10 +342,11 @@ public class AttributeManager {
 	public static final String LONG_GENERAL_INFORMATION = "generalInformation";
 	public static final String LONG_MCHN_INFORMATION = "mchnInformation";
 	public static final String LONG_CONTROLS = "controls";
-	public static final String LONG_STATUS = "status";
+	public static final String LONG_MESSAGE_STATUS = "messageStatus";
 	public static final String LONG_ID = "id";
 	public static final String LONG_AV = "AV";
-	public static final String LONG_TYPE = "type";
+	public static final String LONG_MESSAGE_TYPE = "messageType";
+	public static final String LONG_BENEFICIARY_TYPE = "beneficiaryType";
 	
 	public static final String LONG_DOSSIER = "dossier";
 		
@@ -386,10 +408,10 @@ public class AttributeManager {
 //		abbreviations.put(ABBREV_MCHN_INFORMATION, LONG_MCHN_INFORMATION);
 //		abbreviations.put(ABBREV_CONTROLS, LONG_CONTROLS);
 		
-		abbreviations.put(ABBREV_STATUS,LONG_STATUS);
+		abbreviations.put(ABBREV_MESSAGE_STATUS,LONG_MESSAGE_STATUS);
 		abbreviations.put(ABBREV_ID,LONG_ID);
 		abbreviations.put(ABBREV_AV, LONG_AV);
-		abbreviations.put(ABBREV_TYPE, LONG_TYPE);
+		abbreviations.put(ABBREV_MESSAGE_TYPE, LONG_MESSAGE_TYPE);
 		
 //		// This group maps SMS abbreviations to full attribute names (for the server)
 //		abbreviations.put("i", FINDS_DOSSIER);
@@ -445,8 +467,8 @@ public class AttributeManager {
 		// ---------- MOBILE SIDE MAPPINGS TO ABBREVIATIONS
 		// This group maps Db column names in the on-phone Db to SMS abbreviations
 		abbreviations.put(FINDS_DOSSIER, ABBREV_DOSSIER);
-		abbreviations.put(FINDS_TYPE, ABBREV_TYPE);
-		abbreviations.put(FINDS_STATUS, ABBREV_STATUS);
+		abbreviations.put(FINDS_BENEFICIARY_TYPE, ABBREV_BENEFICIARY_TYPE);
+		abbreviations.put(FINDS_MESSAGE_TYPE, ABBREV_MESSAGE_TYPE);
 		abbreviations.put(MESSAGE_TEXT, ABBREV_MESSAGE_TEXT);
 		abbreviations.put(FINDS_MESSAGE_STATUS, ABBREV_MESSAGE_STATUS);
 		abbreviations.put(FINDS_FIRSTNAME, ABBREV_FIRST);
@@ -521,11 +543,11 @@ public class AttributeManager {
 		abbreviations.put("Dispensaire de Bleck/ Mar Mirande",   "d26" );
 		
 //		<string-array name="health_center_names"> 
-		abbreviations.put("Centre de santŽ une", "h1" );
-		abbreviations.put("Centre de santŽ deux", "h2"  );
-		abbreviations.put("Centre de santŽ trois", "h3" );
-		abbreviations.put("Centre de santŽ quatre", "h4" );
-		abbreviations.put("Centre de santŽ cinq", "h4" );
+		abbreviations.put("Centre de santï¿½ une", "h1" );
+		abbreviations.put("Centre de santï¿½ deux", "h2"  );
+		abbreviations.put("Centre de santï¿½ trois", "h3" );
+		abbreviations.put("Centre de santï¿½ quatre", "h4" );
+		abbreviations.put("Centre de santï¿½ cinq", "h4" );
 		
 	}
 	

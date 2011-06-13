@@ -37,7 +37,7 @@ public class DbWriter {
 	public static final String DB_MESSAGE_MODIFIED_ON = "modified_on";
 	public static final String DB_MESSAGE_TYPE = "message_type";
 	public static final String DB_MESSAGE_SENDER = "sender";
-	public static final String SEPARATOR = "&";
+	public static final String SEPARATOR = ",";
 
 	public static final int DB_STATUS_NEW = 0;
 	public static final int DB_STATUS_PENDING = 1;
