@@ -1,16 +1,22 @@
 package haiti.server.modem;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+
 import haiti.server.datamodel.AttributeManager;
+import haiti.server.gui.*;
+
+import java.net.*;
 
 public class SmsMessage {
 
-	public enum Status {NEW, PENDING, PROCESSED, UNKNOWN};
-	public enum Type {BENEFICIARY, UPDATE, UNKNOWN};
+//	public enum MessageStatus {NEW, PENDING, PROCESSED, UNKNOWN};
+//	public enum MessageType {BENEFICIARY, UPDATE, UNKNOWN};
 	public enum Abbreviated {TRUE, FALSE};
 	
-	private int AVnum = -1;
-	private Status status = Status.UNKNOWN;
-	private Type type = Type.UNKNOWN;
+	private String AVnum = null;
+	private SmsReader.MessageStatus status = SmsReader.MessageStatus.UNKNOWN;
+	private SmsReader.MessageType type = SmsReader.MessageType.UNKNOWN;
 	private String message = "";
 	private String sender = ""; 
 	
@@ -18,9 +24,13 @@ public class SmsMessage {
 		message = rawMsg;
 		sender = rawSender;
 		
-		message = decodeUrl(message, AttributeManager.URL_INNER_DELIM, AttributeManager.INNER_DELIM);
-		message = decodeUrl(message, AttributeManager.URL_OUTER_DELIM, AttributeManager.OUTER_DELIM);
-		sender = decodeUrl(sender, AttributeManager.URL_PLUS, AttributeManager.PLUS);
+		try {
+			message = URLDecoder.decode(message, "UTF-8");
+			sender = URLDecoder.decode(sender, "UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		split(message, AttributeManager.OUTER_DELIM, AttributeManager.INNER_DELIM, true);
 	}
@@ -30,6 +40,14 @@ public class SmsMessage {
 		return s;
 	}
 	
+	public String getAVnum() {
+		return AVnum;
+	}
+
+	public void setAVnum(String aVnum) {
+		AVnum = aVnum;
+	}
+
 	//private void split(String s, String outerDelim, String innerDelim, Abbreviated abbreviated) {
 	private void split(String s, String outerDelim, String innerDelim, boolean abbreviated) {
 		String attrvalPairs[] = s.split(outerDelim);				// Pairs like attr1=val1
@@ -40,45 +58,37 @@ public class SmsMessage {
 			String longAttr = am.mapToLong(abbreviated, attrval[0]);
 			
 			if (longAttr.equals(AttributeManager.LONG_AV))
-				AVnum = Integer.parseInt(attrval[1]);
-			else if (longAttr.equals(AttributeManager.LONG_STATUS)) {
+				AVnum = attrval[1];
+			else if (longAttr.equals(AttributeManager.LONG_MESSAGE_STATUS)) {
 				int i = Integer.parseInt(attrval[1]);
 				switch (i) {
-					case 0: status = Status.NEW; break;
-					case 1: status = Status.PENDING; break;
-					case 2: status = Status.PROCESSED; break;
+					case 0: status = SmsReader.MessageStatus.NEW; break;
+					case 1: status = SmsReader.MessageStatus.PENDING; break;
+					case 2: status = SmsReader.MessageStatus.PROCESSED; break;
 				}
 			}
-			else if (longAttr.equals(AttributeManager.LONG_TYPE)) {
+			else if (longAttr.equals(AttributeManager.LONG_MESSAGE_TYPE)) {
 				switch (Integer.parseInt(attrval[1])) {
-					case 0: type = Type.BENEFICIARY; break;
-					case 1: type = Type.UPDATE; break;
+					case 0: type = SmsReader.MessageType.REGISTRATION; break;
+					case 1: type = SmsReader.MessageType.UPDATE; break;
 				}
 			}
 		}
 	}
 
-	public int getAVnum() {
-		return AVnum;
-	}
-
-	public void setAVnum(int aVnum) {
-		AVnum = aVnum;
-	}
-
-	public Status getStatus() {
+	public SmsReader.MessageStatus getMessageStatus() {
 		return status;
 	}
 
-	public void setStatus(Status status) {
+	public void setStatus(SmsReader.MessageStatus status) {
 		this.status = status;
 	}
 
-	public Type getType() {
+	public SmsReader.MessageType getMessageType() {
 		return type;
 	}
 
-	public void setType(Type type) {
+	public void setType(SmsReader.MessageType type) {
 		this.type = type;
 	}
 

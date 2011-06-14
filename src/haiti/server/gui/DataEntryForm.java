@@ -144,9 +144,9 @@ public class DataEntryForm extends JPanel implements ActionListener, KeyListener
 		this.firstNameJText.setText(beneficiary.getFirstName());
 		this.lastNameJText.setText(beneficiary.getLastName());
 		
-		addItemsToComboBox(communeBox, reader.getCommune());
+		//addItemsToComboBox(communeBox, reader.getCommune());
 		this.communeBox.setSelectedItem(beneficiary.getCommune());
-		addItemsToComboBox(communeSectionBox, reader.getCommuneSection(beneficiary.getCommune()));
+		//addItemsToComboBox(communeSectionBox, reader.getCommuneSection(beneficiary.getCommune()));
 	//	this.communeBox.setText(beneficiary.getCommune());
 	//	this.communeSectionBox.setText(beneficiary.getCommuneSection());
 		this.addressJText.setText(beneficiary.getAddress());
