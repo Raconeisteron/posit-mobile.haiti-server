@@ -83,30 +83,30 @@ public class TbsManager {
 
 	// Fin Methode pour faire des requettes
 
-	public Beneficiary getBeneficiaryByDossier(String dossier) {
-		String query = "select * from Beneficiaire where dossier = " + dossier;
-		ResultSet rs;
-		try {
-			Statement statement = conn.createStatement();
-			rs = statement.executeQuery(query);
-			while(!rs.isAfterLast()) {
-				String msg = DB_MESSAGE_ID + "=" +  rs.getString(DB_MESSAGE_ID) + AttributeManager.PAIRS_SEPARATOR 
-				+ DB_MESSAGE_SENDER+"=" +rs.getString(DB_MESSAGE_SENDER) + AttributeManager.PAIRS_SEPARATOR
-				+ DB_MESSAGE_STATUS + "=" + rs.getString(DB_MESSAGE_STATUS) + AttributeManager.PAIRS_SEPARATOR
-				+ DB_MESSAGE_TYPE + "=" +rs.getString(DB_MESSAGE_TYPE) + AttributeManager.PAIRS_SEPARATOR
-				+ DB_MESSAGE_CREATED_ON + ":" + rs.getString(DB_MESSAGE_CREATED_ON) + AttributeManager.PAIRS_SEPARATOR
-				+ DB_MESSAGE_MODIFIED_ON  + ":" + rs.getString(DB_MESSAGE_MODIFIED_ON) + AttributeManager.PAIRS_SEPARATOR
-				+ rs.getString(DB_MESSAGE_COLUMN);
-				statusmsg.add(msg);
-				rs.next();
-			}
-		}
-		catch (SQLException e) {
-			System.out.println("SQL Exception");
-			e.printStackTrace();
-		}
-		return new Beneficiary();
-	}
+//	public Beneficiary getBeneficiaryByDossier(String dossier) {
+//		String query = "select * from Beneficiaire where dossier = " + dossier;
+//		ResultSet rs;
+//		try {
+//			Statement statement = conn.createStatement();
+//			rs = statement.executeQuery(query);
+//			while(!rs.isAfterLast()) {
+//				String msg = DB_MESSAGE_ID + "=" +  rs.getString(DB_MESSAGE_ID) + AttributeManager.PAIRS_SEPARATOR 
+//				+ DB_MESSAGE_SENDER+"=" +rs.getString(DB_MESSAGE_SENDER) + AttributeManager.PAIRS_SEPARATOR
+//				+ DB_MESSAGE_STATUS + "=" + rs.getString(DB_MESSAGE_STATUS) + AttributeManager.PAIRS_SEPARATOR
+//				+ DB_MESSAGE_TYPE + "=" +rs.getString(DB_MESSAGE_TYPE) + AttributeManager.PAIRS_SEPARATOR
+//				+ DB_MESSAGE_CREATED_ON + ":" + rs.getString(DB_MESSAGE_CREATED_ON) + AttributeManager.PAIRS_SEPARATOR
+//				+ DB_MESSAGE_MODIFIED_ON  + ":" + rs.getString(DB_MESSAGE_MODIFIED_ON) + AttributeManager.PAIRS_SEPARATOR
+//				+ rs.getString(DB_MESSAGE_COLUMN);
+//				statusmsg.add(msg);
+//				rs.next();
+//			}
+//		}
+//		catch (SQLException e) {
+//			System.out.println("SQL Exception");
+//			e.printStackTrace();
+//		}
+//		return new Beneficiary();
+//	}
 
 	/**
 	 * Receives a Beneficiary object from the GUI and uses its data to update
