@@ -30,6 +30,18 @@ import java.util.ResourceBundle;
 
 public class Beneficiary {
 	
+	public enum BeneficiaryType {
+		UNKNOWN(-1), MCHN(0), AGRI(1);
+		
+		private int code;
+		private BeneficiaryType(int code) {
+			this.code = code;
+		}
+		public int getCode() {
+			return code;
+		}
+	}
+	
 	public enum Sex {U, M, F};
 	public enum YnQuestion { U, Y, N};
 	
@@ -48,10 +60,10 @@ public class Beneficiary {
 	
 	public enum Abbreviated {TRUE, FALSE};
 	
-	public enum Status {
+	public enum MessageStatus {
 		UNKNOWN(-1), NEW(0), UPDATED(1), PENDING(2), PROCESSED(3);
 		private int code;
-		private Status(int code) {
+		private MessageStatus(int code) {
 			this.code = code;
 		}
 		public int getCode() {
@@ -61,7 +73,7 @@ public class Beneficiary {
 
 	// Bookeeping attributes
 	private int id = -1;
-	private Status status = Status.UNKNOWN;
+	private MessageStatus status = MessageStatus.UNKNOWN;
 	
 	// Attributes in the order of the form on the phone
 	private String firstName = "";
@@ -228,11 +240,11 @@ public class Beneficiary {
 	}
 
 	
-	public Status getStatus() {
+	public MessageStatus getStatus() {
 		return status;
 	}
 
-	public void setStatus(Status status) {
+	public void setStatus(MessageStatus status) {
 		this.status = status;
 	}
 
