@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+
+<!--
+ *  Norman Danner
+ *  ndanner@wesleyan.edu
+ *
+ *  KNOWN PROBLEMS:
+ *  None.
+ -->
+
+
+<project name="haiti-server" basedir="." default="build">
+
+    <property name="src.dir" value="src"/>
+    <property name="build.dir" value="classes"/>
+
+    <target name="build" description="Compile main source tree java files">
+        <mkdir dir="${build.dir}"/>
+        <javac destdir="${build.dir}" source="1.5" target="1.5" debug="true"
+               deprecation="false" optimize="false" failonerror="true">
+            <src path="${src.dir}"/>
+        </javac>
+    </target>
+
+    <target name="clean" description="Remove generated files" >
+        <delete dir="${build.dir}" includeemptydirs="true" />
+    </target>
+
+
+</project>
