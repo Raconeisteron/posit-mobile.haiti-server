@@ -47,7 +47,7 @@ public class AttributeManager {
 	
 	public static final String ATTR_VAL_SEPARATOR = "=";
 	public static final String PAIRS_SEPARATOR = ",";
-	public static final String LIST_SEPARATOR = "/";  // Don't use '|'\
+	public static final String LIST_SEPARATOR = "&";  // Don't use '|'\
 	public static final String NOT_FOUND = " NOT FOUND"; 
 	public static final String WHERE = " where ";
 	public static final String SELECT_FROM = "select * from ";
@@ -67,7 +67,7 @@ public class AttributeManager {
 	public static final String VALUES = "VALUES ";
 	public static final String USER_DIRECTORY = "user.dir"; 
 	public static final String DATABASE_PATHNAME = "/db/";
-	
+
 
 	public static final String OUTER_DELIM = PAIRS_SEPARATOR;
 	public static final String INNER_DELIM = ATTR_VAL_SEPARATOR;
@@ -136,8 +136,10 @@ public class AttributeManager {
 	public static final String ABBREV_SENT_AT = "t2";
 	public static final String ABBREV_ACK_AT = "t3";
 	
+	public static final String ABBREV_STATUS = "s"; 
 	public static final String ABBREV_ID = "id";    
 	public static final String ABBREV_AV = "AV";
+	public static final String ABBREV_TYPE = "t";
 	
 	public static final String ABBREV_FIRST = "f";     
 	public static final String ABBREV_LAST = "l";      
