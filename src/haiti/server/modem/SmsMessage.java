@@ -26,7 +26,7 @@ public class SmsMessage {
 		
 		try {
 			message = URLDecoder.decode(message, "UTF-8");
-			sender = URLDecoder.decode(sender, "UTF-8");
+			//sender = URLDecoder.decode(sender, "UTF-8");
 		} catch (UnsupportedEncodingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -76,16 +76,16 @@ public class SmsMessage {
 		}
 	}
 
-	public SmsReader.MessageStatus getMessageStatus() {
-		return status;
+	public int getMessageStatus() {
+		return status.getCode();
 	}
 
 	public void setStatus(SmsReader.MessageStatus status) {
 		this.status = status;
 	}
 
-	public SmsReader.MessageType getMessageType() {
-		return type;
+	public int getMessageType() {
+		return type.getCode();
 	}
 
 	public void setType(SmsReader.MessageType type) {

@@ -254,6 +254,7 @@ public class AttributeManager {
 	public static final String MESSAGE_CREATED_AT =  "created_time";
 	public static final String MESSAGE_SENT_AT =  "sent_time";
 	public static final String MESSAGE_ACK_AT =  "acknowledged_time";
+	public static final int ACK_MESSAGES_AT = 5; // How often to ack messages--e.g. every 5 messages
 	
 	public static final String FINDS_Q_MOTHER_LEADER = "mother_leader";
 	public static final String FINDS_Q_VISIT_MOTHER_LEADER = "visit_mother_leader";
