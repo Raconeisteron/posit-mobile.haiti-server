@@ -26,13 +26,14 @@ public class SmsMessage {
 		
 		try {
 			message = URLDecoder.decode(message, "UTF-8");
-			//sender = URLDecoder.decode(sender, "UTF-8");
+			sender = URLDecoder.decode(sender, "UTF-8");
+			sender = sender.replace("+", "");
 		} catch (UnsupportedEncodingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		split(message, AttributeManager.OUTER_DELIM, AttributeManager.INNER_DELIM, true);
+			split(message, AttributeManager.OUTER_DELIM,
+					AttributeManager.INNER_DELIM, true);
 	}
 	
 	private String decodeUrl(String s, String urlSym, String regSym) {
@@ -57,7 +58,7 @@ public class SmsMessage {
 			AttributeManager am = AttributeManager.getInstance();
 			String longAttr = am.mapToLong(abbreviated, attrval[0]);
 			
-			if (longAttr.equals(AttributeManager.LONG_AV))
+			if (longAttr.equals(AttributeManager.LONG_AV))					
 				AVnum = attrval[1];
 			else if (longAttr.equals(AttributeManager.LONG_MESSAGE_STATUS)) {
 				int i = Integer.parseInt(attrval[1]);
@@ -75,6 +76,7 @@ public class SmsMessage {
 			}
 		}
 	}
+
 
 	public int getMessageStatus() {
 		return status.getCode();

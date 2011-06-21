@@ -352,6 +352,8 @@ public class AttributeManager {
 	public static final String LONG_BENEFICIARY_TYPE = "beneficiaryType";
 	
 	public static final String LONG_DOSSIER = "dossier";
+
+	public static final String BULK_MESSAGE = "-1";
 		
 	
 	/**
