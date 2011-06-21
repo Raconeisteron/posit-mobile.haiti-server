@@ -22,6 +22,8 @@
 
 package haiti.server.modem;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,11 +51,12 @@ public class SmsMessageManager {
 	 */
 	public static List<SmsMessage> convertBulkMessage(String message,
 			String sender) {
+		
 		String[] parts = message.split(AttributeManager.OUTER_DELIM);
 		String[] ids = parts[1].split(AttributeManager.LIST_SEPARATOR);
 		List<SmsMessage> messages = new ArrayList<SmsMessage>();
 		for (String id : ids) {
-			SmsMessage sms = new SmsMessage("AV=-1,i=" + id + ",p=T", sender);
+			SmsMessage sms = new SmsMessage("AV="+id+",i=" + id + ",p=T", sender);
 			messages.add(sms);
 		}
 		return messages;
