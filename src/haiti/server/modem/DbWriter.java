@@ -30,9 +30,11 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.net.URLDecoder;
 import java.sql.Array;
 import java.sql.Connection;
 import java.sql.Date;
@@ -431,19 +433,28 @@ public class DbWriter {
 	public static void main(String args[]) {
 		log("main, args= " + args[0] + " " + args[1]);
 		DbWriter dw = new DbWriter();
-		String rawMessage = args[0];
+		String message = args[0];
 		String sender = args[1];
+		try {
+			message = URLDecoder.decode(message, "UTF-8");
+			sender = URLDecoder.decode(sender, "UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		sender = sender.replace("+", "");
 		// If its a bulk message, parse it and create individual messages out of it
-		if (SmsMessageManager.getMessageCategory(rawMessage).equals(
+		if (SmsMessageManager.getMessageCategory(message).equals(
 				AttributeManager.BULK_MESSAGE)) {
 			List<SmsMessage> messages = SmsMessageManager.convertBulkMessage(
-					rawMessage, sender);
+					message, sender);
 			for (SmsMessage sms : messages) {
 				dw.insertMessage(sms);
 				dw.queueAck(sms);
 			}
 		} else {
-			SmsMessage sms = new SmsMessage(rawMessage, sender);
+			SmsMessage sms = new SmsMessage(message, sender);
 
 			dw.insertMessage(sms);
 			dw.queueAck(sms);
