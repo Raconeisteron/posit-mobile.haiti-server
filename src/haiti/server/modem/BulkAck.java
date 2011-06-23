@@ -41,11 +41,10 @@ public class BulkAck {
 	 * @param ids list of id's to include in the ACK message
 	 * @param sender sender from which the messages were sent
 	 */
-	public BulkAck(List<Integer> ids, String sender) {
-		Iterator<Integer> it = ids.iterator();
+	public BulkAck(List<String> ids, String sender) {
 		this.sender=sender;
-		while (it.hasNext()){
-			message+=it.next()+"&"; 
+		for (String id : ids){
+			message+=id+"&"; 
 		}
 	}
 	

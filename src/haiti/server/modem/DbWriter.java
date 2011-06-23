@@ -187,15 +187,42 @@ public class DbWriter {
 	 * @param sender
 	 *            the sender
 	 */
-	public void markAcked(int avNum, String sender) {
+	public void markAcked(String avNum, String sender) {
 		Connection connection = connectDb(dbName);
 		try {
 			Statement statement = connection.createStatement();
 			statement.setQueryTimeout(60); // set timeout to 30 sec.
 			statement.execute("UPDATE " + DB_MESSAGE_TABLE + " SET "
 					+ DB_MESSAGE_ACKED + "= 1 WHERE " + DB_MESSAGE_SENDER
-					+ "='" + sender + "' AND " + DB_MESSAGE_AV_NUM + "="
-					+ avNum);
+					+ "='" + sender + "' AND " + DB_MESSAGE_AV_NUM + "='"
+					+ avNum +"'");
+
+		} catch (SQLException e) {
+			// if the error message is "out of memory",
+			// it probably means no database file is found
+			e.printStackTrace();
+		}
+	}
+
+	
+	/**
+	 * Change the DB_MESSAGE_ACKED field in the database to -1 to indicate that
+	 * this message came in as part of a bulk message.
+	 * 
+	 * @param avNum
+	 *            the AV number of the entry to ack
+	 * @param sender
+	 *            the sender
+	 */
+	public void markAsBulk(String avNum, String sender) {
+		Connection connection = connectDb(dbName);
+		try {
+			Statement statement = connection.createStatement();
+			statement.setQueryTimeout(60); // set timeout to 30 sec.
+			statement.execute("UPDATE " + DB_MESSAGE_TABLE + " SET "
+					+ DB_MESSAGE_ACKED + "= -1 WHERE " + DB_MESSAGE_SENDER
+					+ "='" + sender + "' AND " + DB_MESSAGE_AV_NUM + "= '"
+					+ avNum +"'");
 
 		} catch (SQLException e) {
 			// if the error message is "out of memory",
@@ -265,9 +292,9 @@ public class DbWriter {
 	 *            the phone number that sent the messages
 	 * @return
 	 */
-	public List<Integer> getUnackedIdsByPhone(String sender) {
+	public List<String> getUnackedIdsByPhone(String sender) {
 		Connection connection = connectDb(dbName);
-		List<Integer> ids = new ArrayList<Integer>();
+		List<String> ids = new ArrayList<String>();
 		try {
 			Statement statement = connection.createStatement();
 			statement.setQueryTimeout(60); // set timeout to 30 sec.
@@ -275,7 +302,7 @@ public class DbWriter {
 					+ DB_MESSAGE_TABLE + " where " + DB_MESSAGE_SENDER + "="
 					+ sender + " and " + DB_MESSAGE_ACKED + "=0");
 			while (result.next()) {
-				ids.add(result.getInt(DB_MESSAGE_AV_NUM));
+				ids.add(result.getString(DB_MESSAGE_AV_NUM));
 			}
 			return ids;
 
@@ -301,10 +328,10 @@ public class DbWriter {
 		List<String> phones = getPhonesReadyToSendBulkAcks();
 		if (phones != null) {
 			for (String phone : phones) {
-				List<Integer> ids = getUnackedIdsByPhone(phone);
+				List<String> ids = getUnackedIdsByPhone(phone);
 				BulkAck bulkAck = new BulkAck(ids, phone);
 				sendAck(bulkAck);
-				for (int id : ids) {
+				for (String id : ids) {
 					markAcked(id, phone);
 				}
 				resetCount(phone);
@@ -445,13 +472,16 @@ public class DbWriter {
 		
 		sender = sender.replace("+", "");
 		// If its a bulk message, parse it and create individual messages out of it
-		if (SmsMessageManager.getMessageCategory(message).equals(
-				AttributeManager.BULK_MESSAGE)) {
+		String id = SmsMessageManager.getMessageCategory(message);
+		if (Integer.parseInt(id)<0) {
+			SmsMessage bulkSms = new SmsMessage("AV="+id,sender);
+			dw.insertMessage(bulkSms);
+			dw.queueAck(bulkSms);
 			List<SmsMessage> messages = SmsMessageManager.convertBulkMessage(
 					message, sender);
 			for (SmsMessage sms : messages) {
 				dw.insertMessage(sms);
-				dw.queueAck(sms);
+				dw.markAsBulk(sms.getAVnum(),sms.getSender());
 			}
 		} else {
 			SmsMessage sms = new SmsMessage(message, sender);
