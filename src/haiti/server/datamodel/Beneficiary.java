@@ -31,7 +31,7 @@ import java.util.ResourceBundle;
 public class Beneficiary {
 	
 	public enum BeneficiaryType {
-		UNKNOWN(-1), MCHN(0), AGRI(1);
+		UNKNOWN(-1), MCHN(0), AGRI(1), BOTH(2);
 		
 		private int code;
 		private BeneficiaryType(int code) {
@@ -71,9 +71,10 @@ public class Beneficiary {
 		}
 	};
 
-	// Bookeeping attributes
+	// Bookkeeping attributes
 	private int id = -1;
 	private MessageStatus status = MessageStatus.UNKNOWN;
+	private BeneficiaryType beneficiaryType = BeneficiaryType.UNKNOWN;
 	
 	// Attributes in the order of the form on the phone
 	private String firstName = "";
@@ -89,7 +90,11 @@ public class Beneficiary {
 	private String distributionPost = "";
 	private String commune = "";
 	private String communeSection = "";
-	
+	private String guardianChild = "";
+	private String guardianWoman = "";
+	private String husband = "";
+	private String father = "";
+	private String agriPerson = "";
 	
 	private YnQuestion isMotherLeader = YnQuestion.U;
 	private YnQuestion visitMotherLeader  = YnQuestion.U;
@@ -98,6 +103,8 @@ public class Beneficiary {
 	// Agriculture categories
 	
 	private double amountOfLand = -1;
+	private double seedQuantity = -1;	
+	private int unitOfMeasurement = -1;
 	
 	private YnQuestion isFarmer = YnQuestion.U;
 	private YnQuestion isMuso = YnQuestion.U;
@@ -112,13 +119,16 @@ public class Beneficiary {
 	private YnQuestion getsTrees = YnQuestion.U;
 	
 	private YnQuestion getsHoe = YnQuestion.U;
-	private YnQuestion getsPickax = YnQuestion.U;
+	private YnQuestion getsPickaxe = YnQuestion.U;
 	private YnQuestion getsWheelbarrow = YnQuestion.U;  // Brouette
-	private YnQuestion getsMachete = YnQuestion.U;
+	private YnQuestion getsMachette = YnQuestion.U;
 	private YnQuestion getsSerpette = YnQuestion.U;
 	private YnQuestion getsPelle = YnQuestion.U;
 	private YnQuestion getsBarreAMines = YnQuestion.U;
 
+	private YnQuestion[] isStuff = {isFarmer, isFisherman, isMuso, isRancher, isMerchant, isOther};
+	private YnQuestion[] hsStuff = {getsVeggies, getsCereal, getsTubers, getsTrees, getsHoe, getsPickaxe, getsWheelbarrow, getsMachette, getsSerpette, getsPelle, getsBarreAMines};
+		
 	/**
 	 * Default constructor
 	 */
@@ -149,7 +159,7 @@ public class Beneficiary {
 			try {
 				if (attr.equals(AttributeManager.ABBREV_ID)) 
 					id = Integer.parseInt(val);
-				else if (attr.equals(AttributeManager.ABBREV_FIRST)) 
+				else if (attr.equalsIgnoreCase(AttributeManager.ABBREV_FIRST)) 
 					firstName = val;
 				else if (attr.equalsIgnoreCase(AttributeManager.ABBREV_LAST)) 
 					lastName = val;
@@ -161,17 +171,50 @@ public class Beneficiary {
 					sex = Sex.valueOf(val.toUpperCase());
 				else if (attr.equalsIgnoreCase(AttributeManager.ABBREV_NUMBER_IN_HOME))
 					numberInHome = Integer.parseInt(val);
-				else if (attr.equalsIgnoreCase(AttributeManager.ABBREV_CATEGORY))
-					beneficiaryCategory = 
-						BeneficiaryCategory.valueOf( AttributeManager.getMapping(val.toUpperCase()));
-				else if (attr.equalsIgnoreCase(AttributeManager.ABBREV_HEALTH_CENTER))
-					healthCenter = val;
-				else if (attr.equalsIgnoreCase(AttributeManager.ABBREV_IS_MOTHERLEADER))
-					isMotherLeader = YnQuestion.valueOf(val.toUpperCase());
-				else if (attr.equalsIgnoreCase(AttributeManager.ABBREV_VISIT_MOTHERLEADER))
-					visitMotherLeader = YnQuestion.valueOf(val.toUpperCase());			
-				else if (attr.equalsIgnoreCase(AttributeManager.ABBREV_IS_AGRI))
-					visitMotherLeader = YnQuestion.valueOf(val.toUpperCase());	
+				else if (attr.equalsIgnoreCase(AttributeManager.ABBREV_BENEFICIARY_TYPE)) {
+					if (Integer.parseInt(val) == BeneficiaryType.MCHN.getCode())
+						beneficiaryType = BeneficiaryType.MCHN;
+					else if (Integer.parseInt(val) == BeneficiaryType.AGRI.getCode())
+						beneficiaryType = BeneficiaryType.AGRI;
+					else if (Integer.parseInt(val) == BeneficiaryType.BOTH.getCode())
+						beneficiaryType = BeneficiaryType.BOTH;
+				}
+				if (beneficiaryType == BeneficiaryType.MCHN || beneficiaryType == BeneficiaryType.BOTH) {
+					if (attr.equalsIgnoreCase(AttributeManager.ABBREV_HEALTH_CENTER))
+						healthCenter = AttributeManager.mapToLong(true, val);
+					else if (attr.equalsIgnoreCase(AttributeManager.ABBREV_DISTRIBUTION_POST))
+						distributionPost = AttributeManager.mapToLong(true, val);
+					else if (attr.equalsIgnoreCase(AttributeManager.ABBREV_CATEGORY))
+						beneficiaryCategory = BeneficiaryCategory.valueOf( AttributeManager.getMapping(val.toUpperCase()));
+					else if (attr.equalsIgnoreCase(AttributeManager.ABBREV_RELATIVE_1) && (beneficiaryCategory == BeneficiaryCategory.MALNOURISHED || beneficiaryCategory == BeneficiaryCategory.PREVENTION))
+						guardianChild = val;
+					else if (attr.equalsIgnoreCase(AttributeManager.ABBREV_RELATIVE_1) && (beneficiaryCategory == BeneficiaryCategory.NURSING || beneficiaryCategory == BeneficiaryCategory.EXPECTING))
+						guardianWoman = val;
+					else if (attr.equalsIgnoreCase(AttributeManager.ABBREV_RELATIVE_2) && (beneficiaryCategory == BeneficiaryCategory.NURSING || beneficiaryCategory == BeneficiaryCategory.EXPECTING))
+						husband = val;
+					else if (attr.equalsIgnoreCase(AttributeManager.ABBREV_RELATIVE_2) && (beneficiaryCategory == BeneficiaryCategory.MALNOURISHED || beneficiaryCategory == BeneficiaryCategory.PREVENTION))
+						father = val;
+					else if (attr.equalsIgnoreCase(AttributeManager.ABBREV_IS_MOTHERLEADER))
+						isMotherLeader = YnQuestion.valueOf(val.toUpperCase());
+					else if (attr.equalsIgnoreCase(AttributeManager.ABBREV_VISIT_MOTHERLEADER))
+						visitMotherLeader = YnQuestion.valueOf(val.toUpperCase());			
+					else if (attr.equalsIgnoreCase(AttributeManager.ABBREV_IS_AGRI))
+						isParticipatingAgri = YnQuestion.valueOf(val.toUpperCase());
+					else if (attr.equalsIgnoreCase(AttributeManager.ABBREV_AGRI_NAME))
+						agriPerson = val;					
+				}
+				if (beneficiaryType == BeneficiaryType.AGRI || beneficiaryType == BeneficiaryType.BOTH) {
+					if (attr.equalsIgnoreCase(AttributeManager.ABBREV_LAND_AMT))
+						amountOfLand = Double.parseDouble(val);
+					else if (attr.equalsIgnoreCase(AttributeManager.ABBREV_ISA))
+						split(AttributeManager.decodeBinaryFieldsInt(Integer.parseInt(val), AttributeManager.isAFields), AttributeManager.ABBREV_ISA);
+					else if (attr.equalsIgnoreCase(AttributeManager.ABBREV_HASA))
+						split(AttributeManager.decodeBinaryFieldsInt(Integer.parseInt(val), AttributeManager.hasAFields), AttributeManager.ABBREV_HASA);
+					else if (attr.equalsIgnoreCase(AttributeManager.ABBREV_SEED_QUANTITY))
+						seedQuantity = Double.parseDouble(val);
+					else if (attr.equalsIgnoreCase(AttributeManager.ABBREV_MEASUREMENT_UNIT))
+						unitOfMeasurement = Integer.parseInt(val);					
+				}
 			} catch (NumberFormatException e) {
 				System.out.println("Number format exception");
 				e.printStackTrace();
@@ -230,6 +273,82 @@ public class Beneficiary {
 		this.beneficiaryCategory = beneCategory;
 		this.numberInHome = numberInHome;
 	}
+	
+	/**
+	 * This method splits the is and hs fields according to the given
+	 * binary string and sets the corresponding attributes as yes
+	 * @param binary representation of is and hs fields to be split
+	 * @param isORhs field, depending on which one, the respective array will be chosen
+	 */
+	private void split(String binary, String isORhs) {
+		String fields[] = binary.split(AttributeManager.PAIRS_SEPARATOR);
+		
+		for (int k = 0; k < fields.length; k++) {
+			String attrval[] = fields[k].split(AttributeManager.ATTR_VAL_SEPARATOR);
+			String attr = "", val = "";
+			if (attrval.length == 2) {
+				attr = attrval[0];
+				val = attrval[1];
+			} else if (attrval.length == 1) {
+				attr = attrval[0];
+			}
+			
+			System.out.println("Attr= " + attr + " val= " + val);
+			
+			try {
+				if (isORhs.equalsIgnoreCase(AttributeManager.ABBREV_ISA)) {
+					if (attr.equalsIgnoreCase(AttributeManager.isAFields[0]))
+						isFarmer = YnQuestion.Y;
+					if (attr.equalsIgnoreCase(AttributeManager.isAFields[1]))
+						isFisherman = YnQuestion.Y;		
+					if (attr.equalsIgnoreCase(AttributeManager.isAFields[2]))
+						isMuso = YnQuestion.Y;
+					if (attr.equalsIgnoreCase(AttributeManager.isAFields[3]))
+						isRancher = YnQuestion.Y;
+					if (attr.equalsIgnoreCase(AttributeManager.isAFields[4]))
+						isMerchant = YnQuestion.Y;
+					if (attr.equalsIgnoreCase(AttributeManager.isAFields[5]))
+						isOther = YnQuestion.Y;
+				}
+				else {
+					if (attr.equalsIgnoreCase(AttributeManager.hasAFields[0]))
+						getsVeggies = YnQuestion.Y;
+					if (attr.equalsIgnoreCase(AttributeManager.hasAFields[1]))
+						getsCereal = YnQuestion.Y;
+					if (attr.equalsIgnoreCase(AttributeManager.hasAFields[2]))
+						getsTubers = YnQuestion.Y;			
+					if (attr.equalsIgnoreCase(AttributeManager.hasAFields[3]))
+						getsTrees = YnQuestion.Y;
+					if (attr.equalsIgnoreCase(AttributeManager.hasAFields[4]))
+						getsHoe = YnQuestion.Y;
+					if (attr.equalsIgnoreCase(AttributeManager.hasAFields[5]))
+						getsPickaxe = YnQuestion.Y;		
+					if (attr.equalsIgnoreCase(AttributeManager.hasAFields[6]))
+						getsWheelbarrow = YnQuestion.Y;		
+					if (attr.equalsIgnoreCase(AttributeManager.hasAFields[7]))
+						getsMachette = YnQuestion.Y;	
+					if (attr.equalsIgnoreCase(AttributeManager.hasAFields[8]))
+						getsSerpette = YnQuestion.Y;
+					if (attr.equalsIgnoreCase(AttributeManager.hasAFields[9]))
+						getsPelle = YnQuestion.Y;
+					if (attr.equalsIgnoreCase(AttributeManager.hasAFields[10]))
+						getsBarreAMines = YnQuestion.Y;
+				}
+			} catch (NumberFormatException e) {
+				System.out.println("Number format exception");
+				e.printStackTrace();
+				continue;
+			} catch (NullPointerException e) {
+				System.out.println("Null pointer exception");
+				e.printStackTrace();
+				continue;				
+			} catch (IllegalArgumentException e) {
+				System.out.println("Illegal argument exception");
+				e.printStackTrace();
+				continue;				
+			}
+		}
+	}
 
 	/**
 	 * For temporary development purposes only.
@@ -279,6 +398,7 @@ public class Beneficiary {
 	public void setAddress(String address) {
 		this.locality = address;
 	}
+	
 	public String getCommune() {
 		return commune;
 	}
@@ -356,6 +476,56 @@ public class Beneficiary {
 
 	public void setDistributionPost(String distributionPost) {
 		this.distributionPost = distributionPost;
+	}
+
+
+	public String getGuardianChild() {
+		return guardianChild;
+	}
+
+
+	public void setGuardianChild(String guardianChild) {
+		this.guardianChild = guardianChild;
+	}
+
+
+	public String getGuardianWoman() {
+		return guardianWoman;
+	}
+
+
+	public void setGuardianWoman(String guardianWoman) {
+		this.guardianWoman = guardianWoman;
+	}
+
+
+	public String getHusband() {
+		return husband;
+	}
+
+
+	public void setHusband(String husband) {
+		this.husband = husband;
+	}
+
+
+	public String getFather() {
+		return father;
+	}
+
+
+	public void setFather(String father) {
+		this.father = father;
+	}
+
+
+	public String getAgriPerson() {
+		return agriPerson;
+	}
+
+
+	public void setAgriPerson(String agriPerson) {
+		this.agriPerson = agriPerson;
 	}
 
 
@@ -509,13 +679,13 @@ public class Beneficiary {
 	}
 
 
-	public YnQuestion getGetsPickax() {
-		return getsPickax;
+	public YnQuestion getGetsPickaxe() {
+		return getsPickaxe;
 	}
 
 
-	public void setGetsPickax(YnQuestion getsPickax) {
-		this.getsPickax = getsPickax;
+	public void setGetsPickaxe(YnQuestion getsPickaxe) {
+		this.getsPickaxe = getsPickaxe;
 	}
 
 
@@ -529,13 +699,13 @@ public class Beneficiary {
 	}
 
 
-	public YnQuestion getGetsMachete() {
-		return getsMachete;
+	public YnQuestion getGetsMachette() {
+		return getsMachette;
 	}
 
 
-	public void setGetsMachete(YnQuestion getsMachete) {
-		this.getsMachete = getsMachete;
+	public void setGetsMachete(YnQuestion getsMachette) {
+		this.getsMachette = getsMachette;
 	}
 
 
@@ -597,9 +767,9 @@ public class Beneficiary {
 				+ ", isFisherman=" + isFisherman + ", isOther=" + isOther
 				+ ", getsVeggies=" + getsVeggies + ", getsCereal=" + getsCereal
 				+ ", getsTubers=" + getsTubers + ", getsTrees=" + getsTrees
-				+ ", getsHoe=" + getsHoe + ", getsPickax=" + getsPickax
+				+ ", getsHoe=" + getsHoe + ", getsPickax=" + getsPickaxe
 				+ ", getsWheelbarrow=" + getsWheelbarrow + ", getsMachete="
-				+ getsMachete + ", getsSerpette=" + getsSerpette
+				+ getsMachette + ", getsSerpette=" + getsSerpette
 				+ ", getsPelle=" + getsPelle + ", getsBarreAMines="
 				+ getsBarreAMines + "]";
 	}

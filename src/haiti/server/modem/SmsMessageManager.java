@@ -22,8 +22,6 @@
 
 package haiti.server.modem;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -51,15 +49,22 @@ public class SmsMessageManager {
 	 */
 	public static List<SmsMessage> convertBulkMessage(String message,
 			String sender) {
-		
-		String[] parts = message.split(AttributeManager.OUTER_DELIM);
-		String[] ids = parts[1].split(AttributeManager.LIST_SEPARATOR);
-		List<SmsMessage> messages = new ArrayList<SmsMessage>();
-		for (String id : ids) {
-			SmsMessage sms = new SmsMessage("AV="+id+",i=" + id + ",p=T", sender);
-			messages.add(sms);
+		try {
+			String[] parts = message.split(AttributeManager.OUTER_DELIM);
+			String[] ids = parts[1].split(AttributeManager.LIST_SEPARATOR);
+			List<SmsMessage> messages = new ArrayList<SmsMessage>();
+			for (String id : ids) {
+				SmsMessage sms = new SmsMessage("AV=" + id + ",i=" + id
+						+ ",p=T", sender);
+				messages.add(sms);
+			}
+			return messages;
+		} catch (Exception e) {
+			e.printStackTrace();
+			DbWriter.log("Invalid message format for message: " + message);
 		}
-		return messages;
+
+		return null;
 	}
 
 	/**
@@ -68,11 +73,16 @@ public class SmsMessageManager {
 	 * @param message
 	 *            the text of the message
 	 * @return the category of the message, or more specifically, if the message
-	 *         is AV=ACK,id=1... then this method returns "ACK."
+	 *         is AV=n,id=1... then this method returns "n"
 	 */
 	public static String getMessageCategory(String message) {
-		String[] parts = message.split(AttributeManager.OUTER_DELIM);
-		String[] attrVal = parts[0].split(AttributeManager.INNER_DELIM);
-		return attrVal[1];
+		try {
+			String[] parts = message.split(AttributeManager.OUTER_DELIM);
+			String[] attrVal = parts[0].split(AttributeManager.INNER_DELIM);
+			return attrVal[1];
+		} catch (Exception e) {
+			DbWriter.log("Invalid message format for message: " + message);
+		}
+		return null;
 	}
 }

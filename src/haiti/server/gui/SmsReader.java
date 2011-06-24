@@ -75,7 +75,7 @@ public class SmsReader {
 	public static final String DB_MESSAGE_TABLE = "message_log";
 	public static final String DB_MESSAGE_ID = "id";
 	public static final String DB_MESSAGE_COLUMN = "message_text";
-	public static final String DB_MESSAGE_STATUS = "status";
+	public static final String DB_MESSAGE_STATUS = "message_status";
 	public static final String DB_MESSAGE_CREATED_ON = "created_on";
 	public static final String DB_MESSAGE_MODIFIED_ON = "modified_on";
 	public static final String DB_MESSAGE_TYPE = "message_type";
@@ -265,7 +265,7 @@ public class SmsReader {
 			statement.setQueryTimeout(60); // set timeout to 30 sec.
 
 			statement.execute(AttributeManager.UPDATE + DB_MESSAGE_TABLE + AttributeManager.SET+ DB_MESSAGE_STATUS+AttributeManager.ATTR_VAL_SEPARATOR
-					+ AttributeManager.SINGLE_QUOTE + b.getStatus() + AttributeManager.SINGLE_QUOTE + AttributeManager.WHERE+DB_MESSAGE_ID+AttributeManager.ATTR_VAL_SEPARATOR + b.getId() + AttributeManager.LINE_ENDER);
+					+ AttributeManager.SINGLE_QUOTE + b.getStatus().ordinal() + AttributeManager.SINGLE_QUOTE + AttributeManager.WHERE+DB_MESSAGE_ID+AttributeManager.ATTR_VAL_SEPARATOR + b.getId() + AttributeManager.LINE_ENDER);
 			
 		} catch (SQLException e) {
 			// if the error message is "out of memory",
@@ -273,7 +273,8 @@ public class SmsReader {
 			e.printStackTrace();
 		}
 	}
-	/*
+	
+	/**
 	 * updateMessage method update the status and modified time for given
 	 * Beneficiary object in database
 	 * @param b is the Beneficiary object
