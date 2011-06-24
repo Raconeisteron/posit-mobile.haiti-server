@@ -35,25 +35,7 @@ import java.awt.*;
 import java.awt.event.*;   
 import java.awt.datatransfer.*;
 
-import javax.swing.BorderFactory;
-import javax.swing.ButtonGroup;
-import javax.swing.DefaultListCellRenderer;
-import javax.swing.DefaultListModel;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JFileChooser;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JRadioButton;
-import javax.swing.JScrollBar;
-import javax.swing.JScrollPane;
-import javax.swing.JSplitPane;
-import javax.swing.JTextField;
-import javax.swing.ListSelectionModel;
+import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
@@ -67,9 +49,11 @@ import javax.swing.event.ListSelectionListener;
 public class DataEntryGUI extends JFrame implements WindowListener, ListSelectionListener   {
 
 	public enum DbSource {FILE, DATA_BASE};
-
 	
-	private Menus mMenuManager;
+	public boolean isUser = false;
+	public boolean isAdmin = false;
+	
+	public Menus mMenuManager;
 	private LocaleManager  mLocaleManager;
 	private SmsReader mReader;
 	private JPanel mWelcomePanel ;
@@ -85,7 +69,7 @@ public class DataEntryGUI extends JFrame implements WindowListener, ListSelectio
     private String mMessagesFileOrDbName;
     private Beneficiary mBeneficiary;
     
-    private DataEntryFormStatic mFormPanel; 
+    private FormPanel mFormPanel; 
     private BeneficiaryUpdateForm mUpdatePanel;
     
 	//public TextArea display;// = new TextArea();
@@ -102,20 +86,21 @@ public class DataEntryGUI extends JFrame implements WindowListener, ListSelectio
 		
 		mLocaleManager = new LocaleManager();  // Set's the default locale
 
-		mMenuManager = new Menus(this);
-		mMenuManager.createMenuBar();
-		setMenuBar(Menus.getMenuBar());	  
-		
-		this.setupFrame();
+		setupFrame();
 		this.setMinimumSize(new Dimension(500,300));
+		this.setSize(500, 300);
 
 		setResizable(true);
 		//setSize(WIDTH, HEIGHT);
 		//setSize(900,700);
 		pack();
-		setVisible(true);
+		setVisible(false);
+//		setVisible(true);
 		DataEntryGUI.centerWindow(this);
 		requestFocus();
+
+		LoginScreen ls = new LoginScreen(this);
+		ls.setVisible(true);
 	} 
 	
 	public void messageRepaint() {
@@ -163,9 +148,9 @@ public class DataEntryGUI extends JFrame implements WindowListener, ListSelectio
 //        this.mListScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
 
         this.mListScrollPane.setMaximumSize(new Dimension(700,300));
-        this.mListScrollPane.setSize(700,300);
+        this.mListScrollPane.setSize(300,200);
         this.mFormScrollPane = new JScrollPane(formPanel);
-        this.mFormScrollPane.setSize(700,300);
+        this.mFormScrollPane.setSize(300,200);
 		
         // See http://download.oracle.com/javase/tutorial/uiswing/components/splitpane.html
 		//Create a split pane with the two scroll panes in it.
@@ -222,6 +207,13 @@ public class DataEntryGUI extends JFrame implements WindowListener, ListSelectio
 		this.repaint();
 	}
 
+	/**
+	 * This method reads messages from the given database into the GUI
+	 * depending on both status and type
+	 * @param dbSource the database source
+	 * @param status of the message, including new, pending, processed, etc.
+	 * @param type of the message, registration or update
+	 */
 	public void readMessagesIntoGUI (DbSource dbSource, MessageStatus status, MessageType type) {
 		
 		JFileChooser fd = new JFileChooser();
@@ -241,7 +233,11 @@ public class DataEntryGUI extends JFrame implements WindowListener, ListSelectio
 			mMessagesArray = mReader.getMessageByStatusAndType(mMessagesFileOrDbName, status, type);
 		}
 
-		mFormPanel = new DataEntryFormStatic(this);
+		if (type == MessageType.REGISTRATION)
+			mFormPanel = new DataEntryFormStatic(this);
+		else
+			mFormPanel = new BeneficiaryUpdateFormStatic(this);
+		
 		if (mMessagesArray.length == 0) {
 			mMessagesArray = new String[1];
 			mMessagesArray[0] = "{Empty}";
@@ -261,7 +257,9 @@ public class DataEntryGUI extends JFrame implements WindowListener, ListSelectio
 		this.getContentPane().add(setUpSplitPane(mMessagesArray, mFormPanel));
 		this.pack();
 		DataEntryGUI.centerWindow(this);
-		this.repaint();			
+		this.repaint();
+		this.setSize(1200, 800);
+		this.setLocation(0,0);
 	}
 //        this.mSplitPane.setSize(700,300);
 
@@ -330,29 +328,29 @@ public class DataEntryGUI extends JFrame implements WindowListener, ListSelectio
 	public void postMessageToTBS() {
 		// TODO Auto-generated method stub
 		System.out.println(mBeneficiary.toString());
-		TbsManager tbs = new TbsManager();
-		String result = tbs.postNewBeneficiary(mBeneficiary);
+//		TbsManager tbs = new TbsManager();
+//		String result = tbs.postNewBeneficiary(mBeneficiary);
 		
-		if (result.equals(TbsManager.RESULT_OK)) {
+//		if (result.equals(TbsManager.RESULT_OK)) {
 			mBeneficiary.setStatus(Beneficiary.MessageStatus.PROCESSED); // sets the status of the current Beneficiary item to processed
 			mReader.updateMessage(mBeneficiary, this.mMessagesFileOrDbName);
 			int index = this.mMessageList.getSelectedIndex();
 			String msg = mReader.getMessageById(mBeneficiary.getId(), this.mMessagesFileOrDbName);
-			System.out.println(msg);
-			if (!msg.contains("NOT FOUND")) {
+//			System.out.println(msg);
+//			if (!msg.contains("NOT FOUND")) {
 				this.mListModel.set(index,msg);
 				this.mMessageList.setSelectedIndex(index++);
 				this.mMessageList.repaint();
-				System.out.println("Posted message to TBS Db");
+//				System.out.println("Posted message to TBS Db");
 				JOptionPane.showMessageDialog(this, "Posted message to TBS Db", "Success", -1);
-			} else {
-				System.out.println("ERROR in Posting message to TBS Db");
-				JOptionPane.showMessageDialog(this, "ERROR in Posting message to TBS Db", "ERROR", 0);
-			}
-		} else {
-			System.out.println("ERROR: " + result);
-			JOptionPane.showMessageDialog(this, result, "ERROR", 0);
-		}
+//			} else {
+//				System.out.println("ERROR in Posting message to TBS Db");
+//				JOptionPane.showMessageDialog(this, "ERROR in Posting message to TBS Db", "ERROR", 0);
+//			}
+//		} else {
+//			System.out.println("ERROR: " + result);
+//			JOptionPane.showMessageDialog(this, result, "ERROR", 0);
+//		}
 		
 	}
 
@@ -395,7 +393,6 @@ public class DataEntryGUI extends JFrame implements WindowListener, ListSelectio
 	    win.setLocation(x, y);    
 	}
 	
-
 	/**
 	 * Inner class to render list elements.
 	 * @author rmorelli

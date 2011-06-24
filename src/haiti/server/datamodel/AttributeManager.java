@@ -67,15 +67,12 @@ public class AttributeManager {
 	public static final String VALUES = "VALUES ";
 	public static final String USER_DIRECTORY = "user.dir"; 
 	public static final String DATABASE_PATHNAME = "/db/";
-
+	public static final int ACK_MESSAGES_AT = 5;
+	
 
 	public static final String OUTER_DELIM = PAIRS_SEPARATOR;
 	public static final String INNER_DELIM = ATTR_VAL_SEPARATOR;
 	
-	public static final String URL_OUTER_DELIM = "%2C";
-	public static final String URL_INNER_DELIM = "%3D";
-	public static final String URL_PLUS = "%2B";
-	public static final String PLUS = "+";
 	public static final String FORM_BENEFICIARY = null;
 	
 	
@@ -105,6 +102,30 @@ public class AttributeManager {
 	public static final String FORM_AGRICULTURE_2 = "Agr2";  // Agriculture Program of ACDI/VOCA?:";
 	public static final String FORM_GIVE_NAME= "GiveName";  // "If yes, give the name:";
 
+	public static final String FORM_FARMER="Farmer";
+	public static final String FORM_MUSO="Muso";
+	public static final String FORM_CATTLE_RANCHER="CattleRancher";
+	public static final String FORM_STORE_OWNER="StoreOwner";
+	public static final String FORM_FISHERMAN="Fisherman";
+	public static final String FORM_OTHER="Other";
+	public static final String FORM_VEGETABLES="Vegetables";
+	public static final String FORM_CEREAL="Cereal";
+	public static final String FORM_TUBERS="Tubers";
+	public static final String FORM_TREE="Tree";
+	public static final String FORM_LIVRE="Livre";
+	public static final String FORM_MARMITES="Marmites";
+	public static final String FORM_POTE="Pote";
+	public static final String FORM_KG="Kg";
+	public static final String FORM_PLANTULES="Plantules";
+	public static final String FORM_BOUTURES="Boutures";
+	public static final String FORM_HOE="Hoe";
+	public static final String FORM_PICKAXE="Pickaxe";
+	public static final String FORM_WHEELBARROW="Wheelbarrow";
+	public static final String FORM_MACHETTE="Machette";
+	public static final String FORM_PRUNING_KNIFE="PruningKnife";
+	public static final String FORM_SHOVEL="Shovel";
+	public static final String FORM_CROWBAR="Crowbar";
+
 	public static final String BUTTON_YES="Yes";
 	public static final String BUTTON_NO="No";
 	public static final String BUTTON_MALE="MALE";
@@ -114,6 +135,7 @@ public class AttributeManager {
 	public static final String BUTTON_MOTHER_EXPECTING="Femme enceinte";
 	public static final String BUTTON_MOTHER_NURSING="Femme allaitante";
 	
+	
 	public static final String FORM_DOSSIER="Dossier";
 	public static final String FORM_DOB= "DateOfBirth";
 	public static final String FORM_MONTHS= "MonthsRemaining";
@@ -122,6 +144,12 @@ public class AttributeManager {
 	public static final String FORM_MODIFICATIONS= "Modifications";  // "Are modifications needed in the beneficiary's record?";
 	public static final String FORM_SUSPEND= "Suspend";  // "Should the beneficiary be suspended?";
 	public static final String FORM_WHY= "Why"; //"If so, why?:";
+	public static final String FORM_AGRICULTURE_CATEGORY="AgricultureCategory";
+	public static final String FORM_LAND= "AmountOfLand";
+	public static final String FORM_SEED_TYPE= "SeedTypes";
+	public static final String FORM_SEED_QUANTITY= "QuantityOfSeeds";
+	public static final String FORM_MEASUREMENT= "UnitOfMeasurement";
+	public static final String FORM_TOOLS= "Tools";
 	
 	
 	// Abbreviated names of fields and attributes that make
@@ -131,15 +159,13 @@ public class AttributeManager {
 	public static final String ABBREV_MESSAGE_TEXT = "tx";
 	public static final String ABBREV_MESSAGE_STATUS = "ms";
 	public static final String ABBREV_MESSAGE_TYPE = "t";
-	public static final String ABBREV_BENEFICIARY_TYPE = "bt";
+	public static final String ABBREV_BENEFICIARY_TYPE = "s";
 	public static final String ABBREV_CREATED_AT = "t1";
 	public static final String ABBREV_SENT_AT = "t2";
 	public static final String ABBREV_ACK_AT = "t3";
 	
-	public static final String ABBREV_STATUS = "s"; 
 	public static final String ABBREV_ID = "id";    
 	public static final String ABBREV_AV = "AV";
-	public static final String ABBREV_TYPE = "t";
 	
 	public static final String ABBREV_FIRST = "f";     
 	public static final String ABBREV_LAST = "l";      
@@ -153,15 +179,21 @@ public class AttributeManager {
 	public static final String ABBREV_VISIT_MOTHERLEADER = "mv";
 	public static final String ABBREV_IS_AGRI = "ag";
 	public static final String ABBREV_LAND_AMT = "la";
+	public static final String ABBREV_AGRI_NAME = "an";
 	
 	public static final String ABBREV_NUMBER_IN_HOME = "n";     
 	public static final String ABBREV_HEALTH_CENTER = "h";      
 	public static final String ABBREV_DISTRIBUTION_POST = "d"; 
 	
-	public static final String ABBREV_NAME_CHILD = "nc";
-	public static final String ABBREV_NAME_WOMAN = "nw";
-	public static final String ABBREV_HUSBAND = "h";
-	public static final String ABBREV_FATHER = "f";
+	public static final String ABBREV_RELATIVE_1 = "r1";
+	public static final String ABBREV_RELATIVE_2 = "r2"; 
+//	public static final String ABBREV_NAME_CHILD = "nc";
+//	public static final String ABBREV_NAME_WOMAN = "nw";
+//	public static final String ABBREV_HUSBAND = "h";
+//	public static final String ABBREV_FATHER = "f";
+	
+	public static final String ABBREV_SEED_QUANTITY = "sq";
+	public static final String ABBREV_MEASUREMENT_UNIT = "mu";
 	
 	// Constants for Y/N questions on the agri form
 	public static final String ABBREV_IS_FARMER = "fa";
@@ -197,8 +229,8 @@ public class AttributeManager {
 	// This pair of constants is used to encode/decode Y/N
 	// questions regarding plant, seeds, and tools.
 	public static final String ABBREV_HASA = "hs";
-	public static final String[] hasAFields = {"ba", "br", "ce", "ho", "ma", 
-		"pe", "pi", "se", "tr", "ve", "tu"};
+	public static final String[] hasAFields = {"ve", "ce", "tu", "tr", 
+		"ho", "pi", "ba", "ma", "se", "pe", "br"};
 
 	// -------------- DATA VALUES
 	// These correspond to data values represented as Enums
@@ -254,7 +286,6 @@ public class AttributeManager {
 	public static final String MESSAGE_CREATED_AT =  "created_time";
 	public static final String MESSAGE_SENT_AT =  "sent_time";
 	public static final String MESSAGE_ACK_AT =  "acknowledged_time";
-	public static final int ACK_MESSAGES_AT = 5; // How often to ack messages--e.g. every 5 messages
 	
 	public static final String FINDS_Q_MOTHER_LEADER = "mother_leader";
 	public static final String FINDS_Q_VISIT_MOTHER_LEADER = "visit_mother_leader";
@@ -322,15 +353,16 @@ public class AttributeManager {
 	public static final String LONG_NUMBER_IN_HOME = "NumberInHome";
 	public static final String LONG_HEALTH_CENTER = "HealthCenter";
 	public static final String LONG_DISTRIBUTION_POST = "DistributionPost";
-	public static final String LONG_NAME_CHILD = "nameChild";
-	public static final String LONG_NAME_WOMAN = "nameWoman";
-	public static final String LONG_HUSBAND = "husband";
-	public static final String LONG_FATHER = "father";
+	public static final String LONG_RELATIVE_1 = "Relative1";
+	public static final String LONG_RELATIVE_2 = "Relative2";
+//	public static final String LONG_NAME_CHILD = "nameChild";
+//	public static final String LONG_NAME_WOMAN = "nameWoman";
+//	public static final String LONG_HUSBAND = "husband";
+//	public static final String LONG_FATHER = "father";
 	public static final String LONG_MOTHER_LEADER = "motherLeader";
 	public static final String LONG_VISIT_MOTHER = "visitMotherLeader";
 	public static final String LONG_AGRICULTURE_1 = "agriculture1";
-	public static final String LONG_AGRICULTURE_2 = "agriculture2";
-	public static final String LONG_GIVE_NAME = "giveName";
+	public static final String LONG_AGRI_NAME = "giveName";
 	public static final String LONG_YES = "yes";
 	public static final String LONG_NO = "no";
 	public static final String LONG_MALE = "male";
@@ -352,8 +384,6 @@ public class AttributeManager {
 	public static final String LONG_BENEFICIARY_TYPE = "beneficiaryType";
 	
 	public static final String LONG_DOSSIER = "dossier";
-
-	public static final String BULK_MESSAGE = "-1";
 		
 	
 	/**
@@ -389,10 +419,12 @@ public class AttributeManager {
 		abbreviations.put(ABBREV_NUMBER_IN_HOME, LONG_NUMBER_IN_HOME);
 		abbreviations.put(ABBREV_HEALTH_CENTER, LONG_HEALTH_CENTER);
 		abbreviations.put(ABBREV_DISTRIBUTION_POST, LONG_DISTRIBUTION_POST);
-		abbreviations.put(ABBREV_NAME_CHILD, LONG_NAME_CHILD);
-		abbreviations.put(ABBREV_NAME_WOMAN, LONG_NAME_WOMAN);
-		abbreviations.put(ABBREV_HUSBAND, LONG_HUSBAND);
-		abbreviations.put(ABBREV_FATHER, LONG_FATHER);
+		abbreviations.put(ABBREV_RELATIVE_1, LONG_RELATIVE_1);
+		abbreviations.put(ABBREV_RELATIVE_2, LONG_RELATIVE_2);
+//		abbreviations.put(ABBREV_NAME_CHILD, LONG_NAME_CHILD);
+//		abbreviations.put(ABBREV_NAME_WOMAN, LONG_NAME_WOMAN);
+//		abbreviations.put(ABBREV_HUSBAND, LONG_HUSBAND);
+//		abbreviations.put(ABBREV_FATHER, LONG_FATHER);
 //		abbreviations.put(ABBREV_MOTHER_LEADER, LONG_MOTHER_LEADER);
 //		abbreviations.put(ABBREV_VISIT_MOTHER, LONG_VISIT_MOTHER);
 //		abbreviations.put(ABBREV_AGRICULTURE_1, LONG_AGRICULTURE_1);
@@ -494,8 +526,8 @@ public class AttributeManager {
 		abbreviations.put(FINDS_Q_VISIT_MOTHER_LEADER, ABBREV_VISIT_MOTHERLEADER);
 		abbreviations.put(FINDS_Q_PARTICIPATING_AGRI, ABBREV_IS_AGRI);
 		abbreviations.put(FINDS_LAND_AMOUNT, ABBREV_LAND_AMT);
-		abbreviations.put(FINDS_RELATIVE_1, "r1");
-		abbreviations.put(FINDS_RELATIVE_2, "r2");
+		abbreviations.put(FINDS_RELATIVE_1, ABBREV_RELATIVE_1);
+		abbreviations.put(FINDS_RELATIVE_2, ABBREV_RELATIVE_2);
 		abbreviations.put(FINDS_MONTHS_REMAINING, "mo");
 		abbreviations.put(FINDS_IS_FARMER, ABBREV_IS_FARMER);
 		abbreviations.put(FINDS_IS_FISHER, ABBREV_IS_FISHER);
@@ -547,13 +579,45 @@ public class AttributeManager {
 		abbreviations.put("Dispensaire de Savane Zombi",  "d25"  );
 		abbreviations.put("Dispensaire de Bleck/ Mar Mirande",   "d26" );
 		
+		abbreviations.put("d1", "Centre Platon Cedre" );
+		abbreviations.put("d2", "Point Fixe Ka Tousen" );
+		abbreviations.put("d3", "Anse a Pitres" );
+		abbreviations.put("d4", "Dispensaire Banane" );
+		abbreviations.put("d5", "Pt fixe Calumette" );
+		abbreviations.put("d6", "Centre Belle-Ance" );
+		abbreviations.put("d7", "Dispensaire Mapou" );
+		abbreviations.put("d8", "Pt fixe Baie d_orange" );
+		abbreviations.put("d9", "Dispensaire marbriole" );	
+		abbreviations.put("d10", "Pt fixe Corail Lamothe" );
+		abbreviations.put("d11", "Pt fixe Pichon" );	
+		abbreviations.put("d12", "Pt Fixe Bel-air" );	
+		abbreviations.put("d13", "Labiche" );	
+		abbreviations.put("d14", "Centre St Joseph" );	
+		abbreviations.put("d15", "Dispensaire Ste rose de lima" );	
+		abbreviations.put("d16", "Dispensaire Boucan Belier" );	
+		abbreviations.put("d17", "Dispensaire Ricot" );	
+		abbreviations.put("d18", "Pt Fixe Macieux" );	
+		abbreviations.put("d19", "Point Fixe de Mayette" );	
+		abbreviations.put("d20", "Point Fixe de Amazone" );
+		abbreviations.put("d21", "Dispensaire Grand Gosier" );
+		abbreviations.put("d22", "Dispensaire Bodarie" );
+		abbreviations.put("d23", "Pt fixe Boulay" );
+		abbreviations.put("d24", "Centre Sacre Coeur" );
+		abbreviations.put("d25", "Dispensaire de Savane Zombi" );
+		abbreviations.put("d26", "Dispensaire de Bleck/ Mar Mirande" );
+
 //		<string-array name="health_center_names"> 
-		abbreviations.put("Centre de santï¿½ une", "h1" );
-		abbreviations.put("Centre de santï¿½ deux", "h2"  );
-		abbreviations.put("Centre de santï¿½ trois", "h3" );
-		abbreviations.put("Centre de santï¿½ quatre", "h4" );
-		abbreviations.put("Centre de santï¿½ cinq", "h4" );
-		
+		abbreviations.put("Centre de santŽ un", "h1" );
+		abbreviations.put("Centre de santŽ deux", "h2"  );
+		abbreviations.put("Centre de santŽ trois", "h3" );
+		abbreviations.put("Centre de santŽ quatre", "h4" );
+		abbreviations.put("Centre de santŽ cinq", "h5" );
+
+		abbreviations.put("h1", "Centre de santŽ un" );
+		abbreviations.put("h2", "Centre de santŽ deux" );
+		abbreviations.put("h3", "Centre de santŽ trois" );
+		abbreviations.put("h4", "Centre de santŽ quatre" );
+		abbreviations.put("h5", "Centre de santŽ cinq" );		
 	}
 	
 	/**

@@ -55,11 +55,13 @@ public class Menus implements ActionListener {
 	public static final String MENU_BENEFICIARY_FILTER_PENDING = "PendingBeneficiary";
 	public static final String MENU_BENEFICIARY_FILTER_PROCESSED = "ProcessedBeneficiary";
 	public static final String MENU_BENEFICIARY_FILTER_ARCHIVED = "ArchivedBeneficiary";
+	public static final String MENU_BENEFICIARY_FILTER_ALL = "AllBeneficiaries";
 	public static final String MENU_UPDATE_FILTER = "UpdateFilter";
 	public static final String MENU_UPDATE_FILTER_NEW = "NewUpdate";
 	public static final String MENU_UPDATE_FILTER_PENDING = "PendingUpdate";
 	public static final String MENU_UPDATE_FILTER_PROCESSED = "ProcessedUpdate";
 	public static final String MENU_UPDATE_FILTER_ARCHIVED = "ArchivedUpdate";
+	public static final String MENU_UPDATE_FILTER_ALL = "AllUpdates";
 	public static final String MENU_ALL = "All";
 	public static final String MENU_QUIT = "Quit";
 	public static final String MENU_ABOUT = "About";  // About DataEntryGUI...";
@@ -101,29 +103,34 @@ public class Menus implements ActionListener {
 
 		openDbMenu.add(beneficiaryMenu);
 		openDbMenu.add(updateMenu);
-		addMenuItem(openDbMenu, LocaleManager.resources.getString(MENU_ALL), KeyEvent.VK_A, false);
+//		addMenuItem(openDbMenu, LocaleManager.resources.getString(MENU_ALL), KeyEvent.VK_A, false);
 		
 		addMenuItem(beneficiaryMenu, LocaleManager.resources.getString(MENU_BENEFICIARY_FILTER_NEW), 0, false);
-		addMenuItem(beneficiaryMenu, LocaleManager.resources.getString(MENU_BENEFICIARY_FILTER_PENDING), 0, false);
-		addMenuItem(beneficiaryMenu, LocaleManager.resources.getString(MENU_BENEFICIARY_FILTER_PROCESSED), 0 , false);
-		addMenuItem(beneficiaryMenu, LocaleManager.resources.getString(MENU_BENEFICIARY_FILTER_ARCHIVED), 0, false);
-		
 		addMenuItem(updateMenu, LocaleManager.resources.getString(MENU_UPDATE_FILTER_NEW), 0, false);
-		addMenuItem(updateMenu, LocaleManager.resources.getString(MENU_UPDATE_FILTER_PENDING), 0, false);
-		addMenuItem(updateMenu, LocaleManager.resources.getString(MENU_UPDATE_FILTER_PROCESSED), 0, false);
-		addMenuItem(updateMenu, LocaleManager.resources.getString(MENU_UPDATE_FILTER_ARCHIVED), 0, false);
 		
-		Menu adminMenu = new Menu(LocaleManager.resources.getString(MENU_ADMIN));
-		addMenuItem(adminMenu, LocaleManager.resources.getString(MENU_CREATE), KeyEvent.VK_C, false);
+		mbar = new MenuBar();
+		mbar.add(fileMenu);
+		mbar.add(localeMenu);
 
+		if (gui.isAdmin) {
+			addMenuItem(beneficiaryMenu, LocaleManager.resources.getString(MENU_BENEFICIARY_FILTER_PENDING), 0, false);
+			addMenuItem(beneficiaryMenu, LocaleManager.resources.getString(MENU_BENEFICIARY_FILTER_PROCESSED), 0 , false);
+			addMenuItem(beneficiaryMenu, LocaleManager.resources.getString(MENU_BENEFICIARY_FILTER_ARCHIVED), 0, false);
+			addMenuItem(beneficiaryMenu, LocaleManager.resources.getString(MENU_BENEFICIARY_FILTER_ALL), 0, false);
+			addMenuItem(updateMenu, LocaleManager.resources.getString(MENU_UPDATE_FILTER_PENDING), 0, false);
+			addMenuItem(updateMenu, LocaleManager.resources.getString(MENU_UPDATE_FILTER_PROCESSED), 0, false);
+			addMenuItem(updateMenu, LocaleManager.resources.getString(MENU_UPDATE_FILTER_ARCHIVED), 0, false);
+			addMenuItem(updateMenu, LocaleManager.resources.getString(MENU_UPDATE_FILTER_ALL), 0, false);
+
+			Menu adminMenu = new Menu(LocaleManager.resources.getString(MENU_ADMIN));
+			addMenuItem(adminMenu, LocaleManager.resources.getString(MENU_CREATE), KeyEvent.VK_C, false);
+
+			mbar.add(adminMenu);
+		}
 		
 		Menu helpMenu = new Menu(LocaleManager.resources.getString(MENU_HELP));
 		addMenuItem(helpMenu, LocaleManager.resources.getString(MENU_ABOUT), 0, false);
 
-		mbar = new MenuBar();
-		mbar.add(fileMenu);
-		mbar.add(localeMenu);
-		mbar.add(adminMenu);
 		mbar.setHelpMenu(helpMenu);
 		gui.setMenuBar(mbar);
 	}
@@ -179,55 +186,67 @@ public class Menus implements ActionListener {
 				gui.readMessagesIntoGUI(DbSource.FILE);
 			} 
 			else if (selectedMenuItemText.equals(LocaleManager.resources.getString(MENU_BENEFICIARY_FILTER_NEW))) {
-				gui.readMessagesIntoGUI(DbSource.DATA_BASE, SmsReader.MessageStatus.NEW, SmsReader.MessageType.REGISTRATION);
+				gui.readMessagesIntoGUI(DbSource.DATA_BASE, MessageStatus.NEW, MessageType.REGISTRATION);
 				createMenuBar();
 				gui.setMenuBar(Menus.getMenuBar());	
 				gui.repaint();
 			} 
 			else if (selectedMenuItemText.equals(LocaleManager.resources.getString(MENU_BENEFICIARY_FILTER_PENDING))) {
-				gui.readMessagesIntoGUI(DbSource.DATA_BASE, SmsReader.MessageStatus.PENDING, SmsReader.MessageType.REGISTRATION);
+				gui.readMessagesIntoGUI(DbSource.DATA_BASE, MessageStatus.PENDING, MessageType.REGISTRATION);
 				createMenuBar();
 				gui.setMenuBar(Menus.getMenuBar());	
 				gui.repaint();
 			} 
 			else if (selectedMenuItemText.equals(LocaleManager.resources.getString(MENU_BENEFICIARY_FILTER_PROCESSED))) {
-				gui.readMessagesIntoGUI(DbSource.DATA_BASE, SmsReader.MessageStatus.PROCESSED, SmsReader.MessageType.REGISTRATION);
+				gui.readMessagesIntoGUI(DbSource.DATA_BASE, MessageStatus.PROCESSED, MessageType.REGISTRATION);
 				createMenuBar();
 				gui.setMenuBar(Menus.getMenuBar());	
 				gui.repaint();
 			} 
 			else if (selectedMenuItemText.equals(LocaleManager.resources.getString(MENU_BENEFICIARY_FILTER_ARCHIVED))) {
-				gui.readMessagesIntoGUI(DbSource.DATA_BASE, SmsReader.MessageStatus.ARCHIVED, SmsReader.MessageType.REGISTRATION);
+				gui.readMessagesIntoGUI(DbSource.DATA_BASE, MessageStatus.ARCHIVED, MessageType.REGISTRATION);
+				createMenuBar();
+				gui.setMenuBar(Menus.getMenuBar());	
+				gui.repaint();
+			}  
+			else if (selectedMenuItemText.equals(LocaleManager.resources.getString(MENU_BENEFICIARY_FILTER_ALL))) {
+				gui.readMessagesIntoGUI(DbSource.DATA_BASE, MessageStatus.ALL, MessageType.REGISTRATION);
 				createMenuBar();
 				gui.setMenuBar(Menus.getMenuBar());	
 				gui.repaint();
 			}  
 			else if (selectedMenuItemText.equals(LocaleManager.resources.getString(MENU_UPDATE_FILTER_NEW))) {
-				gui.readMessagesIntoGUI(DbSource.DATA_BASE, SmsReader.MessageStatus.NEW, SmsReader.MessageType.UPDATE);
+				gui.readMessagesIntoGUI(DbSource.DATA_BASE, MessageStatus.NEW, MessageType.UPDATE);
 				createMenuBar();
 				gui.setMenuBar(Menus.getMenuBar());	
 				gui.repaint();
 			} 
 			else if (selectedMenuItemText.equals(LocaleManager.resources.getString(MENU_UPDATE_FILTER_PENDING))) {
-				gui.readMessagesIntoGUI(DbSource.DATA_BASE, SmsReader.MessageStatus.PENDING, SmsReader.MessageType.UPDATE);
+				gui.readMessagesIntoGUI(DbSource.DATA_BASE, MessageStatus.PENDING, MessageType.UPDATE);
 				createMenuBar();
 				gui.setMenuBar(Menus.getMenuBar());	
 				gui.repaint();
 			} 
 			else if (selectedMenuItemText.equals(LocaleManager.resources.getString(MENU_UPDATE_FILTER_PROCESSED))) {
-				gui.readMessagesIntoGUI(DbSource.DATA_BASE, SmsReader.MessageStatus.PROCESSED, SmsReader.MessageType.UPDATE);
+				gui.readMessagesIntoGUI(DbSource.DATA_BASE, MessageStatus.PROCESSED, MessageType.UPDATE);
 				createMenuBar();
 				gui.setMenuBar(Menus.getMenuBar());	
 				gui.repaint();
 			} 
 			else if (selectedMenuItemText.equals(LocaleManager.resources.getString(MENU_UPDATE_FILTER_ARCHIVED))) {
-				gui.readMessagesIntoGUI(DbSource.DATA_BASE, SmsReader.MessageStatus.ARCHIVED, SmsReader.MessageType.UPDATE);
+				gui.readMessagesIntoGUI(DbSource.DATA_BASE, MessageStatus.ARCHIVED, MessageType.UPDATE);
+				createMenuBar();
+				gui.setMenuBar(Menus.getMenuBar());	
+				gui.repaint();
+			}  
+			else if (selectedMenuItemText.equals(LocaleManager.resources.getString(MENU_UPDATE_FILTER_ALL))) {
+				gui.readMessagesIntoGUI(DbSource.DATA_BASE, MessageStatus.ALL, MessageType.UPDATE);
 				createMenuBar();
 				gui.setMenuBar(Menus.getMenuBar());	
 				gui.repaint();
 			}  
 			else if (selectedMenuItemText.equals(LocaleManager.resources.getString(MENU_ALL))) {
-				gui.readMessagesIntoGUI(DbSource.DATA_BASE, SmsReader.MessageStatus.ALL, SmsReader.MessageType.ALL);
+				gui.readMessagesIntoGUI(DbSource.DATA_BASE, MessageStatus.ALL, MessageType.ALL);
 				createMenuBar();
 				gui.setMenuBar(Menus.getMenuBar());	
 				gui.repaint();
