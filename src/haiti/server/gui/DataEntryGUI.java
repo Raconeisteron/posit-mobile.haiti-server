@@ -24,8 +24,8 @@ import haiti.server.datamodel.AttributeManager;
 import haiti.server.datamodel.Beneficiary;
 import haiti.server.datamodel.Beneficiary.Abbreviated;
 import haiti.server.datamodel.LocaleManager;
-import haiti.server.gui.SmsReader.MessageStatus;
-import haiti.server.gui.SmsReader.MessageType;
+import haiti.server.gui.DAO.MessageStatus;
+import haiti.server.gui.DAO.MessageType;
 
 import java.io.*;
 import java.util.Date;
@@ -56,7 +56,7 @@ public class DataEntryGUI extends JFrame implements WindowListener, ListSelectio
 	
 	public Menus mMenuManager;
 	private LocaleManager  mLocaleManager;
-	private SmsReader mReader;
+	private DAO mReader;
 	private JPanel mWelcomePanel ;
 	private String windowId = "";
 	
@@ -185,12 +185,13 @@ public class DataEntryGUI extends JFrame implements WindowListener, ListSelectio
 		
 		System.out.println("messagefilename = " + mMessagesFileOrDbName);
 
-		mReader = new SmsReader(mMessagesFileOrDbName);
+		if (mReader == null)
+			mReader = new DAO(mMessagesFileOrDbName);
 
 		if (dbSource == DbSource.FILE) {
 			mReader.readFile();
 		} else {
-			mReader = new SmsReader();
+			mReader = new DAO();
 			mReader.readUnprocessedMsgsFromDb(mMessagesFileOrDbName);
 		}
 		mMessagesArray = mReader.getMessagesAsArray();
@@ -212,6 +213,12 @@ public class DataEntryGUI extends JFrame implements WindowListener, ListSelectio
 		this.repaint();
 	}
 
+	public void createNewUser(String username, String password) {
+		if (mReader == null)
+			mReader = new DAO(mMessagesFileOrDbName);
+		mReader.createNewUser(this, mMessagesFileOrDbName, username, password);
+	}
+	
 	/**
 	 * This method reads messages from the given database into the GUI
 	 * depending on both status and type
@@ -229,12 +236,12 @@ public class DataEntryGUI extends JFrame implements WindowListener, ListSelectio
 		
 		System.out.println("messagefilename = " + mMessagesFileOrDbName);
 
-		mReader = new SmsReader(mMessagesFileOrDbName);
+		mReader = new DAO(mMessagesFileOrDbName);
 
 		if (dbSource == DbSource.FILE) {
 			mReader.readFile();
 		} else {
-			mReader = new SmsReader();
+			mReader = new DAO();
 			mMessagesArray = mReader.getMessageByStatusAndType(mMessagesFileOrDbName, status, type);
 		}
 
@@ -288,7 +295,7 @@ public class DataEntryGUI extends JFrame implements WindowListener, ListSelectio
 			this.setSize(1200, 800);
 			this.setLocation(0,0);
 		}
-		else if (type == MessageType.ABSENTEE) {
+		else if (type == MessageType.ATTENDENCE) {
 			try{
 				FileWriter fstream = new FileWriter("out.txt", true);
 				BufferedWriter out = new BufferedWriter(fstream);

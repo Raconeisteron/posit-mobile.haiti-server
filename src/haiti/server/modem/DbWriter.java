@@ -22,7 +22,7 @@
 package haiti.server.modem;
 
 import haiti.server.datamodel.AttributeManager;
-import haiti.server.gui.SmsReader;
+import haiti.server.gui.DAO;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -225,7 +225,7 @@ public class DbWriter {
 			statement.setQueryTimeout(60); // set timeout to 30 sec.
 			statement.execute("UPDATE " + DB_MESSAGE_TABLE + " SET "
 					+ DB_MESSAGE_TYPE + "="
-					+ SmsReader.MessageType.ABSENTEE.getCode() + " WHERE "
+					+ DAO.MessageType.ATTENDENCE.getCode() + " WHERE "
 					+ DB_MESSAGE_SENDER + "='" + sender + "' AND "
 					+ DB_MESSAGE_AV_NUM + "= '" + avNum + "'");
 

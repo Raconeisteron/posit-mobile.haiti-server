@@ -5,8 +5,8 @@ import java.net.URLDecoder;
 
 import haiti.server.datamodel.AttributeManager;
 import haiti.server.gui.*;
-import haiti.server.gui.SmsReader.MessageStatus;
-import haiti.server.gui.SmsReader.MessageType;
+import haiti.server.gui.DAO.MessageStatus;
+import haiti.server.gui.DAO.MessageType;
 
 public class SmsMessage {
 
@@ -17,8 +17,8 @@ public class SmsMessage {
 	private String AVnum = null;
 	private int msgNumber = 0;
 	private int msgTotal = 0;
-	private SmsReader.MessageStatus status = SmsReader.MessageStatus.UNKNOWN;
-	private SmsReader.MessageType type = SmsReader.MessageType.UNKNOWN;
+	private DAO.MessageStatus status = DAO.MessageStatus.UNKNOWN;
+	private DAO.MessageType type = DAO.MessageType.UNKNOWN;
 	private String message = "";
 	private String sender = "";
 
@@ -94,22 +94,22 @@ public class SmsMessage {
 					int i = Integer.parseInt(attrval[1]);
 					switch (i) {
 					case 0:
-						status = SmsReader.MessageStatus.NEW;
+						status = DAO.MessageStatus.NEW;
 						break;
 					case 1:
-						status = SmsReader.MessageStatus.PENDING;
+						status = DAO.MessageStatus.PENDING;
 						break;
 					case 2:
-						status = SmsReader.MessageStatus.PROCESSED;
+						status = DAO.MessageStatus.PROCESSED;
 						break;
 					}
 				} else if (longAttr.equals(AttributeManager.LONG_MESSAGE_TYPE)) {
 					switch (Integer.parseInt(attrval[1])) {
 					case 0:
-						type = SmsReader.MessageType.REGISTRATION;
+						type = DAO.MessageType.REGISTRATION;
 						break;
 					case 1:
-						type = SmsReader.MessageType.UPDATE;
+						type = DAO.MessageType.UPDATE;
 						break;
 					}
 				}
@@ -124,7 +124,7 @@ public class SmsMessage {
 		return status.getCode();
 	}
 
-	public void setStatus(SmsReader.MessageStatus status) {
+	public void setStatus(DAO.MessageStatus status) {
 		this.status = status;
 	}
 
@@ -132,7 +132,7 @@ public class SmsMessage {
 		return type.getCode();
 	}
 
-	public void setType(SmsReader.MessageType type) {
+	public void setType(DAO.MessageType type) {
 		this.type = type;
 	}
 

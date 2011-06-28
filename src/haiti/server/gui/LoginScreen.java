@@ -20,13 +20,13 @@ public class LoginScreen extends JFrame implements WindowListener, ActionListene
 	private DataEntryGUI mGui;
 	private String dbName;
 	
-	private static final String DB_USER_TABLE = "user";
+	public static final String DB_USER_TABLE = "user";
 	
 	public LoginScreen(DataEntryGUI gui) {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		mGui = gui;
-		npw = new JTextField(15);
+		npw = new JPasswordField(15);
 		space = new JLabel();
 		
 		label1 = new JLabel();
@@ -77,7 +77,8 @@ public class LoginScreen extends JFrame implements WindowListener, ActionListene
 					Statement statement = connection.createStatement();
 		//			statement.setQueryTimeout(30);  // set timeout to 30 sec.
 					
-					ResultSet rs = statement.executeQuery(AttributeManager.SELECT_FROM + DB_USER_TABLE + AttributeManager.WHERE + "username='" + value1 + AttributeManager.SINGLE_QUOTE);
+					ResultSet rs = statement.executeQuery(AttributeManager.SELECT_FROM + DB_USER_TABLE
+							+ AttributeManager.WHERE + "username='" + value1 + AttributeManager.SINGLE_QUOTE);
 					pw = rs.getString("password");
 					role = Integer.parseInt(rs.getString("role"));
 					if(connection != null)
@@ -126,6 +127,7 @@ public class LoginScreen extends JFrame implements WindowListener, ActionListene
 				String value1=text1.getText();
 				String value2=text2.getText();
 				String pw = null;
+				int role = -1;
 				JFileChooser fd = new JFileChooser();
 				int result = fd.showOpenDialog(this);
 				if (result == JFileChooser.CANCEL_OPTION) 
@@ -139,14 +141,21 @@ public class LoginScreen extends JFrame implements WindowListener, ActionListene
 					
 					ResultSet rs = statement.executeQuery(AttributeManager.SELECT_FROM + DB_USER_TABLE + AttributeManager.WHERE + "username='" + value1 + AttributeManager.SINGLE_QUOTE);
 					pw = rs.getString("password");
-					if (value2.equals(pw)) {
-						statement.executeUpdate("Update user set password='" + npw.getText() + "' where username='" + value1 + "'");
+					role = Integer.parseInt(rs.getString("role"));
+					if (role == 0) {
+						JOptionPane.showMessageDialog(this,"Admin Password cannot be changed",
+								"Error",JOptionPane.ERROR_MESSAGE);						
 					}
-					else{
-						//			System.out.println("enter the valid username and password");
-									JOptionPane.showMessageDialog(this,"Incorrect login or password",
-											"Error",JOptionPane.ERROR_MESSAGE);
-								}
+					else {
+						if (value2.equals(pw)) {
+							statement.executeUpdate("Update user set password='" + npw.getText() + "' where username='" + value1 + "'");
+						}
+						else {
+							//			System.out.println("enter the valid username and password");
+										JOptionPane.showMessageDialog(this,"Incorrect login or password",
+												"Error",JOptionPane.ERROR_MESSAGE);
+						}
+					}
 					if(connection != null)
 						connection.close();
 					} catch(SQLException e) {
@@ -157,6 +166,7 @@ public class LoginScreen extends JFrame implements WindowListener, ActionListene
 		    	remove(panel);
 		    	text1.setText("");
 		    	text2.setText("");
+		    	npw.setText("");
 		    	panel.remove(npw);
 		    	panel.remove(npwLabel);
 		    	panel.remove(space);
@@ -165,7 +175,6 @@ public class LoginScreen extends JFrame implements WindowListener, ActionListene
 		    	panel.add(SUBMIT);
 		    	panel.repaint();
 		    	add(panel);
-				OK.addActionListener(this);
 		    	pack();
 		    	repaint();
 		    }

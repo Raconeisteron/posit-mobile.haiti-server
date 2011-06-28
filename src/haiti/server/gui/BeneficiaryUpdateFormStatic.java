@@ -123,7 +123,7 @@ public class BeneficiaryUpdateFormStatic extends FormPanel implements ActionList
 	 * Called from GUI to fill in data in the form.
 	 * @param beneficiary 
 	 */
-	public void fillInForm(Beneficiary beneficiary, SmsReader reader) {
+	public void fillInForm(Beneficiary beneficiary, DAO reader) {
 	//	this.firstNameJText.setText(beneficiary.getFirstName());
 	//	this.lastNameJText.setText(beneficiary.getLastName());
 		
