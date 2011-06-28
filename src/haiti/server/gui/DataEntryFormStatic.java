@@ -741,7 +741,7 @@ public class DataEntryFormStatic extends FormPanel implements ActionListener, Ke
 		if (e.getSource() instanceof JButton){
 		    JButton button = (JButton)e.getSource();
 		    if (button.equals(toDbButton)) {
-		    	mGui.postMessageToTBS();
+		    	mGui.postMessageToTBS(dossier.getText());
 		    }
 		    else if (button.equals(toDbMgrButton)) {
 		    	mGui.forwardMessageToDbMgr();

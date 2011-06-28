@@ -415,7 +415,7 @@ public class BeneficiaryUpdateForm extends JPanel implements ActionListener {
 		if (e.getSource() instanceof JButton){
 		    JButton button = (JButton)e.getSource();
 		    if (button.equals(toDbButton)) {
-		    	mGui.postMessageToTBS();
+		    	mGui.postMessageToTBS("");
 //				mBeneficiary.setStatus(DB_STATUS_PROCESSED); // sets the status of the current Beneficiary item to processed
 //		    	mReader.updateMessage(mBeneficiary);
 		    }

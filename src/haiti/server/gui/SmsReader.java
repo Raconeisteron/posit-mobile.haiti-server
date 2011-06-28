@@ -60,7 +60,7 @@ public class SmsReader {
 	}
 	
 	public enum MessageType {
-		UNKNOWN(-1), REGISTRATION(0), UPDATE(1), ALL(2);
+		UNKNOWN(-1), REGISTRATION(0), UPDATE(1), ABSENTEE(2), ALL(3);
 		
 		private int code;
 		private MessageType(int code) {

@@ -84,6 +84,7 @@ public class Beneficiary {
 	private Sex sex = Sex.U; 
 	private int numberInHome = -1;
 	private BeneficiaryCategory beneficiaryCategory = BeneficiaryCategory.UNKNOWN;
+	private String dossier = "";
 	
 	// MCHN Information
 	private String healthCenter = "";
@@ -159,6 +160,8 @@ public class Beneficiary {
 			try {
 				if (attr.equals(AttributeManager.ABBREV_ID)) 
 					id = Integer.parseInt(val);
+				else if (attr.equalsIgnoreCase(AttributeManager.ABBREV_DOSSIER))
+					dossier = val;
 				else if (attr.equalsIgnoreCase(AttributeManager.ABBREV_FIRST)) 
 					firstName = val;
 				else if (attr.equalsIgnoreCase(AttributeManager.ABBREV_LAST)) 
@@ -391,6 +394,16 @@ public class Beneficiary {
 		this.lastName = lastName;
 	}
 	
+	public String getDossier() {
+		return dossier;
+	}
+
+
+	public void setDossier(String dossier) {
+		this.dossier = dossier;
+	}
+
+
 	public String getAddress() {
 		return locality;
 	}

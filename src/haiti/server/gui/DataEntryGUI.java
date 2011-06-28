@@ -28,6 +28,7 @@ import haiti.server.gui.SmsReader.MessageStatus;
 import haiti.server.gui.SmsReader.MessageType;
 
 import java.io.*;
+import java.util.Date;
 import java.util.Hashtable;
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -103,6 +104,10 @@ public class DataEntryGUI extends JFrame implements WindowListener, ListSelectio
 		ls.setVisible(true);
 	} 
 	
+	public void setmMessagesFileOrDbName(String mMessagesFileOrDbName) {
+		this.mMessagesFileOrDbName = mMessagesFileOrDbName;
+	}
+
 	public void messageRepaint() {
 		this.mMessageList.repaint();
 	}
@@ -172,11 +177,11 @@ public class DataEntryGUI extends JFrame implements WindowListener, ListSelectio
 	//deprecated
 	public void readMessagesIntoGUI (DbSource dbSource) {
 		
-		JFileChooser fd = new JFileChooser();
-		int result = fd.showOpenDialog(this);
-		if (result == JFileChooser.CANCEL_OPTION) 
-			return;
-		mMessagesFileOrDbName = fd.getSelectedFile().toString();
+//		JFileChooser fd = new JFileChooser();
+//		int result = fd.showOpenDialog(this);
+//		if (result == JFileChooser.CANCEL_OPTION) 
+//			return;
+//		mMessagesFileOrDbName = fd.getSelectedFile().toString();
 		
 		System.out.println("messagefilename = " + mMessagesFileOrDbName);
 
@@ -216,11 +221,11 @@ public class DataEntryGUI extends JFrame implements WindowListener, ListSelectio
 	 */
 	public void readMessagesIntoGUI (DbSource dbSource, MessageStatus status, MessageType type) {
 		
-		JFileChooser fd = new JFileChooser();
-		int result = fd.showOpenDialog(this);
-		if (result == JFileChooser.CANCEL_OPTION) 
-			return;
-		mMessagesFileOrDbName = fd.getSelectedFile().toString();
+//		JFileChooser fd = new JFileChooser();
+//		int result = fd.showOpenDialog(this);
+//		if (result == JFileChooser.CANCEL_OPTION) 
+//			return;
+//		mMessagesFileOrDbName = fd.getSelectedFile().toString();
 		
 		System.out.println("messagefilename = " + mMessagesFileOrDbName);
 
@@ -233,33 +238,81 @@ public class DataEntryGUI extends JFrame implements WindowListener, ListSelectio
 			mMessagesArray = mReader.getMessageByStatusAndType(mMessagesFileOrDbName, status, type);
 		}
 
-		if (type == MessageType.REGISTRATION)
+		if (type == MessageType.REGISTRATION) {
 			mFormPanel = new DataEntryFormStatic(this);
-		else
+			if (mMessagesArray.length == 0) {
+				mMessagesArray = new String[1];
+				mMessagesArray[0] = "{Empty}";
+			}
+			else {
+				mBeneficiary = new Beneficiary(mMessagesArray[0]);
+//				mBeneficiary = new Beneficiary(mMessagesArray[0], Abbreviated.TRUE);
+				mFormPanel.fillInForm(mBeneficiary,mReader);
+				
+//				mUpdatePanel = new BeneficiaryUpdateForm(this);
+//				mBeneficiary = new Beneficiary(mMessagesArray[0], Abbreviated.TRUE);
+//				mUpdatePanel.fillInForm(mBeneficiary,mReader);
+			}
+			this.getContentPane().removeAll(); //WIN!!!!! Yours Truly, Alex and Danny
+//			this.getContentPane().remove(mWelcomePanel);
+//			this.getContentPane().add(setUpSplitPane(mMessagesArray, mUpdatePanel));
+			this.getContentPane().add(setUpSplitPane(mMessagesArray, mFormPanel));
+			this.pack();
+			DataEntryGUI.centerWindow(this);
+			this.repaint();
+			this.setSize(1200, 800);
+			this.setLocation(0,0);
+		}
+		else if (type == MessageType.UPDATE) {
 			mFormPanel = new BeneficiaryUpdateFormStatic(this);
-		
-		if (mMessagesArray.length == 0) {
-			mMessagesArray = new String[1];
-			mMessagesArray[0] = "{Empty}";
+			if (mMessagesArray.length == 0) {
+				mMessagesArray = new String[1];
+				mMessagesArray[0] = "{Empty}";
+			}
+			else {
+				mBeneficiary = new Beneficiary(mMessagesArray[0]);
+//				mBeneficiary = new Beneficiary(mMessagesArray[0], Abbreviated.TRUE);
+				mFormPanel.fillInForm(mBeneficiary,mReader);
+				
+//				mUpdatePanel = new BeneficiaryUpdateForm(this);
+//				mBeneficiary = new Beneficiary(mMessagesArray[0], Abbreviated.TRUE);
+//				mUpdatePanel.fillInForm(mBeneficiary,mReader);
+			}
+			this.getContentPane().removeAll(); //WIN!!!!! Yours Truly, Alex and Danny
+//			this.getContentPane().remove(mWelcomePanel);
+//			this.getContentPane().add(setUpSplitPane(mMessagesArray, mUpdatePanel));
+			this.getContentPane().add(setUpSplitPane(mMessagesArray, mFormPanel));
+			this.pack();
+			DataEntryGUI.centerWindow(this);
+			this.repaint();
+			this.setSize(1200, 800);
+			this.setLocation(0,0);
 		}
-		else {
-			mBeneficiary = new Beneficiary(mMessagesArray[0]);
-//			mBeneficiary = new Beneficiary(mMessagesArray[0], Abbreviated.TRUE);
-			mFormPanel.fillInForm(mBeneficiary,mReader);
-			
-//			mUpdatePanel = new BeneficiaryUpdateForm(this);
-//			mBeneficiary = new Beneficiary(mMessagesArray[0], Abbreviated.TRUE);
-//			mUpdatePanel.fillInForm(mBeneficiary,mReader);
+		else if (type == MessageType.ABSENTEE) {
+			try{
+				FileWriter fstream = new FileWriter("out.txt", true);
+				BufferedWriter out = new BufferedWriter(fstream);
+				out.newLine();
+				out.newLine();
+				out.write("-------" + new Date() + "-------");
+				out.newLine();
+				for (int i = 0; i < mMessagesArray.length; i ++) {
+					mBeneficiary = new Beneficiary(mMessagesArray[i]);
+					out.write("Dossier: " + mBeneficiary.getDossier());
+					out.newLine();
+					mBeneficiary.setStatus(Beneficiary.MessageStatus.PROCESSED);
+					mReader.updateMessage(mBeneficiary, this.mMessagesFileOrDbName);
+				}
+				out.close();
+			}catch (Exception e){//Catch exception if any
+				System.err.println("Error: " + e.getMessage());
+			}
+			this.getContentPane().removeAll(); //WIN!!!!! Yours Truly, Alex and Danny
+			this.pack();
+			DataEntryGUI.centerWindow(this);
+			this.repaint();
+			this.setSize(500, 300);
 		}
-		this.getContentPane().removeAll(); //WIN!!!!! Yours Truly, Alex and Danny
-//		this.getContentPane().remove(mWelcomePanel);
-//		this.getContentPane().add(setUpSplitPane(mMessagesArray, mUpdatePanel));
-		this.getContentPane().add(setUpSplitPane(mMessagesArray, mFormPanel));
-		this.pack();
-		DataEntryGUI.centerWindow(this);
-		this.repaint();
-		this.setSize(1200, 800);
-		this.setLocation(0,0);
 	}
 //        this.mSplitPane.setSize(700,300);
 
@@ -325,13 +378,14 @@ public class DataEntryGUI extends JFrame implements WindowListener, ListSelectio
 	 * Revises the message's status to "Processed" and updates the SMS Db and
 	 * displays the revised status in the GUI's List.
 	 */
-	public void postMessageToTBS() {
+	public void postMessageToTBS(String dossier) {
 		// TODO Auto-generated method stub
 		System.out.println(mBeneficiary.toString());
 //		TbsManager tbs = new TbsManager();
 //		String result = tbs.postNewBeneficiary(mBeneficiary);
 		
 //		if (result.equals(TbsManager.RESULT_OK)) {
+			mBeneficiary.setDossier(dossier);
 			mBeneficiary.setStatus(Beneficiary.MessageStatus.PROCESSED); // sets the status of the current Beneficiary item to processed
 			mReader.updateMessage(mBeneficiary, this.mMessagesFileOrDbName);
 			int index = this.mMessageList.getSelectedIndex();
