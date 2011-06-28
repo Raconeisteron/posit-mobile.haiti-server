@@ -515,7 +515,7 @@ public class DataEntryForm extends JPanel implements ActionListener, KeyListener
 		if (e.getSource() instanceof JButton){
 		    JButton button = (JButton)e.getSource();
 		    if (button.equals(toDbButton)) {
-		    	mGui.postMessageToTBS();
+		    	mGui.postMessageToTBS("");
 		    }
 		    else if (button.equals(toDbMgrButton)) {
 		    	mGui.forwardMessageToDbMgr();

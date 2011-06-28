@@ -68,7 +68,10 @@ public class AttributeManager {
 	public static final String USER_DIRECTORY = "user.dir"; 
 	public static final String DATABASE_PATHNAME = "/db/";
 	public static final int ACK_MESSAGES_AT = 5;
+	public static final String MSG_NUMBER_SEPARATOR = ":";
 	
+	public static final String ABBREV_TRUE = "T";
+	public static final String ABBREV_FALSE = "F";
 
 	public static final String OUTER_DELIM = PAIRS_SEPARATOR;
 	public static final String INNER_DELIM = ATTR_VAL_SEPARATOR;
@@ -151,6 +154,16 @@ public class AttributeManager {
 	public static final String FORM_MEASUREMENT= "UnitOfMeasurement";
 	public static final String FORM_TOOLS= "Tools";
 	
+	// For Update Messages
+	public static final String ABBREV_Q_CHANGE = "cq";   // Added to incorporated changes to beneficiary type
+	public static final String ABBREV_CHANGE_TYPE = "ch";
+	public static final String ABBREV_Q_PRESENT = "pr";
+	public static final String ABBREV_Q_TRANSFER = "tr";
+	public static final String ABBREV_Q_MODIFICATIONS = "ms";	
+	public static final String ABBREV_Q_DECEASED = "dc";
+	public static final String ABBREV_Q_FRAUD = "fr";
+	public static final String ABBREV_Q_COMPLETED_PROGRAM = "cp";
+	
 	
 	// Abbreviated names of fields and attributes that make
 	// up the Attribute side of SMS messages.
@@ -168,7 +181,8 @@ public class AttributeManager {
 	public static final String ABBREV_AV = "AV";
 	
 	public static final String ABBREV_FIRST = "f";     
-	public static final String ABBREV_LAST = "l";      
+	public static final String ABBREV_LAST = "l";    
+	public static final String ABBREV_MESSAGE_NUMBER = "mn";
 	public static final String ABBREV_COMMUNE = "cm";
 	public static final String ABBREV_COMMUNE_SECTION = "cs";
 	public static final String ABBREV_LOCALITY = "a";    
@@ -195,7 +209,7 @@ public class AttributeManager {
 	public static final String ABBREV_SEED_QUANTITY = "sq";
 	public static final String ABBREV_MEASUREMENT_UNIT = "mu";
 	
-	// Constants for Y/N questions on the agri form
+	// Constants for Y/N questions on the agri formf
 	public static final String ABBREV_IS_FARMER = "fa";
 	public static final String ABBREV_IS_FISHER = "fi";
 	public static final String ABBREV_IS_MUSO = "mu";
@@ -344,6 +358,7 @@ public class AttributeManager {
 	// TODO:  Clean up this list
 	public static final String LONG_FIRST = "firstName";
 	public static final String LONG_LAST = "lastName";
+	public static final String LONG_MESSAGE_NUMBER = "messageNumber";
 	public static final String LONG_COMMUNE = "commune";
 	public static final String LONG_COMMUNE_SECTION = "communeSection";
 	public static final String LONG_ADDRESS = "address";
@@ -384,6 +399,8 @@ public class AttributeManager {
 	public static final String LONG_BENEFICIARY_TYPE = "beneficiaryType";
 	
 	public static final String LONG_DOSSIER = "dossier";
+
+
 		
 	
 	/**
@@ -409,6 +426,7 @@ public class AttributeManager {
 //		abbreviations.put(ABBREV_ATTRIBUTE, LONG_ATTRIBUTE);
 		abbreviations.put(ABBREV_FIRST, LONG_FIRST);
 		abbreviations.put(ABBREV_LAST, LONG_LAST);
+		abbreviations.put(ABBREV_MESSAGE_NUMBER, LONG_MESSAGE_NUMBER);
 		abbreviations.put(ABBREV_COMMUNE, LONG_COMMUNE);
 		abbreviations.put(ABBREV_COMMUNE_SECTION, LONG_COMMUNE_SECTION);
 		abbreviations.put(ABBREV_LOCALITY, LONG_ADDRESS);

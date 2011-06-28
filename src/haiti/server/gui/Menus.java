@@ -48,7 +48,7 @@ public class Menus implements ActionListener {
 	
 	public static final String MENU_FILE = "File";
 	public static final String MENU_OPEN_FILE = "OpenFile";
-	public static final String MENU_OPEN_DB = "OpenDB";
+	public static final String MENU_FILTER = "Filter";
 
 	public static final String MENU_BENEFICIARY_FILTER = "BeneficiaryFilter";
 	public static final String MENU_BENEFICIARY_FILTER_NEW = "NewBeneficiary";
@@ -89,7 +89,7 @@ public class Menus implements ActionListener {
 	 */
 	public void createMenuBar() {
 		Menu fileMenu = new Menu(LocaleManager.resources.getString(MENU_FILE));
-		Menu openDbMenu = new Menu(LocaleManager.resources.getString(MENU_OPEN_DB));
+		Menu openDbMenu = new Menu(LocaleManager.resources.getString(MENU_FILTER));
 		addMenuItem(fileMenu, LocaleManager.resources.getString(MENU_OPEN_FILE), KeyEvent.VK_N, false);
 		fileMenu.add(openDbMenu);
 		addMenuItem(fileMenu, LocaleManager.resources.getString(MENU_QUIT), KeyEvent.VK_Q, false);
