@@ -22,6 +22,7 @@
 package haiti.server.modem;
 
 import haiti.server.datamodel.AttributeManager;
+import haiti.server.gui.SmsReader;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -59,7 +60,7 @@ public class DbWriter {
 	};
 
 	public enum MessageType {
-		REGISTRATION, UPDATE, ALL
+		REGISTRATION, UPDATE, ABSENT, ALL
 	};
 
 	public static final String TAG = "SmsReader";
@@ -135,7 +136,7 @@ public class DbWriter {
 			Connection connection = connectDb(dbName);
 			try {
 				Statement statement = connection.createStatement();
-				statement.setQueryTimeout(60); 
+				statement.setQueryTimeout(60);
 				statement.execute("INSERT into '" + DB_MESSAGE_TABLE + "' ('"
 						+ DB_MESSAGE_COLUMN + "', '" + DB_MESSAGE_SENDER
 						+ "', '" + DB_MESSAGE_TYPE + "', '" + DB_MESSAGE_STATUS
@@ -165,7 +166,7 @@ public class DbWriter {
 			Connection connection = connectDb(dbName);
 			try {
 				Statement statement = connection.createStatement();
-				statement.setQueryTimeout(60); 
+				statement.setQueryTimeout(60);
 				statement.execute("INSERT OR IGNORE INTO " + DB_ACK_COUNT_TABLE
 						+ " VALUES ('" + sms.getSender() + "'," + 0 + ")");
 				statement.execute("UPDATE " + DB_ACK_COUNT_TABLE + " SET "
@@ -217,15 +218,16 @@ public class DbWriter {
 	 * @param sender
 	 *            the sender
 	 */
-	public boolean markAsBulk(String avNum, String sender) {
+	public boolean markAsAbsent(String avNum, String sender) {
 		Connection connection = connectDb(dbName);
 		try {
 			Statement statement = connection.createStatement();
 			statement.setQueryTimeout(60); // set timeout to 30 sec.
 			statement.execute("UPDATE " + DB_MESSAGE_TABLE + " SET "
-					+ DB_MESSAGE_ACKED + "= -1 WHERE " + DB_MESSAGE_SENDER
-					+ "='" + sender + "' AND " + DB_MESSAGE_AV_NUM + "= '"
-					+ avNum + "'");
+					+ DB_MESSAGE_TYPE + "="
+					+ SmsReader.MessageType.ABSENTEE.getCode() + " WHERE "
+					+ DB_MESSAGE_SENDER + "='" + sender + "' AND "
+					+ DB_MESSAGE_AV_NUM + "= '" + avNum + "'");
 
 		} catch (SQLException e) {
 			// if the error message is "out of memory",
@@ -292,6 +294,38 @@ public class DbWriter {
 	}
 
 	/**
+	 * Gets all phones from the database that have enough queued messages to
+	 * acknowledge, i.e. where the number of queued messages is greater than
+	 * AttributeManager.ACK_MESSAGES_AT.
+	 * 
+	 * @return a list of the phones
+	 */
+	public boolean shouldPhoneSendAck(SmsMessage msg) {
+		Connection connection = connectDb(dbName);
+		try {
+			Statement statement = connection.createStatement();
+			statement.setQueryTimeout(60); // set timeout to 30 sec.
+			ResultSet result = statement.executeQuery("select * from "
+					+ DB_ACK_COUNT_TABLE + " WHERE " + DB_ACK_COUNT_FIELD
+					+ " >= " + msg.getMsgTotal() + " and "
+					+ DB_ACK_COUNT_SENDER + " = " + msg.getSender());
+			int count = 0;
+			while (result.next())
+				count++;
+			if (count > 0)
+				return true;
+			else
+				return false;
+
+		} catch (SQLException e) {
+			// if the error message is "out of memory",
+			// it probably means no database file is found
+			log(e.getMessage());
+		}
+		return false;
+	}
+
+	/**
 	 * Gets ids from the database that are not yet acknowledged based on the
 	 * phone number that sent them.
 	 * 
@@ -310,7 +344,8 @@ public class DbWriter {
 				statement.setQueryTimeout(60); // set timeout to 30 sec.
 				ResultSet result = statement.executeQuery("select * from "
 						+ DB_MESSAGE_TABLE + " where " + DB_MESSAGE_SENDER
-						+ "=" + sender + " and " + DB_MESSAGE_ACKED + "=0");
+						+ "=" + sender + " and " + DB_MESSAGE_TYPE + "!=2 and "
+						+ DB_MESSAGE_ACKED + "=0");
 				while (result.next()) {
 					ids.add(result.getString(DB_MESSAGE_AV_NUM));
 				}
@@ -336,25 +371,35 @@ public class DbWriter {
 		log("queueACK, msg:  " + sms.getMessage() + " phone= "
 				+ sms.getSender());
 		if (ackMessageInDb(sms)) {
-			List<String> phones = getPhonesReadyToSendBulkAcks();
-			if (phones != null) {
-				for (String phone : phones) {
-					List<String> ids = getUnackedIdsByPhone(phone);
-					if (ids != null) {
-						BulkAck bulkAck = new BulkAck(ids, phone);
+			if (shouldPhoneSendAck(sms)) {
+				List<String> ids = getUnackedIdsByPhone(sms.getSender());
+				if (ids != null) {
+					if (ids.size() < 30) {
+						BulkAck bulkAck = new BulkAck(ids, sms.getSender());
 						sendAck(bulkAck);
-						for (String id : ids) {
-							markAcked(id, phone);
-						}
-						resetCount(phone);
-						return true;
-					} else
-						log("No messages found to ack for phone: " + phone);
+					} else { // Quick fix to prevent going over 160 characters
+						BulkAck bulkAck1 = new BulkAck(ids.subList(0,
+								ids.size() / 2), sms.getSender());
+						BulkAck bulkAck2 = new BulkAck(ids.subList(
+								ids.size() / 2 + 1, ids.size() - 1),
+								sms.getSender());
+						sendAck(bulkAck1);
+						sendAck(bulkAck2);
+					}
+					for (String id : ids) {
+						markAcked(id, sms.getSender());
+					}
+					resetCount(sms.getSender());
+					return true;
+				} else {
+					log("No messages found to ack for phone: "
+							+ sms.getSender());
+					return true;
 				}
-			} else
-				log("No phones ready to send bulk acks yet.");
+			}
+			return true;
 		} else
-			log("Ack message failed: " + sms);
+			log("Message not ack'd successfully");
 		return false;
 	}
 
@@ -444,8 +489,13 @@ public class DbWriter {
 	 *            [1] is the sender
 	 */
 	public static void main(String args[]) {
+		// SmsMessage sms=new
+		// SmsMessage("AV=4,mn=1:10,i=fafa,ms=0,t=0","%2B14406662498");
+		// System.out.println(dw.shouldPhoneSendAck(sms));
+
 		if (args[0] != null && args[1] != null) {
-			log("Received message in main(), raw message: " + args[0] + " sender: " + args[1]);
+			log("Received message in main(), raw message: " + args[0]
+					+ " sender: " + args[1]);
 			DbWriter dw = new DbWriter();
 			String message = args[0];
 			String sender = args[1];
@@ -461,15 +511,20 @@ public class DbWriter {
 			// out of it
 			String id = SmsMessageManager.getMessageCategory(message);
 			if (Integer.parseInt(id) < 0) {
-				SmsMessage bulkSms = new SmsMessage(AttributeManager.ABBREV_AV
-						+ "=" + id, sender);
+				SmsMessage bulkSms = new SmsMessage(message, sender);
+				// SmsMessage bulkSms = new
+				// SmsMessage(AttributeManager.ABBREV_AV
+				// + "=" + id + "," + AttributeManager.ABBREV_MESSAGE_TYPE
+				// + "=" + SmsReader.MessageType.ABSENTEE.getCode() +
+				// AttributeManager.ABBREV_MESSAGE_NUMBER +
+				// sender);
 				if (dw.insertMessage(bulkSms)) {
 					if (dw.queueAck(bulkSms)) {
 						List<SmsMessage> messages = SmsMessageManager
-								.convertBulkMessage(message, sender);
+								.convertBulkAbsenteeMessage(message, sender);
 						for (SmsMessage sms : messages) {
 							dw.insertMessage(sms);
-							dw.markAsBulk(sms.getAVnum(), sms.getSender());
+							// dw.markAsAbsent(sms.getAVnum(), sms.getSender());
 						}
 					} else
 						log("Unable to queue acknowledgment for bulk SMS: "

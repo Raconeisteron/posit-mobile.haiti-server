@@ -5,20 +5,32 @@ import java.net.URLDecoder;
 
 import haiti.server.datamodel.AttributeManager;
 import haiti.server.gui.*;
+import haiti.server.gui.SmsReader.MessageStatus;
+import haiti.server.gui.SmsReader.MessageType;
 
 public class SmsMessage {
 
-	// public enum MessageStatus {NEW, PENDING, PROCESSED, UNKNOWN};
-	// public enum MessageType {BENEFICIARY, UPDATE, UNKNOWN};
 	public enum Abbreviated {
 		TRUE, FALSE
 	};
 
 	private String AVnum = null;
+	private int msgNumber = 0;
+	private int msgTotal = 0;
 	private SmsReader.MessageStatus status = SmsReader.MessageStatus.UNKNOWN;
 	private SmsReader.MessageType type = SmsReader.MessageType.UNKNOWN;
 	private String message = "";
 	private String sender = "";
+
+	public SmsMessage(String aVnum, MessageStatus status, MessageType type,
+			String message, String sender) {
+		super();
+		AVnum = aVnum;
+		this.status = status;
+		this.type = type;
+		this.message = message;
+		this.sender = sender;
+	}
 
 	public SmsMessage(String rawMsg, String rawSender) {
 		message = rawMsg;
@@ -36,11 +48,6 @@ public class SmsMessage {
 				AttributeManager.INNER_DELIM, true);
 	}
 
-	private String decodeUrl(String s, String urlSym, String regSym) {
-		s = s.replaceAll(urlSym, regSym);
-		return s;
-	}
-
 	public String getAVnum() {
 		return AVnum;
 	}
@@ -48,19 +55,41 @@ public class SmsMessage {
 	public void setAVnum(String aVnum) {
 		AVnum = aVnum;
 	}
+	
+	public int getMsgNumber() {
+		return msgNumber;
+	}
+
+	public void setMsgNumber(int msgNumber) {
+		this.msgNumber = msgNumber;
+	}
+
+	public int getMsgTotal() {
+		return msgTotal;
+	}
+
+	public void setMsgTotal(int msgTotal) {
+		this.msgTotal = msgTotal;
+	}
 
 	private void split(String s, String outerDelim, String innerDelim,
 			boolean abbreviated) {
 		try {
-			String attrvalPairs[] = s.split(outerDelim); // Pairs like attr1=val1
+			String attrvalPairs[] = s.split(outerDelim); // Pairs like
+															// attr1=val1
 			for (int k = 0; k < attrvalPairs.length; k++) {
 				// Puts attribute in 0 and value in 1
-				String attrval[] = attrvalPairs[k].split(innerDelim); 
+				String attrval[] = attrvalPairs[k].split(innerDelim);
 				AttributeManager am = AttributeManager.getInstance();
 				String longAttr = am.mapToLong(abbreviated, attrval[0]);
 
 				if (longAttr.equals(AttributeManager.LONG_AV))
 					AVnum = attrval[1];
+				else if (longAttr.equals(AttributeManager.LONG_MESSAGE_NUMBER)){
+					String parts[] = attrval[1].split(AttributeManager.MSG_NUMBER_SEPARATOR);
+					msgNumber=Integer.parseInt(parts[0]);
+					msgTotal=Integer.parseInt(parts[1]);
+				}
 				else if (longAttr.equals(AttributeManager.LONG_MESSAGE_STATUS)) {
 					int i = Integer.parseInt(attrval[1]);
 					switch (i) {
@@ -125,18 +154,13 @@ public class SmsMessage {
 
 	public String toString() {
 		return "Message:\n" + message + "\nSender:\n" + sender + "\nStatus:\n"
-				+ status + "\nType:\n" + type + "\nAV Number:\n" + AVnum;
+				+ status + "\nType:\n" + type + "\nAV Number: " + AVnum
+				+ "\nMessage " + msgNumber + " of " + msgTotal;
 	}
-
-	/**
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-
-		SmsMessage a = new SmsMessage(
-				"AV%3D1%2Ci%3D068MP-FAT%2Ct%3D0%2Cst%3D1%2Cf%3DDenisana%2Cl%3DBalthazar%2Ca%3DSaint+Michel%2Cb%3D1947%2F11%2F31%2Cs%3DF%2Cc%3DP%2Cd%3D28%2C",
-				"%2B18608748128");
-		System.out.println(a);
+	
+	public static void main(String args[]){
+		SmsMessage sms = new SmsMessage("AV=4,mn=1:10,i=fafa,ms=0,t=0","111111");
+		System.out.println(sms);
+		
 	}
 }

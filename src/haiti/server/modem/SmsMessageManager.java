@@ -26,6 +26,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import haiti.server.datamodel.AttributeManager;
+import haiti.server.gui.SmsReader;
+import haiti.server.gui.SmsReader.MessageStatus;
+import haiti.server.gui.SmsReader.MessageType;
 
 /**
  * Class that provides some helper methods for dealing with SMS messages coming
@@ -47,15 +50,20 @@ public class SmsMessageManager {
 	 * @param sender
 	 *            the phone number from which the message was sent
 	 */
-	public static List<SmsMessage> convertBulkMessage(String message,
+	public static List<SmsMessage> convertBulkAbsenteeMessage(String message,
 			String sender) {
 		try {
 			String[] parts = message.split(AttributeManager.OUTER_DELIM);
-			String[] ids = parts[1].split(AttributeManager.LIST_SEPARATOR);
+			String[] ids = parts[2].split(AttributeManager.LIST_SEPARATOR);
 			List<SmsMessage> messages = new ArrayList<SmsMessage>();
 			for (String id : ids) {
-				SmsMessage sms = new SmsMessage("AV=" + id + ",i=" + id
-						+ ",p=T", sender);
+				SmsMessage sms = new SmsMessage(id,
+						SmsReader.MessageStatus.NEW,
+						SmsReader.MessageType.ABSENTEE,
+						AttributeManager.ABBREV_AV + "=" + id + ","
+								+ AttributeManager.ABBREV_DOSSIER + "=" + id
+								+ "," + AttributeManager.ABBREV_Q_PRESENT + "="
+								+ AttributeManager.ABBREV_TRUE, sender);
 				messages.add(sms);
 			}
 			return messages;
