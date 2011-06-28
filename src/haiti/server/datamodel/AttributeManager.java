@@ -171,8 +171,8 @@ public class AttributeManager {
 	public static final String ABBREV_DOSSIER = "i";
 	public static final String ABBREV_MESSAGE_TEXT = "tx";
 	public static final String ABBREV_MESSAGE_STATUS = "ms";
-	public static final String ABBREV_MESSAGE_TYPE = "t";
-	public static final String ABBREV_BENEFICIARY_TYPE = "s";
+	public static final String ABBREV_MESSAGE_TYPE = "s";
+	public static final String ABBREV_BENEFICIARY_TYPE = "t";
 	public static final String ABBREV_CREATED_AT = "t1";
 	public static final String ABBREV_SENT_AT = "t2";
 	public static final String ABBREV_ACK_AT = "t3";
