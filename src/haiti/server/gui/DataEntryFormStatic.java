@@ -173,7 +173,7 @@ public class DataEntryFormStatic extends FormPanel implements ActionListener, Ke
 	 * Fills in the Data Entry Form.
 	 * @param beneficiary 
 	 */
-	public void fillInForm(Beneficiary beneficiary, SmsReader reader) {
+	public void fillInForm(Beneficiary beneficiary, DAO reader) {
 		System.out.println("Filling in form with beneficiary = \n" + beneficiary);
 
 		radioFarmer.setSelected(false);

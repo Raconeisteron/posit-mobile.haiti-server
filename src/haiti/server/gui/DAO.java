@@ -24,6 +24,7 @@ package haiti.server.gui;
 
 import haiti.server.datamodel.AttributeManager;
 import haiti.server.datamodel.Beneficiary;
+import haiti.server.gui.DataEntryGUI;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -37,6 +38,8 @@ import java.util.ArrayList;
 //import java.util.Calendar;
 import java.util.Scanner;
 
+import javax.swing.JOptionPane;
+
 
 /**  
  * A command-line program to read a SMS message file, one message per line.
@@ -45,7 +48,7 @@ import java.util.Scanner;
  *  <BR>To run:     java -classpath ../../haiti-server.jar:. SmsReader <filename> [encoding]
  *
  */
-public class SmsReader {
+public class DAO {
 	
 	public enum MessageStatus {
 		UNKNOWN(-1), NEW(0), PENDING(1), PROCESSED(2),  DECLINED(3), ARCHIVED(4), ALL(5);
@@ -60,7 +63,7 @@ public class SmsReader {
 	}
 	
 	public enum MessageType {
-		UNKNOWN(-1), REGISTRATION(0), UPDATE(1), ABSENTEE(2), ALL(3);
+		UNKNOWN(-1), REGISTRATION(0), UPDATE(1), ATTENDENCE(2), ALL(3);
 		
 		private int code;
 		private MessageType(int code) {
@@ -93,14 +96,14 @@ public class SmsReader {
 	/**
 	 * Default constructor.
 	 */
-	public SmsReader(){
+	public DAO(){
 	}
 	
-	public SmsReader(String filename) { 
+	public DAO(String filename) { 
 		this(filename, System.getProperty("file.encoding"));
 	}
 	
-	public SmsReader(String filename, String encoding) {
+	public DAO(String filename, String encoding) {
 		log("Encoding = " + encoding);
 		this.filename = filename;
 		this.encoding = encoding;
@@ -164,6 +167,35 @@ public class SmsReader {
 		}
 	}
 	
+	public void createNewUser(DataEntryGUI gui, String dbName, String user, String password) {
+		try {
+			Connection connection = connectDb(dbName);			
+			Statement statement = connection.createStatement();
+			statement.setQueryTimeout(30);  // set timeout to 30 sec.
+			ResultSet rs = statement.executeQuery(AttributeManager.SELECT_FROM + LoginScreen.DB_USER_TABLE
+					+ AttributeManager.WHERE + "username='" + user + AttributeManager.SINGLE_QUOTE);
+			if (rs.isAfterLast()) {
+				statement.executeUpdate(AttributeManager.NEW_USER + user
+						+ AttributeManager.SINGLE_QUOTE + AttributeManager.PAIRS_SEPARATOR
+						+ AttributeManager.SINGLE_QUOTE + password + AttributeManager.SINGLE_QUOTE
+						+ AttributeManager.PAIRS_SEPARATOR + AttributeManager.SINGLE_QUOTE
+						+ AttributeManager.NEW_USER_ROLE + AttributeManager.SINGLE_QUOTE
+						+ AttributeManager.CLOSE_PAREN);				
+			}
+			else {
+				JOptionPane.showMessageDialog(gui, "Username already exists",
+						"Error",JOptionPane.ERROR_MESSAGE);
+			}
+			if(connection != null)
+				connection.close();
+		} catch(SQLException e) {
+			// if the error message is "out of memory", 
+			// it probably means no database file is found
+			e.printStackTrace();
+		}
+		
+	}
+	
 	/**
 	 * Reads messages from an Sqlite database with the given status and type.
 	 * @param dbName is the database path and name
@@ -181,11 +213,11 @@ public class SmsReader {
 			Statement statement = connection.createStatement();
 			statement.setQueryTimeout(30);  // set timeout to 30 sec.
 			ResultSet rs = null;
-			if (status.getCode() == 5 && type.getCode() == 2)
+			if (status == MessageStatus.ALL && type == MessageType.ALL)
 				rs = statement.executeQuery(AttributeManager.SELECT_FROM + DB_MESSAGE_TABLE +AttributeManager.LINE_ENDER);			
-			else if (status.getCode() == 5 && type.getCode() != 2)
+			else if (status == MessageStatus.ALL && type != MessageType.ALL)
 				rs = statement.executeQuery(AttributeManager.SELECT_FROM + DB_MESSAGE_TABLE+AttributeManager.WHERE+ DB_MESSAGE_TYPE +AttributeManager.ATTR_VAL_SEPARATOR+type.getCode()+AttributeManager.LINE_ENDER);
-			else if (status.getCode() != 5 && type.getCode() == 2)
+			else if (status != MessageStatus.ALL && type == MessageType.ALL)
 				rs = statement.executeQuery(AttributeManager.SELECT_FROM + DB_MESSAGE_TABLE+AttributeManager.WHERE+ DB_MESSAGE_STATUS +AttributeManager.ATTR_VAL_SEPARATOR+status.getCode()+AttributeManager.LINE_ENDER);
 			else
 				rs = statement.executeQuery(AttributeManager.SELECT_FROM + DB_MESSAGE_TABLE+AttributeManager.WHERE+ DB_MESSAGE_TYPE +AttributeManager.ATTR_VAL_SEPARATOR+type.getCode() +AttributeManager.CONJUNCTION + DB_MESSAGE_STATUS+AttributeManager.ATTR_VAL_SEPARATOR+status.getCode()+AttributeManager.LINE_ENDER);
@@ -485,7 +517,7 @@ public class SmsReader {
     	System.out.println(args[1]+ AttributeManager.CONJUNCTION + args[2]);
     	MessageStatus stat = null;
     	MessageType typ = null;
-    	SmsReader reader = new SmsReader();
+    	DAO reader = new DAO();
     	for (MessageStatus st : MessageStatus.values()) {
     		if(st.toString().equals(args[1])){
     			stat = st;

@@ -140,7 +140,7 @@ public class DataEntryForm extends JPanel implements ActionListener, KeyListener
 	 * Fills in the Data Entry Form.
 	 * @param beneficiary 
 	 */
-	public void fillInForm(Beneficiary beneficiary, SmsReader reader) {
+	public void fillInForm(Beneficiary beneficiary, DAO reader) {
 		this.firstNameJText.setText(beneficiary.getFirstName());
 		this.lastNameJText.setText(beneficiary.getLastName());
 		

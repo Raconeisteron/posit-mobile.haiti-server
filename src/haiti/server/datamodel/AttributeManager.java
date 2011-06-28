@@ -70,6 +70,10 @@ public class AttributeManager {
 	public static final int ACK_MESSAGES_AT = 5;
 	public static final String MSG_NUMBER_SEPARATOR = ":";
 	
+	
+	public static final String NEW_USER = "Insert into user (username, password, role) values('";
+	public static final int NEW_USER_ROLE = 1;
+	
 	public static final String ABBREV_TRUE = "T";
 	public static final String ABBREV_FALSE = "F";
 

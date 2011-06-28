@@ -23,11 +23,12 @@ package haiti.server.gui;
 
 
 import haiti.server.datamodel.LocaleManager;
+import haiti.server.datamodel.User;
 
 import haiti.server.datamodel.LocaleManager;
 import haiti.server.gui.DataEntryGUI.DbSource;
-import haiti.server.gui.SmsReader.MessageStatus;
-import haiti.server.gui.SmsReader.MessageType;
+import haiti.server.gui.DAO.MessageStatus;
+import haiti.server.gui.DAO.MessageType;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -252,6 +253,7 @@ public class Menus implements ActionListener {
 				gui.repaint();
 			}
 			else if (selectedMenuItemText.equals(LocaleManager.resources.getString(MENU_CREATE))) {
+				User newUser = new User(gui);
 			} 
 			else if (selectedMenuItemText.equals(LocaleManager.resources.getString(MENU_ARCHIVE_DB))) {
 			} 
