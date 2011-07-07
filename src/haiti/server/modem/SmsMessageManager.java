@@ -27,8 +27,8 @@ import java.util.List;
 
 import haiti.server.datamodel.AttributeManager;
 import haiti.server.gui.DAO;
-import haiti.server.gui.DAO.MessageStatus;
-import haiti.server.gui.DAO.MessageType;
+import haiti.server.datamodel.AttributeManager.MessageStatus;
+import haiti.server.datamodel.AttributeManager.MessageType;
 
 /**
  * Class that provides some helper methods for dealing with SMS messages coming
@@ -58,8 +58,8 @@ public class SmsMessageManager {
 			List<SmsMessage> messages = new ArrayList<SmsMessage>();
 			for (String id : ids) {
 				SmsMessage sms = new SmsMessage(id,
-						DAO.MessageStatus.NEW,
-						DAO.MessageType.ATTENDENCE,
+						AttributeManager.MessageStatus.NEW,
+						AttributeManager.MessageType.ATTENDANCE,
 						AttributeManager.ABBREV_AV + "=" + id + ","
 								+ AttributeManager.ABBREV_DOSSIER + "=" + id
 								+ "," + AttributeManager.ABBREV_Q_PRESENT + "="

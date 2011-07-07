@@ -50,30 +50,30 @@ import javax.swing.JOptionPane;
  */
 public class DAO {
 	
-	public enum MessageStatus {
-		UNKNOWN(-1), NEW(0), PENDING(1), PROCESSED(2),  DECLINED(3), ARCHIVED(4), ALL(5);
-		
-		private int code;
-		private MessageStatus(int code) {
-			this.code = code;
-		}
-		public int getCode() {
-			return code;
-		}
-	}
-	
-	public enum MessageType {
-		UNKNOWN(-1), REGISTRATION(0), UPDATE(1), ATTENDENCE(2), ALL(3);
-		
-		private int code;
-		private MessageType(int code) {
-			this.code = code;
-		}
-		public int getCode() {
-			return code;
-		}
-	}
-	
+//	public enum MessageStatus {
+//		UNKNOWN(-1), NEW(0), PENDING(1), PROCESSED(2),  DECLINED(3), ARCHIVED(4), ALL(5);
+//		
+//		private int code;
+//		private MessageStatus(int code) {
+//			this.code = code;
+//		}
+//		public int getCode() {
+//			return code;
+//		}
+//	}
+////	
+//	public enum MessageType {
+//		UNKNOWN(-1), REGISTRATION(0), UPDATE(1), ATTENDENCE(2), ALL(3);
+//		
+//		private int code;
+//		private MessageType(int code) {
+//			this.code = code;
+//		}
+//		public int getCode() {
+//			return code;
+//		}
+//	}
+//	
 	public static final String TAG = "SmsReader";
 	public static final String DB_MESSAGE_TABLE = "message_log";
 	public static final String DB_MESSAGE_ID = "id";
@@ -203,7 +203,7 @@ public class DAO {
 	 * @param type is the enum type containing type of the message
 	 * return the array containing messages with the given status and type
 	 */
-	public String[] getMessageByStatusAndType(String dbName, MessageStatus status, MessageType type) {
+	public String[] getMessageByStatusAndType(String dbName, AttributeManager.MessageStatus status, AttributeManager.MessageType type) {
 		//int statusInt = status.ordinal();
 		//int typeInt = type.ordinal();
 		ArrayList<String> statusmsg = new ArrayList<String>();
@@ -213,11 +213,11 @@ public class DAO {
 			Statement statement = connection.createStatement();
 			statement.setQueryTimeout(30);  // set timeout to 30 sec.
 			ResultSet rs = null;
-			if (status == MessageStatus.ALL && type == MessageType.ALL)
+			if (status == AttributeManager.MessageStatus.ALL && type == AttributeManager.MessageType.ALL)
 				rs = statement.executeQuery(AttributeManager.SELECT_FROM + DB_MESSAGE_TABLE +AttributeManager.LINE_ENDER);			
-			else if (status == MessageStatus.ALL && type != MessageType.ALL)
+			else if (status == AttributeManager.MessageStatus.ALL && type != AttributeManager.MessageType.ALL)
 				rs = statement.executeQuery(AttributeManager.SELECT_FROM + DB_MESSAGE_TABLE+AttributeManager.WHERE+ DB_MESSAGE_TYPE +AttributeManager.ATTR_VAL_SEPARATOR+type.getCode()+AttributeManager.LINE_ENDER);
-			else if (status != MessageStatus.ALL && type == MessageType.ALL)
+			else if (status != AttributeManager.MessageStatus.ALL && type == AttributeManager.MessageType.ALL)
 				rs = statement.executeQuery(AttributeManager.SELECT_FROM + DB_MESSAGE_TABLE+AttributeManager.WHERE+ DB_MESSAGE_STATUS +AttributeManager.ATTR_VAL_SEPARATOR+status.getCode()+AttributeManager.LINE_ENDER);
 			else
 				rs = statement.executeQuery(AttributeManager.SELECT_FROM + DB_MESSAGE_TABLE+AttributeManager.WHERE+ DB_MESSAGE_TYPE +AttributeManager.ATTR_VAL_SEPARATOR+type.getCode() +AttributeManager.CONJUNCTION + DB_MESSAGE_STATUS+AttributeManager.ATTR_VAL_SEPARATOR+status.getCode()+AttributeManager.LINE_ENDER);
@@ -297,7 +297,7 @@ public class DAO {
 			statement.setQueryTimeout(60); // set timeout to 30 sec.
 
 			statement.execute(AttributeManager.UPDATE + DB_MESSAGE_TABLE + AttributeManager.SET+ DB_MESSAGE_STATUS+AttributeManager.ATTR_VAL_SEPARATOR
-					+ AttributeManager.SINGLE_QUOTE + b.getStatus().ordinal() + AttributeManager.SINGLE_QUOTE + AttributeManager.WHERE+DB_MESSAGE_ID+AttributeManager.ATTR_VAL_SEPARATOR + b.getId() + AttributeManager.LINE_ENDER);
+					+ AttributeManager.SINGLE_QUOTE + b.getStatus().getCode() + AttributeManager.SINGLE_QUOTE + AttributeManager.WHERE+DB_MESSAGE_ID+AttributeManager.ATTR_VAL_SEPARATOR + b.getId() + AttributeManager.LINE_ENDER);
 			
 		} catch (SQLException e) {
 			// if the error message is "out of memory",
@@ -515,16 +515,16 @@ public class DAO {
     	String filepath = System.getProperty(AttributeManager.USER_DIRECTORY).toString()+ AttributeManager.DATABASE_PATHNAME+args[0];
     	System.out.println(filepath);
     	System.out.println(args[1]+ AttributeManager.CONJUNCTION + args[2]);
-    	MessageStatus stat = null;
-    	MessageType typ = null;
+    	AttributeManager.MessageStatus stat = null;
+    	AttributeManager.MessageType typ = null;
     	DAO reader = new DAO();
-    	for (MessageStatus st : MessageStatus.values()) {
+    	for (AttributeManager.MessageStatus st : AttributeManager.MessageStatus.values()) {
     		if(st.toString().equals(args[1])){
     			stat = st;
     			break;
     		}
     	}
-    	for (MessageType t : MessageType.values()) {
+    	for (AttributeManager.MessageType t : AttributeManager.MessageType.values()) {
     		if(t.toString().equals(args[2])){
     			typ = t;
     			break;

@@ -23,7 +23,7 @@ package haiti.server.gui;
 
 import haiti.server.datamodel.AttributeManager;
 import haiti.server.datamodel.Beneficiary;
-import haiti.server.datamodel.Beneficiary.YnQuestion;
+import haiti.server.datamodel.AttributeManager.YnQuestion;
 import haiti.server.datamodel.LocaleManager;
 
 import java.awt.BorderLayout;
@@ -77,7 +77,8 @@ public class DataEntryFormStatic extends FormPanel implements ActionListener, Ke
 		agriPanel,
 		agriCatePanel,
 		seedTypesPanel,
-		toolsPanel;
+		toolsPanel,
+		organizationPanel;
 	
 	private JLabel 
 		firstName, 
@@ -103,20 +104,30 @@ public class DataEntryFormStatic extends FormPanel implements ActionListener, Ke
 		land,
 		seedTypes,
 		seedQuantity,
-		tools;
+		tools,
+		health;
 	
 	private JRadioButton
+		radioFAO,
+		radioSAVE,
+		radioCROSE,
+		radioPLAN,
+		radioMARDNR,
+		radioOrganizationOther,
+	
 		radioFarmer,
 		radioMuso,
 		radioCattleRancher,
 		radioStoreOwner,
 		radioFisherman,
+		radioArtisan,
 		radioOther,
 
 		radioVegetables,
 		radioCereal,
 		radioTubers,
 		radioTree,
+		radioGrafting,
 		
 		radioHoe,
 		radioPickaxe,
@@ -153,7 +164,11 @@ public class DataEntryFormStatic extends FormPanel implements ActionListener, Ke
 		seedTypesLabel,
 		seedQuantityLabel,
 		toolsLabel,
-		dossierLabel;
+		organizationLabel,
+		dossierLabel,
+		healthLabel,
+		giveNameLabel2,
+		healthPerson;
 	
 	private JTextField
 		dossier;
@@ -181,6 +196,7 @@ public class DataEntryFormStatic extends FormPanel implements ActionListener, Ke
 		radioCattleRancher.setSelected(false);
 		radioStoreOwner.setSelected(false);
 		radioFisherman.setSelected(false);
+		radioArtisan.setSelected(false);
 		radioOther.setSelected(false);
 		radioVegetables.setSelected(false);
 		radioCereal.setSelected(false);
@@ -193,6 +209,12 @@ public class DataEntryFormStatic extends FormPanel implements ActionListener, Ke
 		radioPruningKnife.setSelected(false);
 		radioShovel.setSelected(false);
 		radioCrowbar.setSelected(false);
+		radioFAO.setSelected(false);
+		radioSAVE.setSelected(false);
+		radioPLAN.setSelected(false);
+		radioCROSE.setSelected(false);
+		radioMARDNR.setSelected(false);
+		radioOrganizationOther.setSelected(false);
 
 		this.firstName.setText(beneficiary.getFirstName());
 		this.lastName.setText(beneficiary.getLastName());
@@ -203,16 +225,18 @@ public class DataEntryFormStatic extends FormPanel implements ActionListener, Ke
 		this.dateOfBirth.setText(beneficiary.getDob());
 		this.peopleInHouse.setText(Integer.toString(beneficiary.getNumberInHome()));
 		
-		if (beneficiary.getBeneficiaryCategory().equals(Beneficiary.BeneficiaryCategory.EXPECTING)) 
-			this.beneficiaryCategory.setText(AttributeManager.BUTTON_MOTHER_EXPECTING);
-		else if (beneficiary.getBeneficiaryCategory().equals(Beneficiary.BeneficiaryCategory.NURSING)) 
-			this.beneficiaryCategory.setText(AttributeManager.BUTTON_MOTHER_NURSING);
-		else if (beneficiary.getBeneficiaryCategory().equals(Beneficiary.BeneficiaryCategory.MALNOURISHED)) 
-			this.beneficiaryCategory.setText(AttributeManager.BUTTON_INFANT_MAL);
-		else
-			this.beneficiaryCategory.setText(AttributeManager.BUTTON_INFANT_PREVENTION);
+		if (beneficiary.getBeneficiaryCategory().equals(AttributeManager.BeneficiaryCategory.EXPECTING)) 
+			this.beneficiaryCategory.setText(LocaleManager.resources.getString(AttributeManager.FORM_MOTHER_EXPECTING));
+		else if (beneficiary.getBeneficiaryCategory().equals(AttributeManager.BeneficiaryCategory.NURSING)) 
+			this.beneficiaryCategory.setText(LocaleManager.resources.getString(AttributeManager.FORM_MOTHER_NURSING));
+		else if (beneficiary.getBeneficiaryCategory().equals(AttributeManager.BeneficiaryCategory.MALNOURISHED)) 
+			this.beneficiaryCategory.setText(LocaleManager.resources.getString(AttributeManager.FORM_INFANT_MAL));
+		else if (beneficiary.getBeneficiaryCategory().equals(AttributeManager.BeneficiaryCategory.PREVENTION))
+			this.beneficiaryCategory.setText(LocaleManager.resources.getString(AttributeManager.FORM_INFANT_PREVENTION));
+		else if (beneficiary.getBeneficiaryCategory().equals(AttributeManager.BeneficiaryCategory.AGRI))
+			this.beneficiaryCategory.setText(LocaleManager.resources.getString(AttributeManager.FORM_AGRI));
 				
-		if (beneficiary.getSex().equals(Beneficiary.Sex.M))
+		if (beneficiary.getSex().equals(AttributeManager.Sex.M))
 			this.sex.setText(AttributeManager.FORM_MALE);
 		else
 			this.sex.setText(AttributeManager.FORM_FEMALE);
@@ -221,12 +245,12 @@ public class DataEntryFormStatic extends FormPanel implements ActionListener, Ke
 		this.dp.setText(beneficiary.getDistributionPost());
 		this.guardianChild.setText(beneficiary.getGuardianChild());
 		this.guardianWoman.setText(beneficiary.getGuardianWoman());
-		this.husband.setText(beneficiary.getHusband());
-		this.father.setText(beneficiary.getFather());
+//		this.husband.setText(beneficiary.getHusband());
+//		this.father.setText(beneficiary.getFather());
 		this.agriPerson.setText(beneficiary.getAgriPerson());
 		this.motherLeader.setText(beneficiary.getIsMotherLeader().name());
 		this.motherVisit.setText(beneficiary.getVisitMotherLeader().name());
-		this.agri1.setText(beneficiary.getIsParticipatingAgri().name());
+		this.agri1.setText(beneficiary.getIsAgri().name());
 		
 		if (beneficiary.getIsFarmer() == YnQuestion.Y)
 			radioFarmer.setSelected(true);
@@ -240,6 +264,16 @@ public class DataEntryFormStatic extends FormPanel implements ActionListener, Ke
 			radioFisherman.setSelected(true);
 		if (beneficiary.getIsOther() == YnQuestion.Y)
 			radioOther.setSelected(true);
+		if (beneficiary.getIsFAO() == YnQuestion.Y)
+			radioFAO.setSelected(true);
+		if (beneficiary.getIsSAVE() == YnQuestion.Y)
+			radioSAVE.setSelected(true);
+		if (beneficiary.getIsCROSE() == YnQuestion.Y)
+			radioCROSE.setSelected(true);
+		if (beneficiary.getIsPLAN() == YnQuestion.Y)
+			radioPLAN.setSelected(true);
+		if (beneficiary.getIsOrganizationOther() == YnQuestion.Y)
+			radioOrganizationOther.setSelected(true);
 		if (beneficiary.getGetsVeggies() == YnQuestion.Y)
 			radioVegetables.setSelected(true);
 		if (beneficiary.getGetsCereal() == YnQuestion.Y)
@@ -262,7 +296,8 @@ public class DataEntryFormStatic extends FormPanel implements ActionListener, Ke
 			radioShovel.setSelected(true);
 		if (beneficiary.getGetsBarreAMines() == YnQuestion.Y)
 			radioCrowbar.setSelected(true);
-
+		this.health.setText(beneficiary.getIsHealth().name());
+		
 		mGui.setSize(1200, 800);
 
 	}
@@ -306,8 +341,8 @@ public class DataEntryFormStatic extends FormPanel implements ActionListener, Ke
 		distributionLabel.setText(LocaleManager.resources.getString(AttributeManager.FORM_DISTRIBUTION_POST));
 		childLabel.setText(LocaleManager.resources.getString(AttributeManager.FORM_NAME_CHILD));
 		womanLabel.setText(LocaleManager.resources.getString(AttributeManager.FORM_NAME_WOMAN));
-		husbandLabel.setText(LocaleManager.resources.getString(AttributeManager.FORM_HUSBAND));
-		fatherLabel.setText(LocaleManager.resources.getString(AttributeManager.FORM_FATHER));
+//		husbandLabel.setText(LocaleManager.resources.getString(AttributeManager.FORM_HUSBAND));
+//		fatherLabel.setText(LocaleManager.resources.getString(AttributeManager.FORM_FATHER));
 
 		leaderLabel.setText(LocaleManager.resources.getString(AttributeManager.FORM_MOTHER_LEADER));
 		visitLabel.setText(LocaleManager.resources.getString(AttributeManager.FORM_VISIT_MOTHER));
@@ -330,7 +365,7 @@ public class DataEntryFormStatic extends FormPanel implements ActionListener, Ke
 		radioCereal.setText(LocaleManager.resources.getString(AttributeManager.FORM_CEREAL));
 		radioTubers.setText(LocaleManager.resources.getString(AttributeManager.FORM_TUBERS));
 		radioTree.setText(LocaleManager.resources.getString(AttributeManager.FORM_TREE));
-		seedQuantityLabel.setText(LocaleManager.resources.getString(AttributeManager.FORM_SEED_QUANTITY));
+//		seedQuantityLabel.setText(LocaleManager.resources.getString(AttributeManager.FORM_SEED_QUANTITY));
 
 		toolsLabel.setText(LocaleManager.resources.getString(AttributeManager.FORM_TOOLS));
 		radioHoe.setText(LocaleManager.resources.getString(AttributeManager.FORM_HOE));
@@ -340,7 +375,12 @@ public class DataEntryFormStatic extends FormPanel implements ActionListener, Ke
 		radioPruningKnife.setText(LocaleManager.resources.getString(AttributeManager.FORM_PRUNING_KNIFE));
 		radioShovel.setText(LocaleManager.resources.getString(AttributeManager.FORM_SHOVEL));
 		radioCrowbar.setText(LocaleManager.resources.getString(AttributeManager.FORM_CROWBAR));
+		
+		healthLabel.setText(LocaleManager.resources.getString(AttributeManager.FORM_HEALTH));
+		giveNameLabel2.setText(LocaleManager.resources.getString(AttributeManager.FORM_GIVE_NAME));
 
+		organizationLabel.setText(LocaleManager.resources.getString(AttributeManager.FORM_ORGANIZATIONS));
+		
 		dossierLabel.setText(LocaleManager.resources.getString(LABEL_DOSSIER));
 	}
 	
@@ -375,7 +415,7 @@ public class DataEntryFormStatic extends FormPanel implements ActionListener, Ke
 		beneficiaryCategory = new JLabel();
 		c.gridy=0;
 		c.gridx=0;
-		c.insets=new Insets(10,5,4,40);
+		//c.insets=new Insets(10,5,4,40);
 		c.anchor = GridBagConstraints.NORTHWEST;
 		firstNameLabel = new JLabel(LocaleManager.resources.getString(AttributeManager.FORM_FIRST_NAME));
 		geninfoPanel.add(firstNameLabel,c);
@@ -515,20 +555,20 @@ public class DataEntryFormStatic extends FormPanel implements ActionListener, Ke
 		c.gridy=1;
 		c.gridx=3;
 		mchnPanel.add(guardianWoman,c);
-		c.gridy=2;
-		c.gridx=0;
-		fatherLabel = new JLabel(LocaleManager.resources.getString(AttributeManager.FORM_FATHER));
-		mchnPanel.add(fatherLabel,c);
-		c.gridy=2;
-		c.gridx=1;
-		mchnPanel.add(father,c);
-		c.gridy=2;
-		c.gridx=2;
-		husbandLabel = new JLabel(LocaleManager.resources.getString(AttributeManager.FORM_HUSBAND));
-		mchnPanel.add(husbandLabel,c);
-		c.gridy=2;
-		c.gridx=3;
-		mchnPanel.add(husband,c);
+//		c.gridy=2;
+//		c.gridx=0;
+//		fatherLabel = new JLabel(LocaleManager.resources.getString(AttributeManager.FORM_FATHER));
+//		mchnPanel.add(fatherLabel,c);
+//		c.gridy=2;
+//		c.gridx=1;
+//		mchnPanel.add(father,c);
+//		c.gridy=2;
+//		c.gridx=2;
+//		husbandLabel = new JLabel(LocaleManager.resources.getString(AttributeManager.FORM_HUSBAND));
+//		mchnPanel.add(husbandLabel,c);
+//		c.gridy=2;
+//		c.gridx=3;
+//		mchnPanel.add(husband,c);
 
 		motherLeader = new JLabel();
 		c.gridy=3;
@@ -557,19 +597,19 @@ public class DataEntryFormStatic extends FormPanel implements ActionListener, Ke
 
 		c.gridy=5;
 		c.gridx=0;
-		c.insets=new Insets(10,5,0,40);
-		agr1Label = new JLabel(LocaleManager.resources.getString(AttributeManager.FORM_AGRICULTURE_1) + "\n" + LocaleManager.resources.getString(AttributeManager.FORM_AGRICULTURE_2));
-		mchnPanel.add(agr1Label,c);
+//		c.insets=new Insets(10,5,0,40);
+		agr1Label = new JLabel(LocaleManager.resources.getString(AttributeManager.FORM_AGRICULTURE_1));
+		mchnPanel.add(agr1Label);
 //		c.insets=new Insets(0,5,4,40);
 //		c.gridy=6;
 //		c.gridx=0;
 //		agr2Label = new JLabel(LocaleManager.resources.getString(AttributeManager.FORM_AGRICULTURE_2));
 //		mchnPanel.add(agr2Label,c);
-		c.insets=new Insets(0,5,4,40);
+		//c.insets=new Insets(0,5,4,40);
 		c.gridy=6;
 		c.gridx=1;
 		agri1 = new JLabel();
-		mchnPanel.add(agri1,c);
+		mchnPanel.add(agri1);
 //		mchnPanel.add(radioAgriYes,c);
 		c.gridy=6;
 		c.gridx=2;
@@ -578,12 +618,12 @@ public class DataEntryFormStatic extends FormPanel implements ActionListener, Ke
 		agriPerson = new JLabel();
 		c.gridy=7;
 		c.gridx=0;
-		c.insets=new Insets(10,5,4,40);
+		//c.insets=new Insets(10,5,4,40);
 		giveNameLabel = new JLabel(LocaleManager.resources.getString(AttributeManager.FORM_GIVE_NAME));
-		mchnPanel.add(giveNameLabel,c);
+		mchnPanel.add(giveNameLabel);
 		c.gridy=7;
 		c.gridx=1;
-		mchnPanel.add(agriPerson,c);
+		mchnPanel.add(agriPerson);
 		
 		agriPanel = new JPanel();
 		agriPanel.setBorder(BorderFactory.createTitledBorder(LocaleManager.resources.getString(BORDER_AGRI_INFO)));
@@ -593,7 +633,7 @@ public class DataEntryFormStatic extends FormPanel implements ActionListener, Ke
 		agriCategoryLabel=new JLabel();
 		c.gridy=0;
 		c.gridx=0;
-		c.insets=new Insets(10,5,4,70);
+		//c.insets=new Insets(10,5,4,70);
 		agriPanel.add(agriCategoryLabel,c);
 		c.gridy=0;
 		c.gridx=1;
@@ -609,18 +649,21 @@ public class DataEntryFormStatic extends FormPanel implements ActionListener, Ke
 		radioCattleRancher=new JRadioButton(LocaleManager.resources.getString(AttributeManager.FORM_CATTLE_RANCHER),false);
 		radioStoreOwner=new JRadioButton(LocaleManager.resources.getString(AttributeManager.FORM_STORE_OWNER),false);
 		radioFisherman=new JRadioButton(LocaleManager.resources.getString(AttributeManager.FORM_FISHERMAN),false);
+		radioArtisan=new JRadioButton(LocaleManager.resources.getString(AttributeManager.FORM_ARTISAN),false);
 		radioOther=new JRadioButton(LocaleManager.resources.getString(AttributeManager.FORM_OTHER),false);
 		agriCatePanel.add(radioFarmer);
 		agriCatePanel.add(radioMuso);
 		agriCatePanel.add(radioCattleRancher);
 		agriCatePanel.add(radioStoreOwner);
 		agriCatePanel.add(radioFisherman);
+		agriCatePanel.add(radioArtisan);
 		agriCatePanel.add(radioOther);
 		radioFarmer.setEnabled(false);
 		radioMuso.setEnabled(false);
 		radioCattleRancher.setEnabled(false);
 		radioStoreOwner.setEnabled(false);
 		radioFisherman.setEnabled(false);
+		radioArtisan.setEnabled(false);
 		radioOther.setEnabled(false);
 		agriPanel.add(agriCatePanel);
 		
@@ -660,14 +703,14 @@ public class DataEntryFormStatic extends FormPanel implements ActionListener, Ke
 		radioTree.setEnabled(false);
 		agriPanel.add(seedTypesPanel);
 		
-		seedQuantityLabel=new JLabel();
-		c.gridy=1;
-		c.gridx=2;
-		agriPanel.add(seedQuantityLabel,c);
-		seedQuantity=new JLabel();
-		c.gridy=1;
-		c.gridx=3;
-		agriPanel.add(seedQuantity,c);
+//		seedQuantityLabel=new JLabel();
+//		c.gridy=1;
+//		c.gridx=2;
+//		agriPanel.add(seedQuantityLabel,c);
+//		seedQuantity=new JLabel();
+//		c.gridy=1;
+//		c.gridx=3;
+//		agriPanel.add(seedQuantity,c);
 		
 		toolsLabel=new JLabel();
 		c.gridy=2;
@@ -705,6 +748,59 @@ public class DataEntryFormStatic extends FormPanel implements ActionListener, Ke
 		radioCrowbar.setEnabled(false);
 		agriPanel.add(toolsPanel);
 		
+		c.gridy=2;
+		c.gridx=0;
+//		JLabel fakeLabel = new JLabel();
+//		agriPanel.add(fakeLabel);
+//		JLabel fakeLabel2 = new JLabel();
+//		agriPanel.add(fakeLabel2);
+		
+		organizationLabel=new JLabel();
+		c.gridy=3;
+		c.gridx=0;
+		agriPanel.add(organizationLabel,c);
+		c.gridy=3;
+		c.gridx=1;
+		
+		organizationPanel = new JPanel();
+		organizationPanel.setBorder(BorderFactory.createEmptyBorder());
+		organizationPanel.setLayout(new GridLayout(0,2));
+		organizationPanel.setBackground(Color.WHITE);
+		radioFAO=new JRadioButton(LocaleManager.resources.getString(AttributeManager.FORM_FAO),false);
+		radioSAVE=new JRadioButton(LocaleManager.resources.getString(AttributeManager.FORM_SAVE_ORG),false);
+		radioCROSE=new JRadioButton(LocaleManager.resources.getString(AttributeManager.FORM_CROSE),false);
+		radioPLAN=new JRadioButton(LocaleManager.resources.getString(AttributeManager.FORM_PLAN),false);
+		radioMARDNR=new JRadioButton(LocaleManager.resources.getString(AttributeManager.FORM_MARDNR),false);
+		radioOrganizationOther=new JRadioButton(LocaleManager.resources.getString(AttributeManager.FORM_OTHER_ORG),false);
+		organizationPanel.add(radioFAO);
+		organizationPanel.add(radioSAVE);
+		organizationPanel.add(radioCROSE);
+		organizationPanel.add(radioPLAN);
+		organizationPanel.add(radioMARDNR);
+		organizationPanel.add(radioOrganizationOther);
+		radioFAO.setEnabled(false);
+		radioSAVE.setEnabled(false);
+		radioCROSE.setEnabled(false);
+		radioPLAN.setEnabled(false);
+		radioMARDNR.setEnabled(false);
+		radioOrganizationOther.setEnabled(false);
+		agriPanel.add(organizationPanel);
+		
+		JLabel fakeLabel = new JLabel();
+		agriPanel.add(fakeLabel);
+		JLabel fakeLabel2 = new JLabel();
+		agriPanel.add(fakeLabel2);
+
+		healthLabel = new JLabel(LocaleManager.resources.getString(AttributeManager.FORM_HEALTH));
+		agriPanel.add(healthLabel);
+		health = new JLabel();
+		agriPanel.add(health);
+		
+		healthPerson = new JLabel();
+		giveNameLabel2 = new JLabel(LocaleManager.resources.getString(AttributeManager.FORM_GIVE_NAME));
+		agriPanel.add(giveNameLabel2);
+		agriPanel.add(healthPerson);		
+
 		buttonPanel = new JPanel();
 		buttonPanel.setBorder(BorderFactory.createTitledBorder(LocaleManager.resources.getString(BORDER_CONTROLS)));
 		buttonPanel.setBackground(Color.WHITE);

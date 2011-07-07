@@ -127,13 +127,13 @@ public class BeneficiaryUpdateFormStatic extends FormPanel implements ActionList
 	//	this.firstNameJText.setText(beneficiary.getFirstName());
 	//	this.lastNameJText.setText(beneficiary.getLastName());
 		
-		if (beneficiary.getBeneficiaryCategory().equals(Beneficiary.BeneficiaryCategory.EXPECTING)) 
+		if (beneficiary.getBeneficiaryCategory().equals(AttributeManager.BeneficiaryCategory.EXPECTING)) 
 			this.radioMotherExp.setSelected(true);
-		if (beneficiary.getBeneficiaryCategory().equals(Beneficiary.BeneficiaryCategory.NURSING)) 
+		if (beneficiary.getBeneficiaryCategory().equals(AttributeManager.BeneficiaryCategory.NURSING)) 
 			this.radioMotherNurs.setSelected(true); 
-		if (beneficiary.getBeneficiaryCategory().equals(Beneficiary.BeneficiaryCategory.MALNOURISHED)) 
+		if (beneficiary.getBeneficiaryCategory().equals(AttributeManager.BeneficiaryCategory.MALNOURISHED)) 
 			this.radioInfantMal.setSelected(true);
-		if (beneficiary.getBeneficiaryCategory().equals(Beneficiary.BeneficiaryCategory.PREVENTION)) 
+		if (beneficiary.getBeneficiaryCategory().equals(AttributeManager.BeneficiaryCategory.PREVENTION)) 
 			this.radioInfantPrev.setSelected(true);
 	}
 	
@@ -173,22 +173,22 @@ public class BeneficiaryUpdateFormStatic extends FormPanel implements ActionList
 	
 		updatePanel.setBorder(BorderFactory.createTitledBorder(LocaleManager.resources.getString(BORDER_UPDATE_INFO)));
 		presentLabel.setText(LocaleManager.resources.getString(AttributeManager.FORM_PRESENT));
-		radioPresentYes.setText(LocaleManager.resources.getString(AttributeManager.BUTTON_YES));
-		radioPresentNo.setText(LocaleManager.resources.getString(AttributeManager.BUTTON_NO));
+		radioPresentYes.setText(LocaleManager.resources.getString(AttributeManager.FORM_YES));
+		radioPresentNo.setText(LocaleManager.resources.getString(AttributeManager.FORM_NO));
 		
 		transferredLabel.setText(LocaleManager.resources.getString(AttributeManager.FORM_TRANSFERRED));
-		radioTransferredYes.setText(LocaleManager.resources.getString(AttributeManager.BUTTON_YES));
-		radioTransferredNo.setText(LocaleManager.resources.getString(AttributeManager.BUTTON_NO));
+		radioTransferredYes.setText(LocaleManager.resources.getString(AttributeManager.FORM_YES));
+		radioTransferredNo.setText(LocaleManager.resources.getString(AttributeManager.FORM_NO));
 		transferredWhyLabel.setText(LocaleManager.resources.getString(AttributeManager.FORM_WHY));
 		
 		modificationsLabel.setText(LocaleManager.resources.getString(AttributeManager.FORM_MODIFICATIONS));
-		radioModificationsYes.setText(LocaleManager.resources.getString(AttributeManager.BUTTON_YES));
-		radioModificationsNo.setText(LocaleManager.resources.getString(AttributeManager.BUTTON_NO));
+		radioModificationsYes.setText(LocaleManager.resources.getString(AttributeManager.FORM_YES));
+		radioModificationsNo.setText(LocaleManager.resources.getString(AttributeManager.FORM_NO));
 		modificationsWhyLabel.setText(LocaleManager.resources.getString(AttributeManager.FORM_WHY));
 		
 		suspendLabel.setText(LocaleManager.resources.getString(AttributeManager.FORM_SUSPEND));
-		radioSuspendYes.setText(LocaleManager.resources.getString(AttributeManager.BUTTON_YES));
-		radioSuspendNo.setText(LocaleManager.resources.getString(AttributeManager.BUTTON_NO));
+		radioSuspendYes.setText(LocaleManager.resources.getString(AttributeManager.FORM_YES));
+		radioSuspendNo.setText(LocaleManager.resources.getString(AttributeManager.FORM_NO));
 		suspendWhyLabel.setText(LocaleManager.resources.getString(AttributeManager.FORM_WHY));
 
 	}
@@ -302,8 +302,8 @@ public class BeneficiaryUpdateFormStatic extends FormPanel implements ActionList
 		updatePanel.add(presentLabel,c);
 		
 		presentGroup = new ButtonGroup();
-		radioPresentYes = new JRadioButton(LocaleManager.resources.getString(AttributeManager.BUTTON_YES),false);
-		radioPresentNo = new JRadioButton(LocaleManager.resources.getString(AttributeManager.BUTTON_NO),false);
+		radioPresentYes = new JRadioButton(LocaleManager.resources.getString(AttributeManager.FORM_YES),false);
+		radioPresentNo = new JRadioButton(LocaleManager.resources.getString(AttributeManager.FORM_NO),false);
 		presentGroup.add(radioPresentYes);
 		presentGroup.add(radioPresentNo);	
 		c.gridy=0;
@@ -318,8 +318,8 @@ public class BeneficiaryUpdateFormStatic extends FormPanel implements ActionList
 		transferredLabel = new JLabel(LocaleManager.resources.getString(AttributeManager.FORM_TRANSFERRED));
 		updatePanel.add(transferredLabel,c);
 		transferredGroup = new ButtonGroup();
-		radioTransferredYes = new JRadioButton(LocaleManager.resources.getString(AttributeManager.BUTTON_YES),false);
-		radioTransferredNo = new JRadioButton(LocaleManager.resources.getString(AttributeManager.BUTTON_NO),false);
+		radioTransferredYes = new JRadioButton(LocaleManager.resources.getString(AttributeManager.FORM_YES),false);
+		radioTransferredNo = new JRadioButton(LocaleManager.resources.getString(AttributeManager.FORM_NO),false);
 		transferredGroup.add(radioTransferredYes);
 		transferredGroup.add(radioTransferredNo);	
 		c.gridy=1;
@@ -345,8 +345,8 @@ public class BeneficiaryUpdateFormStatic extends FormPanel implements ActionList
 		modificationsLabel = new JLabel(LocaleManager.resources.getString(AttributeManager.FORM_MODIFICATIONS));
 		updatePanel.add(modificationsLabel,c);
 		modificationsGroup = new ButtonGroup();
-		radioModificationsYes = new JRadioButton(LocaleManager.resources.getString(AttributeManager.BUTTON_YES),false);
-		radioModificationsNo = new JRadioButton(LocaleManager.resources.getString(AttributeManager.BUTTON_NO),false);
+		radioModificationsYes = new JRadioButton(LocaleManager.resources.getString(AttributeManager.FORM_YES),false);
+		radioModificationsNo = new JRadioButton(LocaleManager.resources.getString(AttributeManager.FORM_NO),false);
 		modificationsGroup.add(radioModificationsYes);
 		modificationsGroup.add(radioModificationsNo);	
 		c.gridy=2;
@@ -372,8 +372,8 @@ public class BeneficiaryUpdateFormStatic extends FormPanel implements ActionList
 		suspendLabel = new JLabel(LocaleManager.resources.getString(AttributeManager.FORM_SUSPEND));
 		updatePanel.add(suspendLabel,c);
 		suspendGroup = new ButtonGroup();
-		radioSuspendYes = new JRadioButton(LocaleManager.resources.getString(AttributeManager.BUTTON_YES),false);
-		radioSuspendNo = new JRadioButton(LocaleManager.resources.getString(AttributeManager.BUTTON_NO),false);
+		radioSuspendYes = new JRadioButton(LocaleManager.resources.getString(AttributeManager.FORM_YES),false);
+		radioSuspendNo = new JRadioButton(LocaleManager.resources.getString(AttributeManager.FORM_NO),false);
 		suspendGroup.add(radioSuspendYes);
 		suspendGroup.add(radioSuspendNo);	
 		c.gridy=3;

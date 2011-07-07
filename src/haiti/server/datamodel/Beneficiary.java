@@ -22,6 +22,12 @@
 
 package haiti.server.datamodel;
 
+import haiti.server.datamodel.AttributeManager.BeneficiaryCategory;
+import haiti.server.datamodel.AttributeManager.BeneficiaryType;
+import haiti.server.datamodel.AttributeManager.MessageStatus;
+import haiti.server.datamodel.AttributeManager.Sex;
+import haiti.server.datamodel.AttributeManager.YnQuestion;
+
 import java.util.Locale;
 import java.util.ResourceBundle;
 
@@ -30,46 +36,46 @@ import java.util.ResourceBundle;
 
 public class Beneficiary {
 	
-	public enum BeneficiaryType {
-		UNKNOWN(-1), MCHN(0), AGRI(1), BOTH(2);
-		
-		private int code;
-		private BeneficiaryType(int code) {
-			this.code = code;
-		}
-		public int getCode() {
-			return code;
-		}
-	}
-	
-	public enum Sex {U, M, F};
-	public enum YnQuestion { U, Y, N};
-	
-	public enum BeneficiaryCategory {
-		UNKNOWN(-1), EXPECTING(0), NURSING(1), PREVENTION(2),  MALNOURISHED(3);
-		
-		private int code;
-		private BeneficiaryCategory(int code) {
-			this.code = code;
-		}
-		public int getCode() {
-			return code;
-		}
-	}
-	
-	
-	public enum Abbreviated {TRUE, FALSE};
-	
-	public enum MessageStatus {
-		UNKNOWN(-1), NEW(0), UPDATED(1), PENDING(2), PROCESSED(3);
-		private int code;
-		private MessageStatus(int code) {
-			this.code = code;
-		}
-		public int getCode() {
-			return code;
-		}
-	};
+//	public enum BeneficiaryType {
+//		UNKNOWN(-1), MCHN(0), AGRI(1), BOTH(2);
+//		
+//		private int code;
+//		private BeneficiaryType(int code) {
+//			this.code = code;
+//		}
+//		public int getCode() {
+//			return code;
+//		}
+//	}
+//	
+//	public enum Sex {U, M, F};
+//	public enum YnQuestion { U, Y, N};
+//	
+//	public enum BeneficiaryCategory {
+//		UNKNOWN(-1), AGRI(0), EXPECTING(1), NURSING(2), PREVENTION(3),  MALNOURISHED(4);
+//		
+//		private int code;
+//		private BeneficiaryCategory(int code) {
+//			this.code = code;
+//		}
+//		public int getCode() {
+//			return code;
+//		}
+//	}
+//	
+//	
+//	public enum Abbreviated {TRUE, FALSE};
+//	
+//	public enum MessageStatus {
+//		UNKNOWN(-1), NEW(0), UPDATED(1), PENDING(2), PROCESSED(3);
+//		private int code;
+//		private MessageStatus(int code) {
+//			this.code = code;
+//		}
+//		public int getCode() {
+//			return code;
+//		}
+//	};
 
 	// Bookkeeping attributes
 	private int id = -1;
@@ -97,9 +103,10 @@ public class Beneficiary {
 	private String father = "";
 	private String agriPerson = "";
 	
-	private YnQuestion isMotherLeader = YnQuestion.U;
-	private YnQuestion visitMotherLeader  = YnQuestion.U;
-	private YnQuestion isParticipatingAgri = YnQuestion.U;
+	private YnQuestion isMotherLeader = YnQuestion.N;
+	private YnQuestion visitMotherLeader  = YnQuestion.N;
+	private YnQuestion isAgri = YnQuestion.N;
+	private YnQuestion isRelAgri = YnQuestion.N;
 	
 	// Agriculture categories
 	
@@ -113,7 +120,18 @@ public class Beneficiary {
 	private YnQuestion isMerchant = YnQuestion.U;
 	private YnQuestion isFisherman = YnQuestion.U;
 	private YnQuestion isOther = YnQuestion.U;
+	private YnQuestion isArtisan = YnQuestion.U;
 	
+	private YnQuestion isFAO = YnQuestion.U;
+	private YnQuestion isSAVE = YnQuestion.U;
+	private YnQuestion isCROSE = YnQuestion.U;
+	private YnQuestion isPLAN = YnQuestion.U;
+	private YnQuestion isMARDNR = YnQuestion.U;
+	private YnQuestion isOrganizationOther = YnQuestion.U;
+	
+	private YnQuestion isHealth = YnQuestion.N;
+	private YnQuestion isRelHealth = YnQuestion.N;
+
 	private YnQuestion getsVeggies = YnQuestion.U;
 	private YnQuestion getsCereal = YnQuestion. U;
 	private YnQuestion getsTubers = YnQuestion.U;
@@ -126,10 +144,12 @@ public class Beneficiary {
 	private YnQuestion getsSerpette = YnQuestion.U;
 	private YnQuestion getsPelle = YnQuestion.U;
 	private YnQuestion getsBarreAMines = YnQuestion.U;
+	
+	private String healthPerson = "";
 
-	private YnQuestion[] isStuff = {isFarmer, isFisherman, isMuso, isRancher, isMerchant, isOther};
-	private YnQuestion[] hsStuff = {getsVeggies, getsCereal, getsTubers, getsTrees, getsHoe, getsPickaxe, getsWheelbarrow, getsMachette, getsSerpette, getsPelle, getsBarreAMines};
-		
+//	private YnQuestion[] isStuff = {isFarmer, isFisherman, isMuso, isRancher, isMerchant, isOther};
+//	private YnQuestion[] hsStuff = {getsVeggies, getsCereal, getsTubers, getsTrees, getsHoe, getsPickaxe, getsWheelbarrow, getsMachette, getsSerpette, getsPelle, getsBarreAMines};
+	
 	/**
 	 * Default constructor
 	 */
@@ -174,37 +194,34 @@ public class Beneficiary {
 					sex = Sex.valueOf(val.toUpperCase());
 				else if (attr.equalsIgnoreCase(AttributeManager.ABBREV_NUMBER_IN_HOME))
 					numberInHome = Integer.parseInt(val);
-				else if (attr.equalsIgnoreCase(AttributeManager.ABBREV_BENEFICIARY_TYPE)) {
+				else if (attr.equalsIgnoreCase(AttributeManager.ABBREV_TYPE)) {
 					if (Integer.parseInt(val) == BeneficiaryType.MCHN.getCode())
 						beneficiaryType = BeneficiaryType.MCHN;
-					else if (Integer.parseInt(val) == BeneficiaryType.AGRI.getCode())
+					else if (Integer.parseInt(val) == BeneficiaryType.AGRI.getCode()) {
 						beneficiaryType = BeneficiaryType.AGRI;
+						beneficiaryCategory = BeneficiaryCategory.AGRI;
+					}
 					else if (Integer.parseInt(val) == BeneficiaryType.BOTH.getCode())
 						beneficiaryType = BeneficiaryType.BOTH;
 				}
 				if (beneficiaryType == BeneficiaryType.MCHN || beneficiaryType == BeneficiaryType.BOTH) {
 					if (attr.equalsIgnoreCase(AttributeManager.ABBREV_HEALTH_CENTER))
 						healthCenter = AttributeManager.mapToLong(true, val);
-					else if (attr.equalsIgnoreCase(AttributeManager.ABBREV_DISTRIBUTION_POST))
-						distributionPost = AttributeManager.mapToLong(true, val);
 					else if (attr.equalsIgnoreCase(AttributeManager.ABBREV_CATEGORY))
 						beneficiaryCategory = BeneficiaryCategory.valueOf( AttributeManager.getMapping(val.toUpperCase()));
+					else if (attr.equalsIgnoreCase(AttributeManager.ABBREV_DISTRIBUTION_POST))
+						distributionPost = AttributeManager.mapToLong(true, val);
 					else if (attr.equalsIgnoreCase(AttributeManager.ABBREV_RELATIVE_1) && (beneficiaryCategory == BeneficiaryCategory.MALNOURISHED || beneficiaryCategory == BeneficiaryCategory.PREVENTION))
 						guardianChild = val;
-					else if (attr.equalsIgnoreCase(AttributeManager.ABBREV_RELATIVE_1) && (beneficiaryCategory == BeneficiaryCategory.NURSING || beneficiaryCategory == BeneficiaryCategory.EXPECTING))
+					else if (attr.equalsIgnoreCase(AttributeManager.ABBREV_RELATIVE_1) && beneficiaryCategory == BeneficiaryCategory.EXPECTING)
 						guardianWoman = val;
-					else if (attr.equalsIgnoreCase(AttributeManager.ABBREV_RELATIVE_2) && (beneficiaryCategory == BeneficiaryCategory.NURSING || beneficiaryCategory == BeneficiaryCategory.EXPECTING))
-						husband = val;
-					else if (attr.equalsIgnoreCase(AttributeManager.ABBREV_RELATIVE_2) && (beneficiaryCategory == BeneficiaryCategory.MALNOURISHED || beneficiaryCategory == BeneficiaryCategory.PREVENTION))
-						father = val;
 					else if (attr.equalsIgnoreCase(AttributeManager.ABBREV_IS_MOTHERLEADER))
 						isMotherLeader = YnQuestion.valueOf(val.toUpperCase());
 					else if (attr.equalsIgnoreCase(AttributeManager.ABBREV_VISIT_MOTHERLEADER))
 						visitMotherLeader = YnQuestion.valueOf(val.toUpperCase());			
-					else if (attr.equalsIgnoreCase(AttributeManager.ABBREV_IS_AGRI))
-						isParticipatingAgri = YnQuestion.valueOf(val.toUpperCase());
-					else if (attr.equalsIgnoreCase(AttributeManager.ABBREV_AGRI_NAME))
+					else if (attr.equalsIgnoreCase(AttributeManager.ABBREV_RELATIVE_2)) {
 						agriPerson = val;					
+					}
 				}
 				if (beneficiaryType == BeneficiaryType.AGRI || beneficiaryType == BeneficiaryType.BOTH) {
 					if (attr.equalsIgnoreCase(AttributeManager.ABBREV_LAND_AMT))
@@ -216,7 +233,9 @@ public class Beneficiary {
 					else if (attr.equalsIgnoreCase(AttributeManager.ABBREV_SEED_QUANTITY))
 						seedQuantity = Double.parseDouble(val);
 					else if (attr.equalsIgnoreCase(AttributeManager.ABBREV_MEASUREMENT_UNIT))
-						unitOfMeasurement = Integer.parseInt(val);					
+						unitOfMeasurement = Integer.parseInt(val);
+					else if (attr.equalsIgnoreCase(AttributeManager.ABBREV_RELATIVE_2)) 
+						healthPerson = val;
 				}
 			} catch (NumberFormatException e) {
 				System.out.println("Number format exception");
@@ -312,6 +331,28 @@ public class Beneficiary {
 						isMerchant = YnQuestion.Y;
 					if (attr.equalsIgnoreCase(AttributeManager.isAFields[5]))
 						isOther = YnQuestion.Y;
+					if (attr.equalsIgnoreCase(AttributeManager.isAFields[6]))
+						isArtisan = YnQuestion.Y;
+					if (attr.equalsIgnoreCase(AttributeManager.isAFields[7]))
+						isFAO = YnQuestion.Y;
+					if (attr.equalsIgnoreCase(AttributeManager.isAFields[8]))
+						isSAVE = YnQuestion.Y;
+					if (attr.equalsIgnoreCase(AttributeManager.isAFields[9]))
+						isCROSE = YnQuestion.Y;
+					if (attr.equalsIgnoreCase(AttributeManager.isAFields[10]))
+						isPLAN = YnQuestion.Y;
+					if (attr.equalsIgnoreCase(AttributeManager.isAFields[11]))
+						isMARDNR = YnQuestion.Y;
+					if (attr.equalsIgnoreCase(AttributeManager.isAFields[12]))
+						isOrganizationOther = YnQuestion.Y;
+					if (attr.equalsIgnoreCase(AttributeManager.isAFields[13]))
+						isAgri = YnQuestion.Y;
+					if (attr.equalsIgnoreCase(AttributeManager.isAFields[14]))
+						isRelAgri = YnQuestion.Y;
+					if (attr.equalsIgnoreCase(AttributeManager.isAFields[15]))
+						isHealth = YnQuestion.Y;
+					if (attr.equalsIgnoreCase(AttributeManager.isAFields[16]))
+						isRelHealth = YnQuestion.Y;
 				}
 				else {
 					if (attr.equalsIgnoreCase(AttributeManager.hasAFields[0]))
@@ -542,6 +583,16 @@ public class Beneficiary {
 	}
 
 
+	public String getHealthPerson() {
+		return healthPerson;
+	}
+
+
+	public void setHealthPerson(String healthPerson) {
+		this.healthPerson = healthPerson;
+	}
+
+
 	public YnQuestion getIsMotherLeader() {
 		return isMotherLeader;
 	}
@@ -562,14 +613,14 @@ public class Beneficiary {
 	}
 
 
-	public YnQuestion getIsParticipatingAgri() {
-		return isParticipatingAgri;
-	}
-
-
-	public void setIsParticipatingAgri(YnQuestion isParticipatingAgri) {
-		this.isParticipatingAgri = isParticipatingAgri;
-	}
+//	public YnQuestion getIsParticipatingAgri() {
+//		return isParticipatingAgri;
+//	}
+//
+//
+//	public void setIsParticipatingAgri(YnQuestion isParticipatingAgri) {
+//		this.isParticipatingAgri = isParticipatingAgri;
+//	}
 
 
 	public double getAmountOfLand() {
@@ -639,6 +690,116 @@ public class Beneficiary {
 
 	public void setIsOther(YnQuestion isOther) {
 		this.isOther = isOther;
+	}
+
+
+	public YnQuestion getIsArtisan() {
+		return isArtisan;
+	}
+
+
+	public void setIsArtisan(YnQuestion isArtisan) {
+		this.isArtisan = isArtisan;
+	}
+
+
+	public YnQuestion getIsFAO() {
+		return isFAO;
+	}
+
+
+	public void setIsFAO(YnQuestion isFAO) {
+		this.isFAO = isFAO;
+	}
+
+
+	public YnQuestion getIsSAVE() {
+		return isSAVE;
+	}
+
+
+	public void setIsSAVE(YnQuestion isSAVE) {
+		this.isSAVE = isSAVE;
+	}
+
+
+	public YnQuestion getIsCROSE() {
+		return isCROSE;
+	}
+
+
+	public void setIsCROSE(YnQuestion isCROSE) {
+		this.isCROSE = isCROSE;
+	}
+
+
+	public YnQuestion getIsPLAN() {
+		return isPLAN;
+	}
+
+
+	public void setIsPLAN(YnQuestion isPLAN) {
+		this.isPLAN = isPLAN;
+	}
+
+
+	public YnQuestion getIsMARDNR() {
+		return isMARDNR;
+	}
+
+
+	public void setIsMARDNR(YnQuestion isMARDNR) {
+		this.isMARDNR = isMARDNR;
+	}
+
+
+	public YnQuestion getIsOrganizationOther() {
+		return isOrganizationOther;
+	}
+
+
+	public void setIsOTHER(YnQuestion isOrganizationOther) {
+		this.isOrganizationOther = isOrganizationOther;
+	}
+
+
+	public YnQuestion getIsAgri() {
+		return isAgri;
+	}
+
+
+	public void setIsAgri(YnQuestion isAgri) {
+		this.isAgri = isAgri;
+	}
+
+
+	public YnQuestion getIsRelAgri() {
+		return isRelAgri;
+	}
+
+
+	public void setIsRelAgri(YnQuestion isRelAgri) {
+		this.isRelAgri = isRelAgri;
+	}
+
+
+	public YnQuestion getIsHealth() {
+		return isHealth;
+	}
+
+
+	public void setIsHealth(YnQuestion isHealth) {
+		this.isHealth = isHealth;
+	}
+
+
+	public YnQuestion getIsRelHealth() {
+		return isRelHealth;
+	}
+
+
+	public void setIsRelHealth(YnQuestion isRelHealth) {
+		this.isRelHealth = isRelHealth;
 	}
 
 
@@ -774,7 +935,7 @@ public class Beneficiary {
 				+ commune + ", communeSection=" + communeSection
 				+ ", isMotherLeader=" + isMotherLeader + ", visitMotherLeader="
 				+ visitMotherLeader + ", isParticipatingAgri="
-				+ isParticipatingAgri + ", amountOfLand=" + amountOfLand
+				+ isAgri + ", amountOfLand=" + amountOfLand
 				+ ", isFarmer=" + isFarmer + ", isMuso=" + isMuso
 				+ ", isRancher=" + isRancher + ", isMerchant=" + isMerchant
 				+ ", isFisherman=" + isFisherman + ", isOther=" + isOther

@@ -36,6 +36,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.sql.Array;
 import java.sql.Connection;
 import java.sql.Date;
@@ -53,8 +54,8 @@ import java.util.List;
  */
 public class DbWriter {
 
-	private static final String dbName = "C:\\Documents and Settings\\cslab\\Desktop\\haitidb\\haiti.db";
-
+	private static final String dbName = "D:\\SMS_Reception\\haiti.db";
+	//private static final String dbName = "C:\\Users\\Administrator\\Documents\\haiti.db";
 	public enum MessageStatus {
 		NEW, PENDING, PROCESSED, DECLINED, ARCHIVED, ALL
 	};
@@ -225,7 +226,7 @@ public class DbWriter {
 			statement.setQueryTimeout(60); // set timeout to 30 sec.
 			statement.execute("UPDATE " + DB_MESSAGE_TABLE + " SET "
 					+ DB_MESSAGE_TYPE + "="
-					+ DAO.MessageType.ATTENDENCE.getCode() + " WHERE "
+					+ AttributeManager.MessageType.ATTENDANCE.getCode() + " WHERE "
 					+ DB_MESSAGE_SENDER + "='" + sender + "' AND "
 					+ DB_MESSAGE_AV_NUM + "= '" + avNum + "'");
 
@@ -379,9 +380,9 @@ public class DbWriter {
 						sendAck(bulkAck);
 					} else { // Quick fix to prevent going over 160 characters
 						BulkAck bulkAck1 = new BulkAck(ids.subList(0,
-								ids.size() / 2), sms.getSender());
+								ids.size() / 2 + 1), sms.getSender());
 						BulkAck bulkAck2 = new BulkAck(ids.subList(
-								ids.size() / 2 + 1, ids.size() - 1),
+								ids.size() / 2 + 1, ids.size()),
 								sms.getSender());
 						sendAck(bulkAck1);
 						sendAck(bulkAck2);
@@ -419,7 +420,11 @@ public class DbWriter {
 		String url = "http://localhost:8011/send/sms/" + ack.getSender() + "/"
 				+ ack.getMessage() + "/";
 		log("sendAck, url=" + url);
-		String charset = "UTF-8";
+		try {
+			url = URLEncoder.encode(url, "UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			log(e.getMessage());
+		}
 		URLConnection connection = null;
 
 		try {
@@ -506,7 +511,7 @@ public class DbWriter {
 				log(e.getMessage());
 			}
 
-			sender = sender.replace("+", "");
+			//sender = sender.replace("+", "");
 			// If its a bulk message, parse it and create individual messages
 			// out of it
 			String id = SmsMessageManager.getMessageCategory(message);
