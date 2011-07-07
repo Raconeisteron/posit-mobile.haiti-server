@@ -21,11 +21,12 @@
 package haiti.server.gui;
 
 import haiti.server.datamodel.AttributeManager;
+import haiti.server.datamodel.AttributeManager.BeneficiaryCategory;
 import haiti.server.datamodel.Beneficiary;
-import haiti.server.datamodel.Beneficiary.Abbreviated;
+import haiti.server.datamodel.AttributeManager.Abbreviated;
 import haiti.server.datamodel.LocaleManager;
-import haiti.server.gui.DAO.MessageStatus;
-import haiti.server.gui.DAO.MessageType;
+import haiti.server.datamodel.AttributeManager.MessageStatus;
+import haiti.server.datamodel.AttributeManager.MessageType;
 
 import java.io.*;
 import java.util.Date;
@@ -295,7 +296,7 @@ public class DataEntryGUI extends JFrame implements WindowListener, ListSelectio
 			this.setSize(1200, 800);
 			this.setLocation(0,0);
 		}
-		else if (type == MessageType.ATTENDENCE) {
+		else if (type == MessageType.ATTENDANCE) {
 			try{
 				FileWriter fstream = new FileWriter("out.txt", true);
 				BufferedWriter out = new BufferedWriter(fstream);
@@ -307,7 +308,7 @@ public class DataEntryGUI extends JFrame implements WindowListener, ListSelectio
 					mBeneficiary = new Beneficiary(mMessagesArray[i]);
 					out.write("Dossier: " + mBeneficiary.getDossier());
 					out.newLine();
-					mBeneficiary.setStatus(Beneficiary.MessageStatus.PROCESSED);
+					mBeneficiary.setStatus(AttributeManager.MessageStatus.PROCESSED);
 					mReader.updateMessage(mBeneficiary, this.mMessagesFileOrDbName);
 				}
 				out.close();
@@ -393,7 +394,7 @@ public class DataEntryGUI extends JFrame implements WindowListener, ListSelectio
 		
 //		if (result.equals(TbsManager.RESULT_OK)) {
 			mBeneficiary.setDossier(dossier);
-			mBeneficiary.setStatus(Beneficiary.MessageStatus.PROCESSED); // sets the status of the current Beneficiary item to processed
+			mBeneficiary.setStatus(AttributeManager.MessageStatus.PROCESSED); // sets the status of the current Beneficiary item to processed
 			mReader.updateMessage(mBeneficiary, this.mMessagesFileOrDbName);
 			int index = this.mMessageList.getSelectedIndex();
 			String msg = mReader.getMessageById(mBeneficiary.getId(), this.mMessagesFileOrDbName);
@@ -423,7 +424,7 @@ public class DataEntryGUI extends JFrame implements WindowListener, ListSelectio
 	public void forwardMessageToDbMgr() {
 		// TODO Auto-generated method stub
 		System.out.println(mBeneficiary.toString());
-		mBeneficiary.setStatus(Beneficiary.MessageStatus.PENDING); // sets the status of the current Beneficiary item to processed
+		mBeneficiary.setStatus(AttributeManager.MessageStatus.PENDING); // sets the status of the current Beneficiary item to processed
 		mReader.updateMessage(mBeneficiary, this.mMessagesFileOrDbName);
 		int index = this.mMessageList.getSelectedIndex();
 		String msg = mReader.getMessageById(mBeneficiary.getId(), this.mMessagesFileOrDbName);
@@ -473,7 +474,7 @@ public class DataEntryGUI extends JFrame implements WindowListener, ListSelectio
 		                                                 isSelected,
 		                                                 hasFocus);
 		    String entry = (String)value;
-		    if (entry.contains("status=" + Beneficiary.MessageStatus.PENDING)) {
+		    if (entry.contains("status=" + AttributeManager.MessageStatus.PENDING)) {
 		    	label.setBackground(Color.RED);
 		    } else if (entry.contains("status=1")) {
 		    	label.setBackground(Color.YELLOW);

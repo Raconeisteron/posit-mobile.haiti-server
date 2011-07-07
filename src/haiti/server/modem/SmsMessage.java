@@ -5,8 +5,8 @@ import java.net.URLDecoder;
 
 import haiti.server.datamodel.AttributeManager;
 import haiti.server.gui.*;
-import haiti.server.gui.DAO.MessageStatus;
-import haiti.server.gui.DAO.MessageType;
+import haiti.server.datamodel.AttributeManager.MessageStatus;
+import haiti.server.datamodel.AttributeManager.MessageType;
 
 public class SmsMessage {
 
@@ -17,8 +17,8 @@ public class SmsMessage {
 	private String AVnum = null;
 	private int msgNumber = 0;
 	private int msgTotal = 0;
-	private DAO.MessageStatus status = DAO.MessageStatus.UNKNOWN;
-	private DAO.MessageType type = DAO.MessageType.UNKNOWN;
+	private AttributeManager.MessageStatus status = AttributeManager.MessageStatus.UNKNOWN;
+	private AttributeManager.MessageType type = AttributeManager.MessageType.UNKNOWN;
 	private String message = "";
 	private String sender = "";
 
@@ -36,14 +36,14 @@ public class SmsMessage {
 		message = rawMsg;
 		sender = rawSender;
 
-		try {
-			message = URLDecoder.decode(message, "UTF-8");
-			sender = URLDecoder.decode(sender, "UTF-8");
-			sender = sender.replace("+", "");
-		} catch (UnsupportedEncodingException e) {
-			DbWriter.log(e.getMessage());
-			e.printStackTrace();
-		}
+//		try {
+//			message = URLDecoder.decode(message, "UTF-8");
+//			sender = URLDecoder.decode(sender, "UTF-8");
+//			sender = sender.replace("+", "");
+//		} catch (UnsupportedEncodingException e) {
+//			DbWriter.log(e.getMessage());
+//			e.printStackTrace();
+//		}
 		split(message, AttributeManager.OUTER_DELIM,
 				AttributeManager.INNER_DELIM, true);
 	}
@@ -94,22 +94,22 @@ public class SmsMessage {
 					int i = Integer.parseInt(attrval[1]);
 					switch (i) {
 					case 0:
-						status = DAO.MessageStatus.NEW;
+						status = AttributeManager.MessageStatus.NEW;
 						break;
 					case 1:
-						status = DAO.MessageStatus.PENDING;
+						status = AttributeManager.MessageStatus.PENDING;
 						break;
 					case 2:
-						status = DAO.MessageStatus.PROCESSED;
+						status = AttributeManager.MessageStatus.PROCESSED;
 						break;
 					}
 				} else if (longAttr.equals(AttributeManager.LONG_MESSAGE_TYPE)) {
 					switch (Integer.parseInt(attrval[1])) {
 					case 0:
-						type = DAO.MessageType.REGISTRATION;
+						type = AttributeManager.MessageType.REGISTRATION;
 						break;
 					case 1:
-						type = DAO.MessageType.UPDATE;
+						type = AttributeManager.MessageType.UPDATE;
 						break;
 					}
 				}
@@ -124,7 +124,7 @@ public class SmsMessage {
 		return status.getCode();
 	}
 
-	public void setStatus(DAO.MessageStatus status) {
+	public void setStatus(AttributeManager.MessageStatus status) {
 		this.status = status;
 	}
 
@@ -132,7 +132,7 @@ public class SmsMessage {
 		return type.getCode();
 	}
 
-	public void setType(DAO.MessageType type) {
+	public void setType(AttributeManager.MessageType type) {
 		this.type = type;
 	}
 

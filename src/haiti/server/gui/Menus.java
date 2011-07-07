@@ -27,8 +27,9 @@ import haiti.server.datamodel.User;
 
 import haiti.server.datamodel.LocaleManager;
 import haiti.server.gui.DataEntryGUI.DbSource;
-import haiti.server.gui.DAO.MessageStatus;
-import haiti.server.gui.DAO.MessageType;
+import haiti.server.datamodel.AttributeManager;
+import haiti.server.datamodel.AttributeManager.MessageStatus;
+import haiti.server.datamodel.AttributeManager.MessageType;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -187,67 +188,67 @@ public class Menus implements ActionListener {
 				gui.readMessagesIntoGUI(DbSource.FILE);
 			} 
 			else if (selectedMenuItemText.equals(LocaleManager.resources.getString(MENU_BENEFICIARY_FILTER_NEW))) {
-				gui.readMessagesIntoGUI(DbSource.DATA_BASE, MessageStatus.NEW, MessageType.REGISTRATION);
+				gui.readMessagesIntoGUI(DbSource.DATA_BASE, AttributeManager.MessageStatus.NEW, AttributeManager.MessageType.REGISTRATION);
 				createMenuBar();
 				gui.setMenuBar(Menus.getMenuBar());	
 				gui.repaint();
 			} 
 			else if (selectedMenuItemText.equals(LocaleManager.resources.getString(MENU_BENEFICIARY_FILTER_PENDING))) {
-				gui.readMessagesIntoGUI(DbSource.DATA_BASE, MessageStatus.PENDING, MessageType.REGISTRATION);
+				gui.readMessagesIntoGUI(DbSource.DATA_BASE, AttributeManager.MessageStatus.PENDING, AttributeManager.MessageType.REGISTRATION);
 				createMenuBar();
 				gui.setMenuBar(Menus.getMenuBar());	
 				gui.repaint();
 			} 
 			else if (selectedMenuItemText.equals(LocaleManager.resources.getString(MENU_BENEFICIARY_FILTER_PROCESSED))) {
-				gui.readMessagesIntoGUI(DbSource.DATA_BASE, MessageStatus.PROCESSED, MessageType.REGISTRATION);
+				gui.readMessagesIntoGUI(DbSource.DATA_BASE, AttributeManager.MessageStatus.PROCESSED, AttributeManager.MessageType.REGISTRATION);
 				createMenuBar();
 				gui.setMenuBar(Menus.getMenuBar());	
 				gui.repaint();
 			} 
-			else if (selectedMenuItemText.equals(LocaleManager.resources.getString(MENU_BENEFICIARY_FILTER_ARCHIVED))) {
-				gui.readMessagesIntoGUI(DbSource.DATA_BASE, MessageStatus.ARCHIVED, MessageType.REGISTRATION);
-				createMenuBar();
-				gui.setMenuBar(Menus.getMenuBar());	
-				gui.repaint();
-			}  
+//			else if (selectedMenuItemText.equals(LocaleManager.resources.getString(MENU_BENEFICIARY_FILTER_ARCHIVED))) {
+//				gui.readMessagesIntoGUI(DbSource.DATA_BASE, AttributeManager.MessageStatus.ARCHIVED, AttributeManager.MessageType.REGISTRATION);
+//				createMenuBar();
+//				gui.setMenuBar(Menus.getMenuBar());	
+//				gui.repaint();
+//			}  
 			else if (selectedMenuItemText.equals(LocaleManager.resources.getString(MENU_BENEFICIARY_FILTER_ALL))) {
-				gui.readMessagesIntoGUI(DbSource.DATA_BASE, MessageStatus.ALL, MessageType.REGISTRATION);
+				gui.readMessagesIntoGUI(DbSource.DATA_BASE, AttributeManager.MessageStatus.ALL, AttributeManager.MessageType.REGISTRATION);
 				createMenuBar();
 				gui.setMenuBar(Menus.getMenuBar());	
 				gui.repaint();
 			}  
 			else if (selectedMenuItemText.equals(LocaleManager.resources.getString(MENU_UPDATE_FILTER_NEW))) {
-				gui.readMessagesIntoGUI(DbSource.DATA_BASE, MessageStatus.NEW, MessageType.UPDATE);
+				gui.readMessagesIntoGUI(DbSource.DATA_BASE, AttributeManager.MessageStatus.NEW, AttributeManager.MessageType.UPDATE);
 				createMenuBar();
 				gui.setMenuBar(Menus.getMenuBar());	
 				gui.repaint();
 			} 
 			else if (selectedMenuItemText.equals(LocaleManager.resources.getString(MENU_UPDATE_FILTER_PENDING))) {
-				gui.readMessagesIntoGUI(DbSource.DATA_BASE, MessageStatus.PENDING, MessageType.UPDATE);
+				gui.readMessagesIntoGUI(DbSource.DATA_BASE, AttributeManager.MessageStatus.PENDING, AttributeManager.MessageType.UPDATE);
 				createMenuBar();
 				gui.setMenuBar(Menus.getMenuBar());	
 				gui.repaint();
 			} 
 			else if (selectedMenuItemText.equals(LocaleManager.resources.getString(MENU_UPDATE_FILTER_PROCESSED))) {
-				gui.readMessagesIntoGUI(DbSource.DATA_BASE, MessageStatus.PROCESSED, MessageType.UPDATE);
+				gui.readMessagesIntoGUI(DbSource.DATA_BASE, AttributeManager.MessageStatus.PROCESSED, AttributeManager.MessageType.UPDATE);
 				createMenuBar();
 				gui.setMenuBar(Menus.getMenuBar());	
 				gui.repaint();
 			} 
-			else if (selectedMenuItemText.equals(LocaleManager.resources.getString(MENU_UPDATE_FILTER_ARCHIVED))) {
-				gui.readMessagesIntoGUI(DbSource.DATA_BASE, MessageStatus.ARCHIVED, MessageType.UPDATE);
-				createMenuBar();
-				gui.setMenuBar(Menus.getMenuBar());	
-				gui.repaint();
-			}  
+//			else if (selectedMenuItemText.equals(LocaleManager.resources.getString(MENU_UPDATE_FILTER_ARCHIVED))) {
+//				gui.readMessagesIntoGUI(DbSource.DATA_BASE, AttributeManager.MessageStatus.ARCHIVED, AttributeManager.MessageType.UPDATE);
+//				createMenuBar();
+//				gui.setMenuBar(Menus.getMenuBar());	
+//				gui.repaint();
+//			}  
 			else if (selectedMenuItemText.equals(LocaleManager.resources.getString(MENU_UPDATE_FILTER_ALL))) {
-				gui.readMessagesIntoGUI(DbSource.DATA_BASE, MessageStatus.ALL, MessageType.UPDATE);
+				gui.readMessagesIntoGUI(DbSource.DATA_BASE, AttributeManager.MessageStatus.ALL, AttributeManager.MessageType.UPDATE);
 				createMenuBar();
 				gui.setMenuBar(Menus.getMenuBar());	
 				gui.repaint();
 			}  
 			else if (selectedMenuItemText.equals(LocaleManager.resources.getString(MENU_ALL))) {
-				gui.readMessagesIntoGUI(DbSource.DATA_BASE, MessageStatus.ALL, MessageType.ALL);
+				gui.readMessagesIntoGUI(DbSource.DATA_BASE, AttributeManager.MessageStatus.ALL, AttributeManager.MessageType.ALL);
 				createMenuBar();
 				gui.setMenuBar(Menus.getMenuBar());	
 				gui.repaint();
