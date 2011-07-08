@@ -81,7 +81,7 @@ public class Beneficiary {
 	private int id = -1;
 	private MessageStatus status = MessageStatus.UNKNOWN;
 	private BeneficiaryType beneficiaryType = BeneficiaryType.UNKNOWN;
-	
+
 	// Attributes in the order of the form on the phone
 	private String firstName = "";
 	private String lastName = "";
@@ -393,6 +393,16 @@ public class Beneficiary {
 			}
 		}
 	}
+
+	public BeneficiaryType getBeneficiaryType() {
+		return beneficiaryType;
+	}
+
+
+	public void setBeneficiaryType(BeneficiaryType beneficiaryType) {
+		this.beneficiaryType = beneficiaryType;
+	}
+
 
 	/**
 	 * For temporary development purposes only.
