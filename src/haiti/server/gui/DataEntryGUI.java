@@ -389,30 +389,31 @@ public class DataEntryGUI extends JFrame implements WindowListener, ListSelectio
 	public void postMessageToTBS(String dossier) {
 		// TODO Auto-generated method stub
 		System.out.println(mBeneficiary.toString());
-//		TbsManager tbs = new TbsManager();
-//		String result = tbs.postNewBeneficiary(mBeneficiary);
+		mBeneficiary.setDossier(dossier);
+		TbsManager tbs = new TbsManager();
+		String result = tbs.postNewBeneficiary(mBeneficiary);
 		
-//		if (result.equals(TbsManager.RESULT_OK)) {
+		if (result.equals(TbsManager.RESULT_OK)) {
 			mBeneficiary.setDossier(dossier);
 			mBeneficiary.setStatus(AttributeManager.MessageStatus.PROCESSED); // sets the status of the current Beneficiary item to processed
 			mReader.updateMessage(mBeneficiary, this.mMessagesFileOrDbName);
 			int index = this.mMessageList.getSelectedIndex();
 			String msg = mReader.getMessageById(mBeneficiary.getId(), this.mMessagesFileOrDbName);
 //			System.out.println(msg);
-//			if (!msg.contains("NOT FOUND")) {
+			if (!msg.contains("NOT FOUND")) {
 				this.mListModel.set(index,msg);
 				this.mMessageList.setSelectedIndex(index++);
 				this.mMessageList.repaint();
 //				System.out.println("Posted message to TBS Db");
 				JOptionPane.showMessageDialog(this, "Posted message to TBS Db", "Success", -1);
-//			} else {
-//				System.out.println("ERROR in Posting message to TBS Db");
-//				JOptionPane.showMessageDialog(this, "ERROR in Posting message to TBS Db", "ERROR", 0);
-//			}
-//		} else {
-//			System.out.println("ERROR: " + result);
-//			JOptionPane.showMessageDialog(this, result, "ERROR", 0);
-//		}
+			} else {
+				System.out.println("ERROR in Posting message to TBS Db");
+				JOptionPane.showMessageDialog(this, "ERROR in Posting message to TBS Db", "ERROR", 0);
+			}
+		} else {
+			System.out.println("ERROR: " + result);
+			JOptionPane.showMessageDialog(this, result, "ERROR", 0);
+		}
 		
 	}
 
