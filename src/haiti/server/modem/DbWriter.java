@@ -54,8 +54,11 @@ import java.util.List;
  */
 public class DbWriter {
 
-	private static final String dbName = "D:\\SMS_Reception\\haiti.db";
-	//private static final String dbName = "C:\\Users\\Administrator\\Documents\\haiti.db";
+	// private static final String dbName = "D:\\SMS_Reception\\haiti.db";
+	// private static final String dbName =
+	// "C:\\Users\\Administrator\\Documents\\haiti.db";
+	private static final String dbName = "C:\\Documents and Settings\\cslab\\Desktop\\haitidb\\haiti.db";
+
 	public enum MessageStatus {
 		NEW, PENDING, PROCESSED, DECLINED, ARCHIVED, ALL
 	};
@@ -226,8 +229,8 @@ public class DbWriter {
 			statement.setQueryTimeout(60); // set timeout to 30 sec.
 			statement.execute("UPDATE " + DB_MESSAGE_TABLE + " SET "
 					+ DB_MESSAGE_TYPE + "="
-					+ AttributeManager.MessageType.ATTENDANCE.getCode() + " WHERE "
-					+ DB_MESSAGE_SENDER + "='" + sender + "' AND "
+					+ AttributeManager.MessageType.ATTENDANCE.getCode()
+					+ " WHERE " + DB_MESSAGE_SENDER + "='" + sender + "' AND "
 					+ DB_MESSAGE_AV_NUM + "= '" + avNum + "'");
 
 		} catch (SQLException e) {
@@ -309,7 +312,7 @@ public class DbWriter {
 			ResultSet result = statement.executeQuery("select * from "
 					+ DB_ACK_COUNT_TABLE + " WHERE " + DB_ACK_COUNT_FIELD
 					+ " >= " + msg.getMsgTotal() + " and "
-					+ DB_ACK_COUNT_SENDER + " = " + msg.getSender());
+					+ DB_ACK_COUNT_SENDER + " = '" + msg.getSender() + "'");
 			int count = 0;
 			while (result.next())
 				count++;
@@ -345,7 +348,7 @@ public class DbWriter {
 				statement.setQueryTimeout(60); // set timeout to 30 sec.
 				ResultSet result = statement.executeQuery("select * from "
 						+ DB_MESSAGE_TABLE + " where " + DB_MESSAGE_SENDER
-						+ "=" + sender + " and " + DB_MESSAGE_TYPE + "!=2 and "
+						+ "= '" + sender + "' and " + DB_MESSAGE_TYPE + "!=2 and "
 						+ DB_MESSAGE_ACKED + "=0");
 				while (result.next()) {
 					ids.add(result.getString(DB_MESSAGE_AV_NUM));
@@ -417,14 +420,16 @@ public class DbWriter {
 		// Constructs the URL string
 		log("sendACK, msg:  " + ack.getMessage());
 
-		String url = "http://localhost:8011/send/sms/" + ack.getSender() + "/"
-				+ ack.getMessage() + "/";
-		log("sendAck, url=" + url);
 		try {
-			url = URLEncoder.encode(url, "UTF-8");
+			ack.setSender(URLEncoder.encode(ack.getSender(), "UTF-8"));
+			ack.setMessage(URLEncoder.encode(ack.getMessage(), "UTF-8"));
 		} catch (UnsupportedEncodingException e) {
 			log(e.getMessage());
 		}
+
+		String url = "http://localhost:8011/send/sms/" + ack.getSender() + "/"
+				+ ack.getMessage() + "/";
+		log("sendAck, url=" + url);
 		URLConnection connection = null;
 
 		try {
@@ -511,7 +516,7 @@ public class DbWriter {
 				log(e.getMessage());
 			}
 
-			//sender = sender.replace("+", "");
+			// sender = sender.replace("+", "");
 			// If its a bulk message, parse it and create individual messages
 			// out of it
 			String id = SmsMessageManager.getMessageCategory(message);
