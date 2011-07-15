@@ -24,6 +24,8 @@ package haiti.server.gui;
 
 import haiti.server.datamodel.AttributeManager;
 import haiti.server.datamodel.Beneficiary;
+import haiti.server.datamodel.Bulk;
+import haiti.server.datamodel.Update;
 import haiti.server.gui.DataEntryGUI;
 
 import java.io.FileInputStream;
@@ -285,12 +287,12 @@ public class DAO {
 	 * Beneficiary object in database
 	 * @param b is the Beneficiary object
 	 */
-	public void updateMessage(Beneficiary b, String dbName) {
+	public void updateBeneficiary(Beneficiary b, String dbName) {
 //		String date_format = "yyyy-MM-dd HH:mm:ss";
 //		Calendar cal = Calendar.getInstance();
 //		SimpleDateFormat sdf = new SimpleDateFormat(date_format);
 //		String time = sdf.format(cal.getTime());
-		System.out.println("Upating beneficiary record " + b.getId());
+		System.out.println("Updating beneficiary record " + b.getId());
 		Connection connection = connectDb(dbName);
 		try {
 			Statement statement = connection.createStatement();
@@ -306,6 +308,47 @@ public class DAO {
 		}
 	}
 	
+	public void updateUpdate(Update u, String dbName) {
+//		String date_format = "yyyy-MM-dd HH:mm:ss";
+//		Calendar cal = Calendar.getInstance();
+//		SimpleDateFormat sdf = new SimpleDateFormat(date_format);
+//		String time = sdf.format(cal.getTime());
+		System.out.println("Updating beneficiary record " + u.getId());
+		Connection connection = connectDb(dbName);
+		try {
+			Statement statement = connection.createStatement();
+			statement.setQueryTimeout(60); // set timeout to 30 sec.
+
+			statement.execute(AttributeManager.UPDATE + DB_MESSAGE_TABLE + AttributeManager.SET+ DB_MESSAGE_STATUS+AttributeManager.ATTR_VAL_SEPARATOR
+					+ AttributeManager.SINGLE_QUOTE + u.getStatus().getCode() + AttributeManager.SINGLE_QUOTE + AttributeManager.WHERE+DB_MESSAGE_ID+AttributeManager.ATTR_VAL_SEPARATOR + u.getId() + AttributeManager.LINE_ENDER);
+			
+		} catch (SQLException e) {
+			// if the error message is "out of memory",
+			// it probably means no database file is found
+			e.printStackTrace();
+		}
+	}
+
+	public void updateBulk(Bulk b, String dbName) {
+//		String date_format = "yyyy-MM-dd HH:mm:ss";
+//		Calendar cal = Calendar.getInstance();
+//		SimpleDateFormat sdf = new SimpleDateFormat(date_format);
+//		String time = sdf.format(cal.getTime());
+//		System.out.println("Updating beneficiary record " + b.getId());
+		Connection connection = connectDb(dbName);
+		try {
+			Statement statement = connection.createStatement();
+			statement.setQueryTimeout(30); // set timeout to 30 sec.
+			statement.execute(AttributeManager.UPDATE + DB_MESSAGE_TABLE + AttributeManager.SET+ DB_MESSAGE_STATUS+AttributeManager.ATTR_VAL_SEPARATOR
+					+ AttributeManager.SINGLE_QUOTE + b.getStatus().getCode() + AttributeManager.SINGLE_QUOTE + AttributeManager.WHERE+DB_MESSAGE_ID+AttributeManager.ATTR_VAL_SEPARATOR + b.getId() + AttributeManager.LINE_ENDER);
+			
+		} catch (SQLException e) {
+			// if the error message is "out of memory",
+			// it probably means no database file is found
+			e.printStackTrace();
+		}
+	}
+
 	/**
 	 * updateMessage method update the status and modified time for given
 	 * Beneficiary object in database

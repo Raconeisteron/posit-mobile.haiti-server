@@ -22,26 +22,22 @@ package haiti.server.gui;
  */
 
 import haiti.server.datamodel.AttributeManager;
-import haiti.server.datamodel.Beneficiary;
 import haiti.server.datamodel.LocaleManager;
+import haiti.server.datamodel.Update;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
-import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
-import javax.swing.JTextField;
 
 public class BeneficiaryUpdateFormStatic extends FormPanel implements ActionListener {
 
@@ -58,51 +54,55 @@ public class BeneficiaryUpdateFormStatic extends FormPanel implements ActionList
 	private JButton 
 		toDbMgrButton,
 		toDbButton;
+
 	private JPanel 
-		welcomePanel, 
+//		welcomePanel, 
 		buttonPanel, 
-		formPanel, 
+//		formPanel, 
 		benifPanel, 
 		updatePanel;
-	private JTextField 
-		dossierJText;
 	
 	private JLabel
+		dossier,
 		firstName, 
-		lastName, 
+		lastName,
 		dob,
-		months,
+//		months,
+		beneficiaryCategory,
+		present,
 		transferredWhy,
 		modificationsWhy,
-		suspendWhy;
+		suspendWhy,
+		change,
+		changeType;
 
-	private ButtonGroup  
-		infantGroup,
-		presentGroup,
-		transferredGroup,
-		modificationsGroup,
-		suspendGroup;
+//	private ButtonGroup  
+//		infantGroup,
+//		presentGroup,
+//		transferredGroup,
+//		modificationsGroup,
+//		suspendGroup;
 
-	private JRadioButton 
-		radioInfantMal,
-		radioInfantPrev,
-		radioMotherExp,
-		radioMotherNurs,
-		radioPresentYes,
-		radioPresentNo,
-		radioTransferredYes,
-		radioTransferredNo,
-		radioModificationsYes,
-		radioModificationsNo,
-		radioSuspendYes,
-		radioSuspendNo;
+//	private JRadioButton 
+//		radioInfantMal,
+//		radioInfantPrev,
+//		radioMotherExp,
+//		radioMotherNurs,
+//		radioPresentYes,
+//		radioPresentNo,
+//		radioTransferredYes,
+//		radioTransferredNo,
+//		radioModificationsYes,
+//		radioModificationsNo,
+//		radioSuspendYes,
+//		radioSuspendNo;
 
 	private JLabel 
 		dossierLabel,
 		firstNameLabel,
 		lastNameLabel,
 		dobLabel,
-		monthsLabel,
+//		monthsLabel,
 		beneficiaryLabel,
 		presentLabel,
 		transferredLabel,
@@ -110,7 +110,9 @@ public class BeneficiaryUpdateFormStatic extends FormPanel implements ActionList
 		suspendLabel,
 		transferredWhyLabel,
 		modificationsWhyLabel,
-		suspendWhyLabel;
+		suspendWhyLabel,
+		changeLabel,
+		changeTypeLabel;
 
 
 	public BeneficiaryUpdateFormStatic(DataEntryGUI gui) {
@@ -121,20 +123,29 @@ public class BeneficiaryUpdateFormStatic extends FormPanel implements ActionList
 	
 	/**
 	 * Called from GUI to fill in data in the form.
-	 * @param beneficiary 
+	 * @param update 
 	 */
-	public void fillInForm(Beneficiary beneficiary, DAO reader) {
-	//	this.firstNameJText.setText(beneficiary.getFirstName());
-	//	this.lastNameJText.setText(beneficiary.getLastName());
+	public void fillInForm(Object o, DAO reader) {
+		Update update = (Update)o;
+		this.dossier.setText(update.getDossier());
 		
-		if (beneficiary.getBeneficiaryCategory().equals(AttributeManager.BeneficiaryCategory.EXPECTING)) 
-			this.radioMotherExp.setSelected(true);
-		if (beneficiary.getBeneficiaryCategory().equals(AttributeManager.BeneficiaryCategory.NURSING)) 
-			this.radioMotherNurs.setSelected(true); 
-		if (beneficiary.getBeneficiaryCategory().equals(AttributeManager.BeneficiaryCategory.MALNOURISHED)) 
-			this.radioInfantMal.setSelected(true);
-		if (beneficiary.getBeneficiaryCategory().equals(AttributeManager.BeneficiaryCategory.PREVENTION)) 
-			this.radioInfantPrev.setSelected(true);
+		this.firstName.setText(update.getFirstName());
+		this.lastName.setText(update.getLastName());
+		
+		beneficiaryCategory.setText(update.getBeneficiaryCategory().name());
+		dob.setText(update.getDob());
+		present.setText(update.getPresent().name());
+		change.setText(update.getChange().name());
+		changeType.setText(update.getChangeType());
+		
+//		if (update.getBeneficiaryCategory().equals(AttributeManager.BeneficiaryCategory.EXPECTING)) 
+//			this.radioMotherExp.setSelected(true);
+//		if (update.getBeneficiaryCategory().equals(AttributeManager.BeneficiaryCategory.NURSING)) 
+//			this.radioMotherNurs.setSelected(true); 
+//		if (update.getBeneficiaryCategory().equals(AttributeManager.BeneficiaryCategory.MALNOURISHED)) 
+//			this.radioInfantMal.setSelected(true);
+//		if (update.getBeneficiaryCategory().equals(AttributeManager.BeneficiaryCategory.PREVENTION)) 
+//			this.radioInfantPrev.setSelected(true);
 	}
 	
 	/**
@@ -142,10 +153,10 @@ public class BeneficiaryUpdateFormStatic extends FormPanel implements ActionList
 	 * @param combo
 	 * @param arr
 	 */
-	private void addItemsToComboBox (JComboBox combo, String arr[]) {
-		for (int k = 0; k < arr.length; k++) 
-			combo.addItem(arr[k]);
-	}
+//	private void addItemsToComboBox (JComboBox combo, String arr[]) {
+//		for (int k = 0; k < arr.length; k++) 
+//			combo.addItem(arr[k]);
+//	}
 	
 	/**
 	 * Called automatically whenever the Panel is repainted this method
@@ -157,7 +168,7 @@ public class BeneficiaryUpdateFormStatic extends FormPanel implements ActionList
 
 		toDbButton.setText(LocaleManager.resources.getString(BUTTON_SAVE));
 		this.setBorder(BorderFactory.createTitledBorder(LocaleManager.resources.getString(BORDER_BENEFICIARY_UPDATE)));
-		buttonPanel.setBorder(BorderFactory.createTitledBorder(LocaleManager.resources.getString(BORDER_CONTROLS)));
+//		buttonPanel.setBorder(BorderFactory.createTitledBorder(LocaleManager.resources.getString(BORDER_CONTROLS)));
 		benifPanel.setBorder(BorderFactory.createTitledBorder(LocaleManager.resources.getString(BORDER_BENEFICIARY_INFO)));
 		
 		dossierLabel.setText(LocaleManager.resources.getString(AttributeManager.FORM_DOSSIER));
@@ -165,32 +176,35 @@ public class BeneficiaryUpdateFormStatic extends FormPanel implements ActionList
 		lastNameLabel.setText(LocaleManager.resources.getString(AttributeManager.FORM_LAST_NAME));
 		dobLabel.setText(LocaleManager.resources.getString(AttributeManager.FORM_DOB));
 		beneficiaryLabel.setText(LocaleManager.resources.getString(AttributeManager.FORM_BENEFICIARY_CATEGORY));
-		radioInfantMal.setText(LocaleManager.resources.getString(AttributeManager.LONG_INFANT_MAL));
-		radioInfantPrev.setText(LocaleManager.resources.getString(AttributeManager.LONG_INFANT_PREVENTION));
-		radioMotherExp.setText(LocaleManager.resources.getString(AttributeManager.LONG_MOTHER_EXPECTING));
-		radioMotherNurs.setText(LocaleManager.resources.getString(AttributeManager.LONG_MOTHER_NURSING));
-		monthsLabel.setText(LocaleManager.resources.getString(AttributeManager.FORM_MONTHS));
+//		radioInfantMal.setText(LocaleManager.resources.getString(AttributeManager.LONG_INFANT_MAL));
+//		radioInfantPrev.setText(LocaleManager.resources.getString(AttributeManager.LONG_INFANT_PREVENTION));
+//		radioMotherExp.setText(LocaleManager.resources.getString(AttributeManager.LONG_MOTHER_EXPECTING));
+//		radioMotherNurs.setText(LocaleManager.resources.getString(AttributeManager.LONG_MOTHER_NURSING));
+//		monthsLabel.setText(LocaleManager.resources.getString(AttributeManager.FORM_MONTHS));
 	
 		updatePanel.setBorder(BorderFactory.createTitledBorder(LocaleManager.resources.getString(BORDER_UPDATE_INFO)));
 		presentLabel.setText(LocaleManager.resources.getString(AttributeManager.FORM_PRESENT));
-		radioPresentYes.setText(LocaleManager.resources.getString(AttributeManager.FORM_YES));
-		radioPresentNo.setText(LocaleManager.resources.getString(AttributeManager.FORM_NO));
+//		radioPresentYes.setText(LocaleManager.resources.getString(AttributeManager.FORM_YES));
+//		radioPresentNo.setText(LocaleManager.resources.getString(AttributeManager.FORM_NO));
 		
-		transferredLabel.setText(LocaleManager.resources.getString(AttributeManager.FORM_TRANSFERRED));
-		radioTransferredYes.setText(LocaleManager.resources.getString(AttributeManager.FORM_YES));
-		radioTransferredNo.setText(LocaleManager.resources.getString(AttributeManager.FORM_NO));
-		transferredWhyLabel.setText(LocaleManager.resources.getString(AttributeManager.FORM_WHY));
+//		transferredLabel.setText(LocaleManager.resources.getString(AttributeManager.FORM_TRANSFERRED));
+//		radioTransferredYes.setText(LocaleManager.resources.getString(AttributeManager.FORM_YES));
+//		radioTransferredNo.setText(LocaleManager.resources.getString(AttributeManager.FORM_NO));
+//		transferredWhyLabel.setText(LocaleManager.resources.getString(AttributeManager.FORM_WHY));
 		
-		modificationsLabel.setText(LocaleManager.resources.getString(AttributeManager.FORM_MODIFICATIONS));
-		radioModificationsYes.setText(LocaleManager.resources.getString(AttributeManager.FORM_YES));
-		radioModificationsNo.setText(LocaleManager.resources.getString(AttributeManager.FORM_NO));
-		modificationsWhyLabel.setText(LocaleManager.resources.getString(AttributeManager.FORM_WHY));
+//		modificationsLabel.setText(LocaleManager.resources.getString(AttributeManager.FORM_MODIFICATIONS));
+//		radioModificationsYes.setText(LocaleManager.resources.getString(AttributeManager.FORM_YES));
+//		radioModificationsNo.setText(LocaleManager.resources.getString(AttributeManager.FORM_NO));
+//		modificationsWhyLabel.setText(LocaleManager.resources.getString(AttributeManager.FORM_WHY));
 		
-		suspendLabel.setText(LocaleManager.resources.getString(AttributeManager.FORM_SUSPEND));
-		radioSuspendYes.setText(LocaleManager.resources.getString(AttributeManager.FORM_YES));
-		radioSuspendNo.setText(LocaleManager.resources.getString(AttributeManager.FORM_NO));
-		suspendWhyLabel.setText(LocaleManager.resources.getString(AttributeManager.FORM_WHY));
+//		suspendLabel.setText(LocaleManager.resources.getString(AttributeManager.FORM_SUSPEND));
+//		radioSuspendYes.setText(LocaleManager.resources.getString(AttributeManager.FORM_YES));
+//		radioSuspendNo.setText(LocaleManager.resources.getString(AttributeManager.FORM_NO));
+//		suspendWhyLabel.setText(LocaleManager.resources.getString(AttributeManager.FORM_WHY));
 
+		changeLabel.setText(LocaleManager.resources.getString(AttributeManager.FORM_CHANGE));
+		changeTypeLabel.setText(LocaleManager.resources.getString(AttributeManager.FORM_CHANGE_TYPE));
+		
 	}
 	
 	/**
@@ -201,198 +215,211 @@ public class BeneficiaryUpdateFormStatic extends FormPanel implements ActionList
 		//Form panel
 		//formPanel = new JPanel();
 		this.setBorder(BorderFactory.createTitledBorder(LocaleManager.resources.getString(BORDER_BENEFICIARY_UPDATE)));
-		this.setLayout(new BorderLayout());
+		this.setLayout(new GridLayout(0,1));
 		this.setBackground(Color.WHITE); 
 		
 		//Beneficiary Information Panel
 		benifPanel = new JPanel();
 		benifPanel.setBorder(BorderFactory.createTitledBorder(LocaleManager.resources.getString(BORDER_BENEFICIARY_INFO)));
-		benifPanel.setLayout(new GridBagLayout());
+		benifPanel.setLayout(new GridLayout(0,4));
 		benifPanel.setBackground(Color.WHITE); 
-		GridBagConstraints c = new GridBagConstraints();
-		dossierJText = new JTextField();
-		dossierJText.setColumns(15);
+//		GridBagConstraints c = new GridBagConstraints();
+		dossier = new JLabel();
 		firstName = new JLabel();
-	//	firstName.setColumns(15);
+//		firstName.setColumns(15);
 		lastName = new JLabel();
-	//	lastName.setColumns(15);
+//		lastName.setColumns(15);
 		dob = new JLabel();
-	//	dobJText.setColumns(15);
-		months = new JLabel();
-	//	months.setColumns(15);
-		c.gridy=0;
-		c.gridx=0;
-		c.insets=new Insets(10,5,4,2);
-		c.anchor = GridBagConstraints.NORTHEAST;
+//		dobJText.setColumns(15);
+//		months = new JLabel();
+//		months.setColumns(15);
+//		c.gridy=0;
+//		c.gridx=0;
+//		c.insets=new Insets(10,5,4,2);
+//		c.anchor = GridBagConstraints.NORTHEAST;
 		
 		dossierLabel = new JLabel(LocaleManager.resources.getString(AttributeManager.FORM_DOSSIER));
-		benifPanel.add(dossierLabel,c);
-		c.gridy=0;
-		c.gridx=1;
-		benifPanel.add(dossierJText,c);
+		benifPanel.add(dossierLabel);
+//		c.gridy=0;
+//		c.gridx=1;
+		benifPanel.add(dossier);
 		
 		firstNameLabel = new JLabel(LocaleManager.resources.getString(AttributeManager.FORM_FIRST_NAME));
-		c.gridy=1;
-		c.gridx=0;
-		benifPanel.add(firstNameLabel,c);
-		c.gridy=1;
-		c.gridx=1;
-		benifPanel.add(firstName,c);
-		c.gridy=1;
-		c.gridx=2;
+//		c.gridy=1;
+//		c.gridx=0;
+		benifPanel.add(firstNameLabel);
+//		c.gridy=1;
+//		c.gridx=1;
+		benifPanel.add(firstName);
+//		c.gridy=1;
+//		c.gridx=2;
 		lastNameLabel = new JLabel(LocaleManager.resources.getString(AttributeManager.FORM_LAST_NAME));
-		benifPanel.add(lastNameLabel,c);
-		c.gridy=1;
-		c.gridx=3;
-		benifPanel.add(lastName,c);
+		benifPanel.add(lastNameLabel);
+//		c.gridy=1;
+//		c.gridx=3;
+		benifPanel.add(lastName);
 
 		dobLabel = new JLabel(LocaleManager.resources.getString(AttributeManager.FORM_DOB));
-		c.gridy = 2;
-		c.gridx=0;
-		benifPanel.add(dobLabel,c);
-		c.gridy = 2;
-		c.gridx=1;
-		benifPanel.add(dob,c);
+//		c.gridy = 2;
+//		c.gridx=0;
+		benifPanel.add(dobLabel);
+//		c.gridy = 2;
+//		c.gridx=1;
+		benifPanel.add(dob);
 		
 		//Beneficiary radio buttons
-		c.gridy = 3;
-		c.gridx=0;
+//		c.gridy = 3;
+//		c.gridx=0;
 		beneficiaryLabel = new JLabel(LocaleManager.resources.getString(AttributeManager.FORM_BENEFICIARY_CATEGORY));
-		benifPanel.add(beneficiaryLabel,c);
-		infantGroup = new ButtonGroup();
-		radioInfantMal = new JRadioButton(LocaleManager.resources.getString(AttributeManager.LONG_INFANT_MAL),false);
-		radioInfantPrev = new JRadioButton(LocaleManager.resources.getString(AttributeManager.LONG_INFANT_PREVENTION),false);
-		radioMotherExp = new JRadioButton(LocaleManager.resources.getString(AttributeManager.LONG_MOTHER_EXPECTING),false);
-		radioMotherNurs = new JRadioButton(LocaleManager.resources.getString(AttributeManager.LONG_MOTHER_NURSING),false);
-		infantGroup.add(radioInfantMal);
-		infantGroup.add(radioInfantPrev);
-		infantGroup.add(radioMotherExp);
-		infantGroup.add(radioMotherNurs);
-		c.gridy=3;
-		c.gridx=1;
-		benifPanel.add(radioInfantMal,c);
-		c.gridy=3;
-		c.gridx=2;
-		benifPanel.add(radioInfantPrev,c);
-		c.gridy=3;
-		c.gridx=3;
-		benifPanel.add(radioMotherExp,c);
-		c.gridy=3;
-		c.gridx=4;
-		benifPanel.add(radioMotherNurs,c);
+		benifPanel.add(beneficiaryLabel);
+		beneficiaryCategory = new JLabel();
+		benifPanel.add(beneficiaryCategory);
+//		infantGroup = new ButtonGroup();
+//		radioInfantMal = new JRadioButton(LocaleManager.resources.getString(AttributeManager.LONG_INFANT_MAL),false);
+//		radioInfantPrev = new JRadioButton(LocaleManager.resources.getString(AttributeManager.LONG_INFANT_PREVENTION),false);
+//		radioMotherExp = new JRadioButton(LocaleManager.resources.getString(AttributeManager.LONG_MOTHER_EXPECTING),false);
+//		radioMotherNurs = new JRadioButton(LocaleManager.resources.getString(AttributeManager.LONG_MOTHER_NURSING),false);
+//		infantGroup.add(radioInfantMal);
+//		infantGroup.add(radioInfantPrev);
+//		infantGroup.add(radioMotherExp);
+//		infantGroup.add(radioMotherNurs);
+//		c.gridy=3;
+//		c.gridx=1;
+//		benifPanel.add(radioInfantMal);
+//		c.gridy=3;
+//		c.gridx=2;
+//		benifPanel.add(radioInfantPrev);
+//		c.gridy=3;
+//		c.gridx=3;
+//		benifPanel.add(radioMotherExp);
+//		c.gridy=3;
+//		c.gridx=4;
+//		benifPanel.add(radioMotherNurs);
 	
-		monthsLabel = new JLabel(LocaleManager.resources.getString(AttributeManager.FORM_MONTHS));
-		c.gridy=4;
-		c.gridx=0;
-		benifPanel.add(monthsLabel,c);
-		c.gridy=4;
-		c.gridx=1;
-		benifPanel.add(months,c);
+//		monthsLabel = new JLabel(LocaleManager.resources.getString(AttributeManager.FORM_MONTHS));
+//		c.gridy=4;
+//		c.gridx=0;
+//		benifPanel.add(monthsLabel);
+//		c.gridy=4;
+//		c.gridx=1;
+//		benifPanel.add(months);
 		
 		
 		//Update panel
 		updatePanel = new JPanel();
 		updatePanel.setBorder(BorderFactory.createTitledBorder(LocaleManager.resources.getString(BORDER_UPDATE_INFO)));
-		updatePanel.setLayout(new GridBagLayout());
+		updatePanel.setLayout(new GridLayout(0,4));
 		updatePanel.setBackground(Color.WHITE); 
 
-		c.gridy=0;
-		c.gridx=0;
+//		c.gridy=0;
+//		c.gridx=0;
 		presentLabel = new JLabel(LocaleManager.resources.getString(AttributeManager.FORM_PRESENT));
-		updatePanel.add(presentLabel,c);
+		updatePanel.add(presentLabel);
+		present = new JLabel();
+		updatePanel.add(present);
 		
-		presentGroup = new ButtonGroup();
-		radioPresentYes = new JRadioButton(LocaleManager.resources.getString(AttributeManager.FORM_YES),false);
-		radioPresentNo = new JRadioButton(LocaleManager.resources.getString(AttributeManager.FORM_NO),false);
-		presentGroup.add(radioPresentYes);
-		presentGroup.add(radioPresentNo);	
-		c.gridy=0;
-		c.gridx=1;
-		updatePanel.add(radioPresentYes,c);
-		c.gridy=0;
-		c.gridx=2;
-		updatePanel.add(radioPresentNo,c);
+		changeLabel = new JLabel(LocaleManager.resources.getString(AttributeManager.FORM_CHANGE));
+		changeTypeLabel = new JLabel(LocaleManager.resources.getString(AttributeManager.FORM_CHANGE_TYPE));
+		change = new JLabel();
+		changeType = new JLabel();
 		
-		c.gridy=1;
-		c.gridx=0;
-		transferredLabel = new JLabel(LocaleManager.resources.getString(AttributeManager.FORM_TRANSFERRED));
-		updatePanel.add(transferredLabel,c);
-		transferredGroup = new ButtonGroup();
-		radioTransferredYes = new JRadioButton(LocaleManager.resources.getString(AttributeManager.FORM_YES),false);
-		radioTransferredNo = new JRadioButton(LocaleManager.resources.getString(AttributeManager.FORM_NO),false);
-		transferredGroup.add(radioTransferredYes);
-		transferredGroup.add(radioTransferredNo);	
-		c.gridy=1;
-		c.gridx=1;
-		updatePanel.add(radioTransferredYes,c);
-		c.gridy=1;
-		c.gridx=2;
-		updatePanel.add(radioTransferredNo,c);
-		c.gridy=1;
-		c.gridx=3;
-		c.insets=new Insets(10,25,4,2);
-		transferredWhyLabel = new JLabel(LocaleManager.resources.getString(AttributeManager.FORM_WHY));
-		updatePanel.add(transferredWhyLabel,c);
-		c.gridy=1;
-		c.gridx=4;
-		c.insets=new Insets(10,5,4,2);
-		transferredWhy = new JLabel();
-	//	transferredWhy.setColumns(15);
-		updatePanel.add(transferredWhy,c);
+		updatePanel.add(changeLabel);
+		updatePanel.add(change);
+		updatePanel.add(changeTypeLabel);
+		updatePanel.add(changeType);
+		
+//		presentGroup = new ButtonGroup();
+//		radioPresentYes = new JRadioButton(LocaleManager.resources.getString(AttributeManager.FORM_YES),false);
+//		radioPresentNo = new JRadioButton(LocaleManager.resources.getString(AttributeManager.FORM_NO),false);
+//		presentGroup.add(radioPresentYes);
+//		presentGroup.add(radioPresentNo);	
+//		c.gridy=0;
+//		c.gridx=1;
+//		updatePanel.add(radioPresentYes);
+//		c.gridy=0;
+//		c.gridx=2;
+//		updatePanel.add(radioPresentNo);
+		
+//		c.gridy=1;
+//		c.gridx=0;
+//		transferredLabel = new JLabel(LocaleManager.resources.getString(AttributeManager.FORM_TRANSFERRED));
+//		updatePanel.add(transferredLabel);
+//		transferredGroup = new ButtonGroup();
+//		radioTransferredYes = new JRadioButton(LocaleManager.resources.getString(AttributeManager.FORM_YES),false);
+//		radioTransferredNo = new JRadioButton(LocaleManager.resources.getString(AttributeManager.FORM_NO),false);
+//		transferredGroup.add(radioTransferredYes);
+//		transferredGroup.add(radioTransferredNo);	
+//		c.gridy=1;
+//		c.gridx=1;
+//		updatePanel.add(radioTransferredYes);
+//		c.gridy=1;
+//		c.gridx=2;
+//		updatePanel.add(radioTransferredNo);
+//		c.gridy=1;
+//		c.gridx=3;
+//		c.insets=new Insets(10,25,4,2);
+//		transferredWhyLabel = new JLabel(LocaleManager.resources.getString(AttributeManager.FORM_WHY));
+//		updatePanel.add(transferredWhyLabel);
+//		c.gridy=1;
+//		c.gridx=4;
+//		c.insets=new Insets(10,5,4,2);
+//		transferredWhy = new JLabel();
+//		transferredWhy.setColumns(15);
+//		updatePanel.add(transferredWhy);
 
-		c.gridy=2;
-		c.gridx=0;
-		modificationsLabel = new JLabel(LocaleManager.resources.getString(AttributeManager.FORM_MODIFICATIONS));
-		updatePanel.add(modificationsLabel,c);
-		modificationsGroup = new ButtonGroup();
-		radioModificationsYes = new JRadioButton(LocaleManager.resources.getString(AttributeManager.FORM_YES),false);
-		radioModificationsNo = new JRadioButton(LocaleManager.resources.getString(AttributeManager.FORM_NO),false);
-		modificationsGroup.add(radioModificationsYes);
-		modificationsGroup.add(radioModificationsNo);	
-		c.gridy=2;
-		c.gridx=1;
-		updatePanel.add(radioModificationsYes,c);
-		c.gridy=2;
-		c.gridx=2;
-		updatePanel.add(radioModificationsNo,c);
-		c.gridy=2;
-		c.gridx=3;
-		c.insets=new Insets(10,25,4,2);
-		modificationsWhyLabel = new JLabel(LocaleManager.resources.getString(AttributeManager.FORM_WHY));
-		updatePanel.add(modificationsWhyLabel,c);
-		c.gridy=2;
-		c.gridx=4;
-		c.insets=new Insets(10,5,4,2);
-		modificationsWhy = new JLabel();
-	//	modificationsWhy.setColumns(15);
-		updatePanel.add(modificationsWhy,c);
+//		c.gridy=2;
+//		c.gridx=0;
+//		modificationsLabel = new JLabel(LocaleManager.resources.getString(AttributeManager.FORM_MODIFICATIONS));
+//		updatePanel.add(modificationsLabel);
+//		modificationsGroup = new ButtonGroup();
+//		radioModificationsYes = new JRadioButton(LocaleManager.resources.getString(AttributeManager.FORM_YES),false);
+//		radioModificationsNo = new JRadioButton(LocaleManager.resources.getString(AttributeManager.FORM_NO),false);
+//		modificationsGroup.add(radioModificationsYes);
+//		modificationsGroup.add(radioModificationsNo);	
+//		c.gridy=2;
+//		c.gridx=1;
+//		updatePanel.add(radioModificationsYes);
+//		c.gridy=2;
+//		c.gridx=2;
+//		updatePanel.add(radioModificationsNo);
+//		c.gridy=2;
+//		c.gridx=3;
+//		c.insets=new Insets(10,25,4,2);
+//		modificationsWhyLabel = new JLabel(LocaleManager.resources.getString(AttributeManager.FORM_WHY));
+//		updatePanel.add(modificationsWhyLabel);
+//		c.gridy=2;
+//		c.gridx=4;
+//		c.insets=new Insets(10,5,4,2);
+//		modificationsWhy = new JLabel();
+//		modificationsWhy.setColumns(15);
+//		updatePanel.add(modificationsWhy);
 		
-		c.gridy=3;
-		c.gridx=0;
-		suspendLabel = new JLabel(LocaleManager.resources.getString(AttributeManager.FORM_SUSPEND));
-		updatePanel.add(suspendLabel,c);
-		suspendGroup = new ButtonGroup();
-		radioSuspendYes = new JRadioButton(LocaleManager.resources.getString(AttributeManager.FORM_YES),false);
-		radioSuspendNo = new JRadioButton(LocaleManager.resources.getString(AttributeManager.FORM_NO),false);
-		suspendGroup.add(radioSuspendYes);
-		suspendGroup.add(radioSuspendNo);	
-		c.gridy=3;
-		c.gridx=1;
-		updatePanel.add(radioSuspendYes,c);
-		c.gridy=3;
-		c.gridx=2;
-		updatePanel.add(radioSuspendNo,c);
-		c.gridy=3;
-		c.gridx=3;
-		c.insets=new Insets(10,25,4,2);
-		suspendWhyLabel = new JLabel(LocaleManager.resources.getString(AttributeManager.FORM_WHY));
-		updatePanel.add(suspendWhyLabel,c);
-		c.gridy=3;
-		c.gridx=4;
-		c.insets=new Insets(10,5,4,2);
-		suspendWhy = new JLabel();
-	//	suspendWhy.setColumns(15);
-		updatePanel.add(suspendWhy,c);
+//		c.gridy=3;
+//		c.gridx=0;
+//		suspendLabel = new JLabel(LocaleManager.resources.getString(AttributeManager.FORM_SUSPEND));
+//		updatePanel.add(suspendLabel);
+//		suspendGroup = new ButtonGroup();
+//		radioSuspendYes = new JRadioButton(LocaleManager.resources.getString(AttributeManager.FORM_YES),false);
+//		radioSuspendNo = new JRadioButton(LocaleManager.resources.getString(AttributeManager.FORM_NO),false);
+//		suspendGroup.add(radioSuspendYes);
+//		suspendGroup.add(radioSuspendNo);	
+//		c.gridy=3;
+//		c.gridx=1;
+//		updatePanel.add(radioSuspendYes);
+//		c.gridy=3;
+//		c.gridx=2;
+//		updatePanel.add(radioSuspendNo);
+//		c.gridy=3;
+//		c.gridx=3;
+//		c.insets=new Insets(10,25,4,2);
+//		suspendWhyLabel = new JLabel(LocaleManager.resources.getString(AttributeManager.FORM_WHY));
+//		updatePanel.add(suspendWhyLabel);
+//		c.gridy=3;
+//		c.gridx=4;
+//		c.insets=new Insets(10,5,4,2);
+//		suspendWhy = new JLabel();
+//		suspendWhy.setColumns(15);
+//		updatePanel.add(suspendWhy);
 			
 		
 		//Control panel
@@ -417,7 +444,7 @@ public class BeneficiaryUpdateFormStatic extends FormPanel implements ActionList
 		if (e.getSource() instanceof JButton){
 		    JButton button = (JButton)e.getSource();
 		    if (button.equals(toDbButton)) {
-		    	mGui.postMessageToTBS(dossierJText.getText());
+		    	mGui.postMessageToTBS(dossier.getText());
 //				mBeneficiary.setStatus(DB_STATUS_PROCESSED); // sets the status of the current Beneficiary item to processed
 //		    	mReader.updateMessage(mBeneficiary);
 		    }

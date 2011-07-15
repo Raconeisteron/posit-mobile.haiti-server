@@ -234,4 +234,17 @@ public class TbsManager {
 		// +" "+"')";
 	}
 
+	public static String convertProfessionAttributes(Beneficiary beneficiary) {
+//		String decodedAttributes = AttributeManager.decodeBinaryFieldsInt(codedInt, attributes);
+//		System.out.println(decodedAttributes);
+		if (beneficiary.getIsArtisan()==AttributeManager.YnQuestion.Y)
+			professions += "Artisan " + 
+		String professions = beneficiary.getIsArtisan()
+		return "";
+		
+	}
+	public static void main(String args[]){
+		System.out.println(convertAttributesToEldivertsFormatLol(8, AttributeManager.isAFields));
+		
+	}
 }

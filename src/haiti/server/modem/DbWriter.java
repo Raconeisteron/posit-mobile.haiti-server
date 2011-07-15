@@ -499,9 +499,6 @@ public class DbWriter {
 	 *            [1] is the sender
 	 */
 	public static void main(String args[]) {
-		// SmsMessage sms=new
-		// SmsMessage("AV=4,mn=1:10,i=fafa,ms=0,t=0","%2B14406662498");
-		// System.out.println(dw.shouldPhoneSendAck(sms));
 
 		if (args[0] != null && args[1] != null) {
 			log("Received message in main(), raw message: " + args[0]
@@ -516,25 +513,17 @@ public class DbWriter {
 				log(e.getMessage());
 			}
 
-			// sender = sender.replace("+", "");
 			// If its a bulk message, parse it and create individual messages
 			// out of it
 			String id = SmsMessageManager.getMessageCategory(message);
 			if (Integer.parseInt(id) < 0) {
 				SmsMessage bulkSms = new SmsMessage(message, sender);
-				// SmsMessage bulkSms = new
-				// SmsMessage(AttributeManager.ABBREV_AV
-				// + "=" + id + "," + AttributeManager.ABBREV_MESSAGE_TYPE
-				// + "=" + SmsReader.MessageType.ABSENTEE.getCode() +
-				// AttributeManager.ABBREV_MESSAGE_NUMBER +
-				// sender);
 				if (dw.insertMessage(bulkSms)) {
 					if (dw.queueAck(bulkSms)) {
 						List<SmsMessage> messages = SmsMessageManager
 								.convertBulkAbsenteeMessage(message, sender);
 						for (SmsMessage sms : messages) {
 							dw.insertMessage(sms);
-							// dw.markAsAbsent(sms.getAVnum(), sms.getSender());
 						}
 					} else
 						log("Unable to queue acknowledgment for bulk SMS: "
