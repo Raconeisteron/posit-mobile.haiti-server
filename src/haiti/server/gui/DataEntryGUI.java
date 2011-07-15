@@ -23,6 +23,8 @@ package haiti.server.gui;
 import haiti.server.datamodel.AttributeManager;
 import haiti.server.datamodel.AttributeManager.BeneficiaryCategory;
 import haiti.server.datamodel.Beneficiary;
+import haiti.server.datamodel.Bulk;
+import haiti.server.datamodel.Update;
 import haiti.server.datamodel.AttributeManager.Abbreviated;
 import haiti.server.datamodel.LocaleManager;
 import haiti.server.datamodel.AttributeManager.MessageStatus;
@@ -70,9 +72,11 @@ public class DataEntryGUI extends JFrame implements WindowListener, ListSelectio
     
     private String mMessagesFileOrDbName;
     private Beneficiary mBeneficiary;
+    private Update mUpdate;
+    private Bulk mBulk;
     
     private FormPanel mFormPanel; 
-    private BeneficiaryUpdateForm mUpdatePanel;
+    private JPanel mBulkPanel;
     
 	//public TextArea display;// = new TextArea();
 	
@@ -278,9 +282,9 @@ public class DataEntryGUI extends JFrame implements WindowListener, ListSelectio
 				mMessagesArray[0] = "{Empty}";
 			}
 			else {
-				mBeneficiary = new Beneficiary(mMessagesArray[0]);
+				mUpdate = new Update(mMessagesArray[0]);
 //				mBeneficiary = new Beneficiary(mMessagesArray[0], Abbreviated.TRUE);
-				mFormPanel.fillInForm(mBeneficiary,mReader);
+				mFormPanel.fillInForm(mUpdate,mReader);
 				
 //				mUpdatePanel = new BeneficiaryUpdateForm(this);
 //				mBeneficiary = new Beneficiary(mMessagesArray[0], Abbreviated.TRUE);
@@ -304,22 +308,28 @@ public class DataEntryGUI extends JFrame implements WindowListener, ListSelectio
 				out.newLine();
 				out.write("-------" + new Date() + "-------");
 				out.newLine();
+				mBulkPanel = new JPanel();
+				mBulkPanel.setLayout(new GridLayout(0,1));
+				mBulkPanel.add(new JLabel("Dossier Numbers of Absentees:"));
 				for (int i = 0; i < mMessagesArray.length; i ++) {
-					mBeneficiary = new Beneficiary(mMessagesArray[i]);
-					out.write("Dossier: " + mBeneficiary.getDossier());
-					out.newLine();
-					mBeneficiary.setStatus(AttributeManager.MessageStatus.PROCESSED);
-					mReader.updateMessage(mBeneficiary, this.mMessagesFileOrDbName);
+					mBulk = new Bulk(mMessagesArray[i]);
+					mBulkPanel.add(new JLabel(mBulk.getAvNum()));
+//					out.write("Dossier: " + mBulk.getDossier());
+//					out.newLine();
+					mBulk.setStatus(AttributeManager.MessageStatus.PROCESSED);
+					mReader.updateBulk(mBulk, this.mMessagesFileOrDbName);
 				}
 				out.close();
+				
 			}catch (Exception e){//Catch exception if any
 				System.err.println("Error: " + e.getMessage());
 			}
 			this.getContentPane().removeAll(); //WIN!!!!! Yours Truly, Alex and Danny
+			this.getContentPane().add(setUpSplitPane(mMessagesArray, mBulkPanel));
 			this.pack();
 			DataEntryGUI.centerWindow(this);
 			this.repaint();
-			this.setSize(500, 300);
+			this.setSize(1000, 650);
 		}
 	}
 //        this.mSplitPane.setSize(700,300);
@@ -396,7 +406,7 @@ public class DataEntryGUI extends JFrame implements WindowListener, ListSelectio
 		if (result.equals(TbsManager.RESULT_OK)) {
 			mBeneficiary.setDossier(dossier);
 			mBeneficiary.setStatus(AttributeManager.MessageStatus.PROCESSED); // sets the status of the current Beneficiary item to processed
-			mReader.updateMessage(mBeneficiary, this.mMessagesFileOrDbName);
+			mReader.updateBeneficiary(mBeneficiary, this.mMessagesFileOrDbName);
 			int index = this.mMessageList.getSelectedIndex();
 			String msg = mReader.getMessageById(mBeneficiary.getId(), this.mMessagesFileOrDbName);
 //			System.out.println(msg);
@@ -426,7 +436,7 @@ public class DataEntryGUI extends JFrame implements WindowListener, ListSelectio
 		// TODO Auto-generated method stub
 		System.out.println(mBeneficiary.toString());
 		mBeneficiary.setStatus(AttributeManager.MessageStatus.PENDING); // sets the status of the current Beneficiary item to processed
-		mReader.updateMessage(mBeneficiary, this.mMessagesFileOrDbName);
+		mReader.updateBeneficiary(mBeneficiary, this.mMessagesFileOrDbName);
 		int index = this.mMessageList.getSelectedIndex();
 		String msg = mReader.getMessageById(mBeneficiary.getId(), this.mMessagesFileOrDbName);
 		System.out.println(msg);

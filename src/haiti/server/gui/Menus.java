@@ -76,6 +76,7 @@ public class Menus implements ActionListener {
 	public static final String MENU_ARCHIVE_DB = "ArchiveDb";
 	public static final String MENU_OUTPUT_ARCHIVE = "OutputArchive";
 	public static final String MENU_MOBILE_DB = "MobileDb";
+	public static final String MENU_ATTENDANCE = "AbsentReport";
 
 	
 	public static Locale[] supportedLocales = {Locale.FRENCH, Locale.ENGLISH};	
@@ -94,6 +95,7 @@ public class Menus implements ActionListener {
 		Menu openDbMenu = new Menu(LocaleManager.resources.getString(MENU_FILTER));
 		addMenuItem(fileMenu, LocaleManager.resources.getString(MENU_OPEN_FILE), KeyEvent.VK_N, false);
 		fileMenu.add(openDbMenu);
+		addMenuItem(fileMenu, LocaleManager.resources.getString(MENU_ATTENDANCE), 0, false);
 		addMenuItem(fileMenu, LocaleManager.resources.getString(MENU_QUIT), KeyEvent.VK_Q, false);
 
 		Menu localeMenu = new Menu(LocaleManager.resources.getString(MENU_LOCALE));
@@ -187,6 +189,9 @@ public class Menus implements ActionListener {
 			else if (selectedMenuItemText.equals(LocaleManager.resources.getString(MENU_OPEN_FILE)))  {
 				gui.readMessagesIntoGUI(DbSource.FILE);
 			} 
+			else if (selectedMenuItemText.equals(LocaleManager.resources.getString(MENU_ATTENDANCE))) {
+				gui.readMessagesIntoGUI(DbSource.DATA_BASE, AttributeManager.MessageStatus.NEW, AttributeManager.MessageType.ATTENDANCE);
+			}
 			else if (selectedMenuItemText.equals(LocaleManager.resources.getString(MENU_BENEFICIARY_FILTER_NEW))) {
 				gui.readMessagesIntoGUI(DbSource.DATA_BASE, AttributeManager.MessageStatus.NEW, AttributeManager.MessageType.REGISTRATION);
 				createMenuBar();
