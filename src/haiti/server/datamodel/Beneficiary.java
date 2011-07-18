@@ -117,11 +117,11 @@ public class Beneficiary {
 	private YnQuestion isFarmer = YnQuestion.U;
 	private YnQuestion isMuso = YnQuestion.U;
 	private YnQuestion isRancher = YnQuestion.U;
-	private YnQuestion isMerchant = YnQuestion.U;
 	private YnQuestion isFisherman = YnQuestion.U;
 	private YnQuestion isOther = YnQuestion.U;
 	private YnQuestion isArtisan = YnQuestion.U;
-	
+	private YnQuestion isStoreOwner = YnQuestion.U;
+
 	private YnQuestion isFAO = YnQuestion.U;
 	private YnQuestion isSAVE = YnQuestion.U;
 	private YnQuestion isCROSE = YnQuestion.U;
@@ -136,7 +136,9 @@ public class Beneficiary {
 	private YnQuestion getsCereal = YnQuestion. U;
 	private YnQuestion getsTubers = YnQuestion.U;
 	private YnQuestion getsTrees = YnQuestion.U;
-	
+	private YnQuestion getsGrafting = YnQuestion.U;
+	private YnQuestion getsCoffee = YnQuestion.U;
+
 	private YnQuestion getsHoe = YnQuestion.U;
 	private YnQuestion getsPickaxe = YnQuestion.U;
 	private YnQuestion getsWheelbarrow = YnQuestion.U;  // Brouette
@@ -328,7 +330,7 @@ public class Beneficiary {
 					if (attr.equalsIgnoreCase(AttributeManager.isAFields[3]))
 						isRancher = YnQuestion.Y;
 					if (attr.equalsIgnoreCase(AttributeManager.isAFields[4]))
-						isMerchant = YnQuestion.Y;
+						isStoreOwner = YnQuestion.Y;
 					if (attr.equalsIgnoreCase(AttributeManager.isAFields[5]))
 						isOther = YnQuestion.Y;
 					if (attr.equalsIgnoreCase(AttributeManager.isAFields[6]))
@@ -377,6 +379,10 @@ public class Beneficiary {
 						getsPelle = YnQuestion.Y;
 					if (attr.equalsIgnoreCase(AttributeManager.hasAFields[10]))
 						getsBarreAMines = YnQuestion.Y;
+					if (attr.equalsIgnoreCase(AttributeManager.hasAFields[11]))
+						getsCoffee= YnQuestion.Y;
+					if (attr.equalsIgnoreCase(AttributeManager.hasAFields[12]))
+						getsGrafting = YnQuestion.Y;
 				}
 			} catch (NumberFormatException e) {
 				System.out.println("Number format exception");
@@ -673,16 +679,6 @@ public class Beneficiary {
 	}
 
 
-	public YnQuestion getIsMerchant() {
-		return isMerchant;
-	}
-
-
-	public void setIsMerchant(YnQuestion isMerchant) {
-		this.isMerchant = isMerchant;
-	}
-
-
 	public YnQuestion getIsFisherman() {
 		return isFisherman;
 	}
@@ -712,6 +708,14 @@ public class Beneficiary {
 		this.isArtisan = isArtisan;
 	}
 
+	public YnQuestion getIsStoreOwner() {
+		return isStoreOwner;
+	}
+
+
+	public void setIsStoreOwner(YnQuestion isStoreOwner) {
+		this.isStoreOwner = isStoreOwner;
+	}
 
 	public YnQuestion getIsFAO() {
 		return isFAO;
@@ -852,7 +856,25 @@ public class Beneficiary {
 		this.getsTrees = getsTrees;
 	}
 
+	public YnQuestion getGetsGrafting() {
+		return getsGrafting;
+	}
 
+
+	public void setGetsGrafting(YnQuestion getsGrafting) {
+		this.getsGrafting = getsGrafting;
+	}
+
+	
+	public YnQuestion getGetsCoffee() {
+		return getsCoffee;
+	}
+
+
+	public void setGetsCoffee(YnQuestion getsCoffee) {
+		this.getsCoffee = getsCoffee;
+	}
+	
 	public YnQuestion getGetsHoe() {
 		return getsHoe;
 	}
@@ -947,7 +969,7 @@ public class Beneficiary {
 				+ visitMotherLeader + ", isParticipatingAgri="
 				+ isAgri + ", amountOfLand=" + amountOfLand
 				+ ", isFarmer=" + isFarmer + ", isMuso=" + isMuso
-				+ ", isRancher=" + isRancher + ", isMerchant=" + isMerchant
+				+ ", isRancher=" + isRancher + ", isStoreOwner=" + isStoreOwner
 				+ ", isFisherman=" + isFisherman + ", isOther=" + isOther
 				+ ", getsVeggies=" + getsVeggies + ", getsCereal=" + getsCereal
 				+ ", getsTubers=" + getsTubers + ", getsTrees=" + getsTrees

@@ -379,6 +379,8 @@ public class AttributeManager {
 	public static final String FORM_CEREAL = "Cereal";
 	public static final String FORM_TUBERS = "Tubers";
 	public static final String FORM_TREE = "Tree";
+	public static final String FORM_GRAFTING = "Grafting";
+	public static final String FORM_COFFEE = "Coffee";
 	public static final String FORM_LIVRE = "Livre";
 	public static final String FORM_MARMITES = "Marmites";
 	public static final String FORM_POTE = "Pote";
@@ -688,6 +690,10 @@ public class AttributeManager {
 	public static final String ABBREV_D24 = "HETH-024";
 	public static final String ABBREV_D25 = "HETH026";
 	public static final String ABBREV_D26 = "HETH027";
+
+	public static final String ET_SEPARATOR = "et";
+
+
 	
 	
 	

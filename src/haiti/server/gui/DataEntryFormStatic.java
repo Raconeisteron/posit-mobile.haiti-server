@@ -128,6 +128,7 @@ public class DataEntryFormStatic extends FormPanel implements ActionListener, Ke
 		radioTubers,
 		radioTree,
 		radioGrafting,
+		radioCoffee,
 		
 		radioHoe,
 		radioPickaxe,
@@ -203,6 +204,7 @@ public class DataEntryFormStatic extends FormPanel implements ActionListener, Ke
 		radioCereal.setSelected(false);
 		radioTubers.setSelected(false);
 		radioTree.setSelected(false);
+		radioGrafting.setSelected(false);
 		radioHoe.setSelected(false);
 		radioPickaxe.setSelected(false);
 		radioWheelbarrow.setSelected(false);
@@ -259,7 +261,7 @@ public class DataEntryFormStatic extends FormPanel implements ActionListener, Ke
 			radioMuso.setSelected(true);
 		if (beneficiary.getIsRancher() == YnQuestion.Y)
 			radioCattleRancher.setSelected(true);
-		if (beneficiary.getIsMerchant() == YnQuestion.Y)
+		if (beneficiary.getIsStoreOwner() == YnQuestion.Y)
 			radioStoreOwner.setSelected(true);
 		if (beneficiary.getIsFisherman() == YnQuestion.Y)
 			radioFisherman.setSelected(true);
@@ -283,6 +285,10 @@ public class DataEntryFormStatic extends FormPanel implements ActionListener, Ke
 			radioTubers.setSelected(true);
 		if (beneficiary.getGetsTrees() == YnQuestion.Y)
 			radioTree.setSelected(true);
+		if (beneficiary.getGetsGrafting()==YnQuestion.Y)
+			radioGrafting.setSelected(true);
+		if (beneficiary.getGetsCoffee()==YnQuestion.Y)
+			radioCoffee.setSelected(true);
 		if (beneficiary.getGetsHoe() == YnQuestion.Y)
 			radioHoe.setSelected(true);
 		if (beneficiary.getGetsPickaxe() == YnQuestion.Y)
@@ -366,6 +372,8 @@ public class DataEntryFormStatic extends FormPanel implements ActionListener, Ke
 		radioCereal.setText(LocaleManager.resources.getString(AttributeManager.FORM_CEREAL));
 		radioTubers.setText(LocaleManager.resources.getString(AttributeManager.FORM_TUBERS));
 		radioTree.setText(LocaleManager.resources.getString(AttributeManager.FORM_TREE));
+		radioGrafting.setText(LocaleManager.resources.getString(AttributeManager.FORM_GRAFTING));
+		radioCoffee.setText(LocaleManager.resources.getString(AttributeManager.FORM_COFFEE));
 //		seedQuantityLabel.setText(LocaleManager.resources.getString(AttributeManager.FORM_SEED_QUANTITY));
 
 		toolsLabel.setText(LocaleManager.resources.getString(AttributeManager.FORM_TOOLS));
@@ -694,14 +702,20 @@ public class DataEntryFormStatic extends FormPanel implements ActionListener, Ke
 		radioCereal=new JRadioButton(LocaleManager.resources.getString(AttributeManager.FORM_CEREAL),false);
 		radioTubers=new JRadioButton(LocaleManager.resources.getString(AttributeManager.FORM_TUBERS),false);
 		radioTree=new JRadioButton(LocaleManager.resources.getString(AttributeManager.FORM_TREE),false);
+		radioGrafting=new JRadioButton(LocaleManager.resources.getString(AttributeManager.FORM_GRAFTING),false);
+		radioCoffee=new JRadioButton(LocaleManager.resources.getString(AttributeManager.FORM_COFFEE),false);
 		seedTypesPanel.add(radioVegetables);
 		seedTypesPanel.add(radioCereal);
 		seedTypesPanel.add(radioTubers);
 		seedTypesPanel.add(radioTree);
+		seedTypesPanel.add(radioGrafting);
+		seedTypesPanel.add(radioCoffee);
 		radioVegetables.setEnabled(false);
 		radioCereal.setEnabled(false);
 		radioTubers.setEnabled(false);
 		radioTree.setEnabled(false);
+		radioGrafting.setEnabled(false);
+		radioCoffee.setEnabled(false);
 		agriPanel.add(seedTypesPanel);
 		
 //		seedQuantityLabel=new JLabel();
