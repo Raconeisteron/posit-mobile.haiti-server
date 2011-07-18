@@ -1,6 +1,7 @@
 package haiti.server.gui;
 
 import haiti.server.datamodel.AttributeManager;
+import haiti.server.datamodel.LocaleManager;
 import haiti.server.datamodel.AttributeManager.BeneficiaryCategory;
 import haiti.server.datamodel.AttributeManager.BeneficiaryType;
 import haiti.server.datamodel.Beneficiary;
@@ -13,14 +14,14 @@ public class TbsManager {
 	public static final String TAG = "TbsManager";
 	public static final String RESULT_OK = "Ok";
 	private Connection conn;
-
+	private LocaleManager mLocaleManager;
 	// public TbsManager() {}
 
 	public TbsManager() {
 		try {
 			Class.forName("sun.jdbc.odbc.JdbcOdbcDriver");
-			conn = DriverManager.getConnection("jdbc:odbc:acdi_source", "sa1",
-					"tiovas");
+			conn = DriverManager.getConnection("jdbc:odbc:acdi_source", "elidvert",
+					"xyz%322");
 		} catch (ClassNotFoundException f) {
 			System.out.println("ClassNotFound Exception");
 			f.printStackTrace();
@@ -31,6 +32,7 @@ public class TbsManager {
 			System.out.println("Exception");
 			f.printStackTrace();
 		}
+		mLocaleManager = new LocaleManager();
 	}
 
 	/**
@@ -52,8 +54,8 @@ public class TbsManager {
 			//
 			Class.forName("sun.jdbc.odbc.JdbcOdbcDriver");
 			// etablir une connection
-			con = DriverManager.getConnection("jdbc:odbc:acdi_source", "sa",
-					"tiovas");
+			con = DriverManager.getConnection("jdbc:odbc:acdi_source", "elidvert",
+					"xyz%322");
 
 			// Creation d'une instruction
 			Statement requete = con.createStatement();
@@ -177,19 +179,20 @@ public class TbsManager {
 		}
 		if (bt == BeneficiaryType.AGRI || bt == BeneficiaryType.BOTH) {
 			requete = "Insert into MasterList_Livelihood values('" + info + "','"
-					+ "BENEFICIARY PROFESSIONS" + "','"
+					+ convertProfessionAttributes(beneficiary) + "','"
 					+ beneficiary.getNumberInHome() + "','"
 					+ beneficiary.getAmountOfLand() + "','"
 					+ "BENEFICIARY SEEDS/FOODS" + "',"
 					+ 0.0 + ",'"
-					+ "BENEFICIARY TOOLS" + "',"
+					+ convertAgricultureAttributes(beneficiary) + "',"
 					+ 0.0 + ",'"
 					+ "BENEFICIARY UNITS" + "','"
-					+ "OTHER ORGS" + "','"
+					+ convertOrganizationAttributes(beneficiary) + "','"
 					+ beneficiary.getIsHealth().name() + "','"
 					+ beneficiary.getHealthPerson() + "','"
 					+ "NAME OF AGRONOMIST" + "')";
 		}
+		System.out.println(requete);
 		String result = ExecuterRequete(requete, "Inserer");
 		System.out.println(TAG + " result = " + result);
 		return result;
@@ -234,17 +237,75 @@ public class TbsManager {
 		// +" "+"')";
 	}
 
-	public static String convertProfessionAttributes(Beneficiary beneficiary) {
-//		String decodedAttributes = AttributeManager.decodeBinaryFieldsInt(codedInt, attributes);
-//		System.out.println(decodedAttributes);
+	public String convertProfessionAttributes(Beneficiary beneficiary) {
+		String professions = "";
 		if (beneficiary.getIsArtisan()==AttributeManager.YnQuestion.Y)
-			professions += "Artisan " + 
-		String professions = beneficiary.getIsArtisan()
-		return "";
-		
+			professions += LocaleManager.resources.getString(AttributeManager.FORM_ARTISAN) + " " + AttributeManager.ET_SEPARATOR + " ";
+		if (beneficiary.getIsFarmer()==AttributeManager.YnQuestion.Y)
+			professions += LocaleManager.resources.getString(AttributeManager.FORM_FARMER) + " " + AttributeManager.ET_SEPARATOR + " ";
+		if (beneficiary.getIsMuso()==AttributeManager.YnQuestion.Y)
+			professions += LocaleManager.resources.getString(AttributeManager.FORM_MUSO) + " " + AttributeManager.ET_SEPARATOR + " ";
+		if (beneficiary.getIsFisherman() == AttributeManager.YnQuestion.Y)
+			professions += LocaleManager.resources.getString(AttributeManager.FORM_FISHERMAN) + " " + AttributeManager.ET_SEPARATOR + " ";
+		if (beneficiary.getIsRancher() == AttributeManager.YnQuestion.Y)
+			professions += LocaleManager.resources.getString(AttributeManager.FORM_CATTLE_RANCHER) + " " + AttributeManager.ET_SEPARATOR + " ";
+		if (beneficiary.getIsStoreOwner() == AttributeManager.YnQuestion.Y)
+			professions += LocaleManager.resources.getString(AttributeManager.FORM_STORE_OWNER) + " " + AttributeManager.ET_SEPARATOR + " ";
+		professions = professions.substring(0,professions.length()-4); // Remove final 'et'
+		return professions;
 	}
+	
+	public String convertAgricultureAttributes(Beneficiary beneficiary) {
+		String agricultureAttributes = "";
+		if (beneficiary.getGetsCereal()==AttributeManager.YnQuestion.Y)
+			agricultureAttributes += LocaleManager.resources.getString(AttributeManager.FORM_CEREAL) + " " + AttributeManager.ET_SEPARATOR + " ";
+		if (beneficiary.getGetsHoe()==AttributeManager.YnQuestion.Y)
+			agricultureAttributes += LocaleManager.resources.getString(AttributeManager.FORM_HOE) + " " + AttributeManager.ET_SEPARATOR + " ";
+		if (beneficiary.getGetsMachette()==AttributeManager.YnQuestion.Y)
+			agricultureAttributes += LocaleManager.resources.getString(AttributeManager.FORM_MACHETTE) + " " + AttributeManager.ET_SEPARATOR + " ";
+		if (beneficiary.getGetsPelle()==AttributeManager.YnQuestion.Y)
+			agricultureAttributes += LocaleManager.resources.getString(AttributeManager.FORM_SHOVEL) + " " + AttributeManager.ET_SEPARATOR + " ";
+		if (beneficiary.getGetsPickaxe()==AttributeManager.YnQuestion.Y)
+			agricultureAttributes += LocaleManager.resources.getString(AttributeManager.FORM_PICKAXE) + " " + AttributeManager.ET_SEPARATOR + " ";
+		if (beneficiary.getGetsSerpette()==AttributeManager.YnQuestion.Y)
+			agricultureAttributes += LocaleManager.resources.getString(AttributeManager.FORM_PRUNING_KNIFE) + " " + AttributeManager.ET_SEPARATOR + " ";
+		if (beneficiary.getGetsTrees() == AttributeManager.YnQuestion.Y)
+			agricultureAttributes += LocaleManager.resources.getString(AttributeManager.FORM_TREE) + " " + AttributeManager.ET_SEPARATOR + " ";
+		if (beneficiary.getGetsTubers() == AttributeManager.YnQuestion.Y)
+			agricultureAttributes += LocaleManager.resources.getString(AttributeManager.FORM_TREE) + " " + AttributeManager.ET_SEPARATOR + " ";
+		if (beneficiary.getGetsVeggies() == AttributeManager.YnQuestion.Y)
+			agricultureAttributes += LocaleManager.resources.getString(AttributeManager.FORM_VEGETABLES) + " " + AttributeManager.ET_SEPARATOR + " ";
+		if (beneficiary.getGetsWheelbarrow() == AttributeManager.YnQuestion.Y)
+			agricultureAttributes += LocaleManager.resources.getString(AttributeManager.FORM_WHEELBARROW) + " " + AttributeManager.ET_SEPARATOR + " ";
+		if (beneficiary.getGetsBarreAMines()==AttributeManager.YnQuestion.Y)
+			agricultureAttributes += LocaleManager.resources.getString(AttributeManager.FORM_CROWBAR) + AttributeManager.ET_SEPARATOR + " ";
+		agricultureAttributes = agricultureAttributes.substring(0,agricultureAttributes.length()-4); // Remove final 'et'
+		return agricultureAttributes;
+	}
+	
+	public String convertOrganizationAttributes(Beneficiary beneficiary){
+		String organizations = "";
+		if (beneficiary.getIsFAO()==AttributeManager.YnQuestion.Y)
+			organizations += LocaleManager.resources.getString(AttributeManager.FORM_FAO) + " " + AttributeManager.ET_SEPARATOR + " ";
+		if (beneficiary.getIsCROSE()==AttributeManager.YnQuestion.Y)
+			organizations += LocaleManager.resources.getString(AttributeManager.FORM_CROSE) + " " + AttributeManager.ET_SEPARATOR + " ";
+		if (beneficiary.getIsMARDNR()==AttributeManager.YnQuestion.Y)
+			organizations += LocaleManager.resources.getString(AttributeManager.FORM_MARDNR) + " " + AttributeManager.ET_SEPARATOR + " ";
+		if (beneficiary.getIsPLAN()==AttributeManager.YnQuestion.Y)
+			organizations += LocaleManager.resources.getString(AttributeManager.FORM_PLAN) + " " + AttributeManager.ET_SEPARATOR + " ";
+		if (beneficiary.getIsSAVE()==AttributeManager.YnQuestion.Y)
+			organizations += LocaleManager.resources.getString(AttributeManager.FORM_SAVE_ORG) + " " + AttributeManager.ET_SEPARATOR + " ";
+		if (beneficiary.getIsOrganizationOther()==AttributeManager.YnQuestion.Y)
+			organizations += LocaleManager.resources.getString(AttributeManager.FORM_OTHER_ORG) + " " + AttributeManager.ET_SEPARATOR + " ";
+		organizations = organizations.substring(0,organizations.length()-4); // Remove final 'et'
+		return organizations;
+	}
+
+	
 	public static void main(String args[]){
-		System.out.println(convertAttributesToEldivertsFormatLol(8, AttributeManager.isAFields));
-		
+		TbsManager tbs = new TbsManager();
+		Beneficiary beneficiary = new Beneficiary("AV=186,mn=1:1,i=1,t=1,s=0,mi=0,ms=0,f=Michael,l=Phelps,ad=Baltimore,b=2011/7/18,g=M,n=2,la=29,cs=11eme La vallee,r2=Mama Phelps,pr=F,mo=0,is=1311,hs=795");
+		System.out.println(tbs.convertProfessionAttributes(beneficiary) + " gg " + tbs.convertOrganizationAttributes(beneficiary) + " gg " + tbs.convertAgricultureAttributes(beneficiary));
+		tbs.postNewBeneficiary(beneficiary);
 	}
 }
