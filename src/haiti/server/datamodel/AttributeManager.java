@@ -770,6 +770,8 @@ public class AttributeManager {
 		mappings.put(ABBREV_PREVENTION, FINDS_PREVENTION);
 		mappings.put(ABBREV_MALNOURISHED, FINDS_MALNOURISHED);
 		
+		mappings.put(ABBREV_MSG_NUMBER_SLASH_SIZE,LONG_MESSAGE_NUMBER );
+		
 		//  Not sure whether these are needed on server side?
 //		mappings.put("F", "FEMALE");
 //		mappings.put("M", "MALE");
@@ -806,6 +808,7 @@ public class AttributeManager {
 		mappings.put(MESSAGE_CREATED_AT, ABBREV_CREATED_AT);
 		mappings.put(MESSAGE_SENT_AT, ABBREV_SENT_AT);
 		mappings.put(MESSAGE_ACK_AT, ABBREV_ACK_AT);
+	
 		
 		mappings.put(FINDS_Q_MOTHER_LEADER, ABBREV_IS_MOTHERLEADER);
 		mappings.put(FINDS_Q_VISIT_MOTHER_LEADER, ABBREV_VISIT_MOTHERLEADER);
