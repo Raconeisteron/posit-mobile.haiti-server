@@ -54,7 +54,7 @@ public class SmsMessageManager {
 			String sender) {
 		try {
 			String[] parts = message.split(AttributeManager.OUTER_DELIM);
-			String[] ids = parts[2].split(AttributeManager.LIST_SEPARATOR);
+			String[] ids = parts[3].split(AttributeManager.LIST_SEPARATOR);
 			List<SmsMessage> messages = new ArrayList<SmsMessage>();
 			for (String id : ids) {
 				SmsMessage sms = new SmsMessage(id,
