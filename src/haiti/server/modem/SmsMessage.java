@@ -18,7 +18,7 @@ public class SmsMessage {
 	private int msgNumber = 0;
 	private int msgTotal = 0;
 	private AttributeManager.MessageStatus status = AttributeManager.MessageStatus.UNKNOWN;
-	private AttributeManager.MessageType type = AttributeManager.MessageType.UNKNOWN;
+	private AttributeManager.MessageType type = AttributeManager.MessageType.REGISTRATION;
 	private String message = "";
 	private String sender = "";
 
@@ -90,28 +90,40 @@ public class SmsMessage {
 					msgNumber=Integer.parseInt(parts[0]);
 					msgTotal=Integer.parseInt(parts[1]);
 				}
-				else if (longAttr.equals(AttributeManager.LONG_MESSAGE_STATUS)) {
+				else if (longAttr.equals(AttributeManager.LONG_STATUS)) {
 					int i = Integer.parseInt(attrval[1]);
 					switch (i) {
 					case 0:
 						status = AttributeManager.MessageStatus.NEW;
 						break;
 					case 1:
-						status = AttributeManager.MessageStatus.PENDING;
+						status = AttributeManager.MessageStatus.UPDATED;
 						break;
 					case 2:
+						status = AttributeManager.MessageStatus.PENDING;
+						break;
+					case 3:
 						status = AttributeManager.MessageStatus.PROCESSED;
 						break;
-					}
-				} else if (longAttr.equals(AttributeManager.LONG_MESSAGE_TYPE)) {
-					switch (Integer.parseInt(attrval[1])) {
-					case 0:
-						type = AttributeManager.MessageType.REGISTRATION;
-						break;
-					case 1:
-						type = AttributeManager.MessageType.UPDATE;
+					case 4:
+						status = AttributeManager.MessageStatus.ALL;
 						break;
 					}
+//				} else if (longAttr.equals(AttributeManager.LONG_TYPE)) {
+//					switch (Integer.parseInt(attrval[1])) {
+//					case 0:
+//						type = AttributeManager.MessageType.REGISTRATION;
+//						break;
+//					case 1:
+//						type = AttributeManager.MessageType.UPDATE;
+//						break;
+//					case 2:
+//						type = AttributeManager.MessageType.ATTENDANCE;
+//						break;
+//					case 3:
+//						type = AttributeManager.MessageType.ALL;
+//						break;
+//					}
 				}
 			}
 		} catch (ArrayIndexOutOfBoundsException e) {

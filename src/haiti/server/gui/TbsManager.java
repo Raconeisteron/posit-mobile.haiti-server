@@ -148,7 +148,7 @@ public class TbsManager {
 					+ beneficiary.getNumberInHome() + "','"
 					+ beneficiary.getHealthCenter() + "','"
 					+ beneficiary.getDistributionPost() + "','"
-					+ "HEALTH CENTER CODE" + "','"
+					+ beneficiary.getHealthCenter() + "','"
 					+ beneficiary.getGuardianChild() + "','"
 					+ beneficiary.getGuardianWoman() + "','"
 					+ beneficiary.getHusband() + "','"
