@@ -223,7 +223,7 @@ public class Menus implements ActionListener {
 				gui.repaint();
 			}  
 			else if (selectedMenuItemText.equals(LocaleManager.resources.getString(MENU_UPDATE_FILTER_NEW))) {
-				gui.readMessagesIntoGUI(DbSource.DATA_BASE, AttributeManager.MessageStatus.NEW, AttributeManager.MessageType.UPDATE);
+				gui.readMessagesIntoGUI(DbSource.DATA_BASE, AttributeManager.MessageStatus.UPDATED, AttributeManager.MessageType.REGISTRATION);
 				createMenuBar();
 				gui.setMenuBar(Menus.getMenuBar());	
 				gui.repaint();
