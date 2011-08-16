@@ -223,7 +223,7 @@ public class DataEntryFormStatic extends FormPanel implements ActionListener, Ke
 		this.lastName.setText(beneficiary.getLastName());
 		
 		this.communeBox.setText(beneficiary.getCommune());
-		this.communeSectionBox.setText(beneficiary.getCommuneSection());
+		this.communeSectionBox.setText(AttributeManager.mapToLong(true, beneficiary.getCommuneSection()));
 		this.address.setText(beneficiary.getAddress());
 		this.dateOfBirth.setText(beneficiary.getDob());
 		this.peopleInHouse.setText(Integer.toString(beneficiary.getNumberInHome()));

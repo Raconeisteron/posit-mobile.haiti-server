@@ -314,8 +314,8 @@ public class DataEntryGUI extends JFrame implements WindowListener, ListSelectio
 				for (int i = 0; i < mMessagesArray.length; i ++) {
 					mBulk = new Bulk(mMessagesArray[i]);
 					mBulkPanel.add(new JLabel(mBulk.getAvNum()));
-//					out.write("Dossier: " + mBulk.getDossier());
-//					out.newLine();
+					out.write("Dossier: " + mBulk.getAvNum());
+					out.newLine();
 					mBulk.setStatus(AttributeManager.MessageStatus.PROCESSED);
 					mReader.updateBulk(mBulk, this.mMessagesFileOrDbName);
 				}
