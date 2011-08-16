@@ -196,6 +196,8 @@ public class Beneficiary {
 					sex = Sex.valueOf(val.toUpperCase());
 				else if (attr.equalsIgnoreCase(AttributeManager.ABBREV_NUMBER_IN_HOME))
 					numberInHome = Integer.parseInt(val);
+				else if (attr.equalsIgnoreCase(AttributeManager.ABBREV_COMMUNE_SECTION))
+					communeSection = val;
 				else if (attr.equalsIgnoreCase(AttributeManager.ABBREV_TYPE)) {
 					if (Integer.parseInt(val) == BeneficiaryType.MCHN.getCode())
 						beneficiaryType = BeneficiaryType.MCHN;
@@ -215,7 +217,7 @@ public class Beneficiary {
 						distributionPost = AttributeManager.mapToLong(true, val);
 					else if (attr.equalsIgnoreCase(AttributeManager.ABBREV_RELATIVE_1) && (beneficiaryCategory == BeneficiaryCategory.MALNOURISHED || beneficiaryCategory == BeneficiaryCategory.PREVENTION))
 						guardianChild = val;
-					else if (attr.equalsIgnoreCase(AttributeManager.ABBREV_RELATIVE_1) && beneficiaryCategory == BeneficiaryCategory.EXPECTING)
+					else if (attr.equalsIgnoreCase(AttributeManager.ABBREV_RELATIVE_1) && beneficiaryCategory == BeneficiaryCategory.EXPECTING || beneficiaryCategory == BeneficiaryCategory.NURSING)
 						guardianWoman = val;
 					else if (attr.equalsIgnoreCase(AttributeManager.ABBREV_IS_MOTHERLEADER))
 						isMotherLeader = YnQuestion.valueOf(val.toUpperCase());
