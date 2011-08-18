@@ -279,7 +279,8 @@ public class TbsManager {
 			agricultureAttributes += LocaleManager.resources.getString(AttributeManager.FORM_WHEELBARROW) + " " + AttributeManager.ET_SEPARATOR + " ";
 		if (beneficiary.getGetsBarreAMines()==AttributeManager.YnQuestion.Y)
 			agricultureAttributes += LocaleManager.resources.getString(AttributeManager.FORM_CROWBAR) + AttributeManager.ET_SEPARATOR + " ";
-		agricultureAttributes = agricultureAttributes.substring(0,agricultureAttributes.length()-4); // Remove final 'et'
+		if (!agricultureAttributes.equals(""))
+			agricultureAttributes = agricultureAttributes.substring(0,agricultureAttributes.length()-4); // Remove final 'et'
 		return agricultureAttributes;
 	}
 	
@@ -297,7 +298,8 @@ public class TbsManager {
 			organizations += LocaleManager.resources.getString(AttributeManager.FORM_SAVE_ORG) + " " + AttributeManager.ET_SEPARATOR + " ";
 		if (beneficiary.getIsOrganizationOther()==AttributeManager.YnQuestion.Y)
 			organizations += LocaleManager.resources.getString(AttributeManager.FORM_OTHER_ORG) + " " + AttributeManager.ET_SEPARATOR + " ";
-		organizations = organizations.substring(0,organizations.length()-4); // Remove final 'et'
+		if (!organizations.equals(""))
+			organizations = organizations.substring(0,organizations.length()-4); // Remove final 'et'
 		return organizations;
 	}
 
