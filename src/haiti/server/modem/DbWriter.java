@@ -57,8 +57,8 @@ public class DbWriter {
 	// private static final String dbName = "D:\\SMS_Reception\\haiti.db";
 	// private static final String dbName = "/home3/rfoeckin/Desktop/databases/haiti.db";
 	// "C:\\Users\\Administrator\\Documents\\haiti.db";
-	private static final String dbName = "C:\\Documents and Settings\\cslab\\Desktop\\haitidb\\haiti.db";
-
+	//private static final String dbName = "C:\\Documents and Settings\\cslab\\Desktop\\haitidb\\haiti.db";
+	private static final String dbName = "C:\\Documents and Settings\\cslab\\My Documents\\Dropbox\\Haiti-Docs\\haitidb\\haiti.db";
 	public enum MessageStatus {
 		NEW, PENDING, PROCESSED, DECLINED, ARCHIVED, ALL
 	};

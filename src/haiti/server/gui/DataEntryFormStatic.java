@@ -275,6 +275,8 @@ public class DataEntryFormStatic extends FormPanel implements ActionListener, Ke
 			radioCROSE.setSelected(true);
 		if (beneficiary.getIsPLAN() == YnQuestion.Y)
 			radioPLAN.setSelected(true);
+		if (beneficiary.getIsMARDNR() == YnQuestion.Y)
+			radioMARDNR.setSelected(true);
 		if (beneficiary.getIsOrganizationOther() == YnQuestion.Y)
 			radioOrganizationOther.setSelected(true);
 		if (beneficiary.getGetsVeggies() == YnQuestion.Y)
