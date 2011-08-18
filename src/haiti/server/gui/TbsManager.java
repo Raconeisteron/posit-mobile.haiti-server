@@ -145,6 +145,7 @@ public class TbsManager {
 		if (bt == BeneficiaryType.MCHN || bt == BeneficiaryType.BOTH) {
 			requete = "Insert into Beneficiaire_1 values('" + info + "','"
 					+ beneficiary.getBeneficiaryCategory().name() + "','"
+					+ beneficiary.getBeneficiaryCategory().name() + "','"
 					+ beneficiary.getNumberInHome() + "','"
 					+ beneficiary.getHealthCenter() + "','"
 					+ beneficiary.getDistributionPost() + "','"
@@ -251,7 +252,8 @@ public class TbsManager {
 			professions += LocaleManager.resources.getString(AttributeManager.FORM_CATTLE_RANCHER) + " " + AttributeManager.ET_SEPARATOR + " ";
 		if (beneficiary.getIsStoreOwner() == AttributeManager.YnQuestion.Y)
 			professions += LocaleManager.resources.getString(AttributeManager.FORM_STORE_OWNER) + " " + AttributeManager.ET_SEPARATOR + " ";
-		professions = professions.substring(0,professions.length()-4); // Remove final 'et'
+		if (!professions.equals(""))
+			professions = professions.substring(0,professions.length()-4); // Remove final 'et'
 		return professions;
 	}
 	
