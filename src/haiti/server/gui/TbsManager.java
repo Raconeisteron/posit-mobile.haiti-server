@@ -172,16 +172,11 @@ public class TbsManager {
 		if (bt == BeneficiaryType.AGRI || bt == BeneficiaryType.BOTH) {
 			requete = "Insert into MasterList_Livelihood values('"
 					+ info_LIVELIHOOD + "','"
-
 					+ convertProfessionAttributes(beneficiary) + "','"
-					+ beneficiary.getNumberInHome()
-					+ "','"
-					+ beneficiary.getAmountOfLand()
-					+ "','"
-					+ "BENEFICIARY SEEDS/FOODS"
-					+ "','" // Here you muste insert seed chosen in the
-							// sms.program it
-					+ convertAgricultureAttributes(beneficiary) + "','"
+					+ beneficiary.getNumberInHome() + "','"
+					+ beneficiary.getAmountOfLand() + "','"
+					+ convertSeedAttributes(beneficiary)+ "','" 
+					+ convertToolAttributes(beneficiary) + "','"
 					+ convertOrganizationAttributes(beneficiary) + "','"
 					+ beneficiary.getIsHealth().name() + "','"
 					+ beneficiary.getHealthPerson() + "','" + " " + "')";
@@ -232,13 +227,46 @@ public class TbsManager {
 		return professions;
 	}
 
-	public String convertAgricultureAttributes(Beneficiary beneficiary) {
+	public String convertSeedAttributes(Beneficiary beneficiary) {
 		String agricultureAttributes = "";
 		if (beneficiary.getGetsCereal() == AttributeManager.YnQuestion.Y)
 			agricultureAttributes += LocaleManager.resources
 					.getString(AttributeManager.FORM_CEREAL)
 					+ " "
 					+ AttributeManager.ET_SEPARATOR + " ";
+		if (beneficiary.getGetsTrees() == AttributeManager.YnQuestion.Y)
+			agricultureAttributes += LocaleManager.resources
+					.getString(AttributeManager.FORM_TREE)
+					+ " "
+					+ AttributeManager.ET_SEPARATOR + " ";
+		if (beneficiary.getGetsTubers() == AttributeManager.YnQuestion.Y)
+			agricultureAttributes += LocaleManager.resources
+					.getString(AttributeManager.FORM_TUBERS)
+					+ " "
+					+ AttributeManager.ET_SEPARATOR + " ";
+		if (beneficiary.getGetsVeggies() == AttributeManager.YnQuestion.Y)
+			agricultureAttributes += LocaleManager.resources
+					.getString(AttributeManager.FORM_VEGETABLES)
+					+ " "
+					+ AttributeManager.ET_SEPARATOR + " ";
+		if (beneficiary.getGetsGrafting() == AttributeManager.YnQuestion.Y)
+			agricultureAttributes += LocaleManager.resources
+					.getString(AttributeManager.FORM_GRAFTING)
+					+ " "
+					+ AttributeManager.ET_SEPARATOR + " ";
+		if (beneficiary.getGetsCoffee() == AttributeManager.YnQuestion.Y)
+			agricultureAttributes += LocaleManager.resources
+					.getString(AttributeManager.FORM_COFFEE)
+					+ " "
+					+ AttributeManager.ET_SEPARATOR + " ";
+		if (!agricultureAttributes.equals(""))
+			agricultureAttributes = agricultureAttributes.substring(0,
+					agricultureAttributes.length() - 4); // Remove final 'et'
+		return agricultureAttributes;
+	}
+
+	public String convertToolAttributes(Beneficiary beneficiary){
+		String agricultureAttributes = "";
 		if (beneficiary.getGetsHoe() == AttributeManager.YnQuestion.Y)
 			agricultureAttributes += LocaleManager.resources
 					.getString(AttributeManager.FORM_HOE)
@@ -264,21 +292,6 @@ public class TbsManager {
 					.getString(AttributeManager.FORM_PRUNING_KNIFE)
 					+ " "
 					+ AttributeManager.ET_SEPARATOR + " ";
-		if (beneficiary.getGetsTrees() == AttributeManager.YnQuestion.Y)
-			agricultureAttributes += LocaleManager.resources
-					.getString(AttributeManager.FORM_TREE)
-					+ " "
-					+ AttributeManager.ET_SEPARATOR + " ";
-		if (beneficiary.getGetsTubers() == AttributeManager.YnQuestion.Y)
-			agricultureAttributes += LocaleManager.resources
-					.getString(AttributeManager.FORM_TREE)
-					+ " "
-					+ AttributeManager.ET_SEPARATOR + " ";
-		if (beneficiary.getGetsVeggies() == AttributeManager.YnQuestion.Y)
-			agricultureAttributes += LocaleManager.resources
-					.getString(AttributeManager.FORM_VEGETABLES)
-					+ " "
-					+ AttributeManager.ET_SEPARATOR + " ";
 		if (beneficiary.getGetsWheelbarrow() == AttributeManager.YnQuestion.Y)
 			agricultureAttributes += LocaleManager.resources
 					.getString(AttributeManager.FORM_WHEELBARROW)
@@ -293,7 +306,7 @@ public class TbsManager {
 					agricultureAttributes.length() - 4); // Remove final 'et'
 		return agricultureAttributes;
 	}
-
+	
 	public String convertOrganizationAttributes(Beneficiary beneficiary) {
 		String organizations = "";
 		if (beneficiary.getIsFAO() == AttributeManager.YnQuestion.Y)
