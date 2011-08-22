@@ -297,6 +297,7 @@ public class TbsManager {
 			organizations += LocaleManager.resources.getString(AttributeManager.FORM_SAVE_ORG) + " " + AttributeManager.ET_SEPARATOR + " ";
 		if (beneficiary.getIsOrganizationOther()==AttributeManager.YnQuestion.Y)
 			organizations += LocaleManager.resources.getString(AttributeManager.FORM_OTHER_ORG) + " " + AttributeManager.ET_SEPARATOR + " ";
+		if (!organizations.equals(""))
 		organizations = organizations.substring(0,organizations.length()-4); // Remove final 'et'
 		return organizations;
 	}
