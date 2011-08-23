@@ -20,13 +20,10 @@
  *
  */
 
-package haiti.server.gui;
+package haiti.server.datamodel;
 
-import haiti.server.datamodel.AttributeManager;
-import haiti.server.datamodel.Beneficiary;
-import haiti.server.datamodel.Bulk;
-import haiti.server.datamodel.Update;
 import haiti.server.gui.DataEntryGUI;
+import haiti.server.gui.LoginScreen;
 
 import java.io.FileInputStream;
 import java.io.IOException;

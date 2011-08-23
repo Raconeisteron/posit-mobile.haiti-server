@@ -26,7 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import haiti.server.datamodel.AttributeManager;
-import haiti.server.gui.DAO;
+import haiti.server.datamodel.DAO;
 import haiti.server.datamodel.AttributeManager.MessageStatus;
 import haiti.server.datamodel.AttributeManager.MessageType;
 

@@ -22,6 +22,7 @@ package haiti.server.gui;
  */
 
 import haiti.server.datamodel.AttributeManager;
+import haiti.server.datamodel.DAO;
 import haiti.server.datamodel.LocaleManager;
 import haiti.server.datamodel.Update;
 

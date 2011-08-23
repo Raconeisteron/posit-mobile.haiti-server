@@ -22,7 +22,7 @@
 package haiti.server.modem;
 
 import haiti.server.datamodel.AttributeManager;
-import haiti.server.gui.DAO;
+import haiti.server.datamodel.DAO;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;

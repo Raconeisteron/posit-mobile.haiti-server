@@ -1,20 +1,19 @@
-package haiti.server.gui;
+package haiti.server.datamodel;
 
-import haiti.server.datamodel.AttributeManager;
-import haiti.server.datamodel.LocaleManager;
-import haiti.server.datamodel.AttributeManager.BeneficiaryCategory;
+
 import haiti.server.datamodel.AttributeManager.BeneficiaryType;
-import haiti.server.datamodel.Beneficiary;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.*;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Properties;
 
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
 //import com.sun.tools.javac.util.Log;
@@ -131,23 +130,32 @@ public class TbsManager {
 		// //////////////////Partie Informations Generales
 
 		String Default_date = "2020/01/01";
-
+		Calendar calendar = Calendar.getInstance();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
+        String dobString = "";
+        try {
+			Date dob = dateFormat.parse(beneficiary.getDob());
+			dobString = dateFormat.format(dob);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		String info_MCHN = beneficiary.getDossier() + "','"
 				+ beneficiary.getLastName() + "','"
 				+ beneficiary.getFirstName() + "','"
 				+ AttributeManager.mapToLong(true, beneficiary.getCommuneSection()) + "','"
 				+ beneficiary.getLocality() + "','" + Default_date + "','"
-				+ beneficiary.getDob() + "','" + beneficiary.getSex().name();
+				+ dobString + "','" + beneficiary.getSex().name();
 
 		String info_LIVELIHOOD = beneficiary.getDossier() + "','"
 				+ beneficiary.getLastName() + "','"
 				+ beneficiary.getFirstName() + "','"
 				+ AttributeManager.mapToLong(true, beneficiary.getCommuneSection()) + "','"
-				+ beneficiary.getLocality() + "','" + (new Date()).getYear()
-				+ "/" + (new Date()).getMonth() + "/" + (new Date()).getDay()
-				+ "','" + beneficiary.getDob() + "','"
+				+ beneficiary.getLocality() + "','" + dateFormat.format(calendar.getTime())
+				+ "','" + dobString + "','"
 				+ beneficiary.getSex().name();
 
+		System.out.println("livelihood: " + info_LIVELIHOOD);
 		String requete = "";
 
 		BeneficiaryType bt = beneficiary.getBeneficiaryType();
