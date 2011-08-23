@@ -37,6 +37,8 @@ import java.io.File;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import java.applet.Applet;
+
+import javax.swing.JFileChooser;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
@@ -50,6 +52,7 @@ public class Menus implements ActionListener {
 	
 	public static final String MENU_FILE = "File";
 	public static final String MENU_OPEN_FILE = "OpenFile";
+	public static final String MENU_OPEN_DB = "OpenDB";
 	public static final String MENU_FILTER = "Filter";
 
 	public static final String MENU_BENEFICIARY_FILTER = "BeneficiaryFilter";
@@ -92,9 +95,11 @@ public class Menus implements ActionListener {
 	 */
 	public void createMenuBar() {
 		Menu fileMenu = new Menu(LocaleManager.resources.getString(MENU_FILE));
-		Menu openDbMenu = new Menu(LocaleManager.resources.getString(MENU_FILTER));
+		Menu openDbMenu = new Menu(LocaleManager.resources.getString(MENU_OPEN_DB));
+		Menu filterMenu = new Menu(LocaleManager.resources.getString(MENU_FILTER));
 		addMenuItem(fileMenu, LocaleManager.resources.getString(MENU_OPEN_FILE), KeyEvent.VK_N, false);
-		fileMenu.add(openDbMenu);
+		addMenuItem(fileMenu, LocaleManager.resources.getString(MENU_OPEN_DB), KeyEvent.VK_D, false);
+		fileMenu.add(filterMenu);
 		addMenuItem(fileMenu, LocaleManager.resources.getString(MENU_ATTENDANCE), 0, false);
 		addMenuItem(fileMenu, LocaleManager.resources.getString(MENU_QUIT), KeyEvent.VK_Q, false);
 
@@ -105,8 +110,8 @@ public class Menus implements ActionListener {
 		Menu beneficiaryMenu = new Menu(LocaleManager.resources.getString(MENU_BENEFICIARY_FILTER));
 		Menu updateMenu = new Menu(LocaleManager.resources.getString(MENU_UPDATE_FILTER));
 
-		openDbMenu.add(beneficiaryMenu);
-		openDbMenu.add(updateMenu);
+		filterMenu.add(beneficiaryMenu);
+		filterMenu.add(updateMenu);
 //		addMenuItem(openDbMenu, LocaleManager.resources.getString(MENU_ALL), KeyEvent.VK_A, false);
 		
 		addMenuItem(beneficiaryMenu, LocaleManager.resources.getString(MENU_BENEFICIARY_FILTER_NEW), 0, false);
@@ -116,7 +121,7 @@ public class Menus implements ActionListener {
 		mbar.add(fileMenu);
 		mbar.add(localeMenu);
 
-		if (gui.isAdmin) {
+		//if (gui.isAdmin) {
 			addMenuItem(beneficiaryMenu, LocaleManager.resources.getString(MENU_BENEFICIARY_FILTER_PENDING), 0, false);
 			addMenuItem(beneficiaryMenu, LocaleManager.resources.getString(MENU_BENEFICIARY_FILTER_PROCESSED), 0 , false);
 			addMenuItem(beneficiaryMenu, LocaleManager.resources.getString(MENU_BENEFICIARY_FILTER_ARCHIVED), 0, false);
@@ -130,7 +135,7 @@ public class Menus implements ActionListener {
 			addMenuItem(adminMenu, LocaleManager.resources.getString(MENU_CREATE), KeyEvent.VK_C, false);
 
 			mbar.add(adminMenu);
-		}
+		//}
 		
 		Menu helpMenu = new Menu(LocaleManager.resources.getString(MENU_HELP));
 		addMenuItem(helpMenu, LocaleManager.resources.getString(MENU_ABOUT), 0, false);
@@ -189,6 +194,9 @@ public class Menus implements ActionListener {
 			else if (selectedMenuItemText.equals(LocaleManager.resources.getString(MENU_OPEN_FILE)))  {
 				gui.readMessagesIntoGUI(DbSource.FILE);
 			} 
+			else if (selectedMenuItemText.equals(LocaleManager.resources.getString(MENU_OPEN_DB))){
+				gui.chooseDb();
+			}
 			else if (selectedMenuItemText.equals(LocaleManager.resources.getString(MENU_ATTENDANCE))) {
 				gui.readMessagesIntoGUI(DbSource.DATA_BASE, AttributeManager.MessageStatus.NEW, AttributeManager.MessageType.ATTENDANCE);
 			}
