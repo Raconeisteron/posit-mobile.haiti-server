@@ -24,6 +24,8 @@ import haiti.server.datamodel.AttributeManager;
 import haiti.server.datamodel.AttributeManager.BeneficiaryCategory;
 import haiti.server.datamodel.Beneficiary;
 import haiti.server.datamodel.Bulk;
+import haiti.server.datamodel.DAO;
+import haiti.server.datamodel.TbsManager;
 import haiti.server.datamodel.Update;
 import haiti.server.datamodel.AttributeManager.Abbreviated;
 import haiti.server.datamodel.LocaleManager;

@@ -1,6 +1,7 @@
 package haiti.server.gui;
 
 import haiti.server.datamodel.Beneficiary;
+import haiti.server.datamodel.DAO;
 
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;

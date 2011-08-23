@@ -23,6 +23,7 @@ package haiti.server.gui;
 
 import haiti.server.datamodel.AttributeManager;
 import haiti.server.datamodel.Beneficiary;
+import haiti.server.datamodel.DAO;
 import haiti.server.datamodel.AttributeManager.YnQuestion;
 import haiti.server.datamodel.LocaleManager;
 
