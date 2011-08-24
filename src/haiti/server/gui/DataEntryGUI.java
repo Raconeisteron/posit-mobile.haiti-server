@@ -136,7 +136,7 @@ public class DataEntryGUI extends JFrame implements WindowListener,
 		mWelcomeLabel = new JLabel("Please choose a database or a file.");
 		mWelcomePanel.add(welcome);
 		mWelcomePanel.add(mWelcomeLabel);
-		
+
 		this.getContentPane().add(mWelcomePanel);
 	}
 
@@ -455,7 +455,7 @@ public class DataEntryGUI extends JFrame implements WindowListener,
 
 		if (result.equals(TbsManager.RESULT_OK)) {
 			mBeneficiary.setDossier(dossier);
-			mBeneficiary.setStatus(AttributeManager.MessageStatus.PROCESSED); 
+			mBeneficiary.setStatus(AttributeManager.MessageStatus.PROCESSED);
 			mReader.updateBeneficiary(mBeneficiary, this.mMessagesFileOrDbName);
 			int index = this.mMessageList.getSelectedIndex();
 			String msg = mReader.getMessageById(mBeneficiary.getId(),
@@ -487,7 +487,7 @@ public class DataEntryGUI extends JFrame implements WindowListener,
 	public void forwardMessageToDbMgr() {
 		// TODO Auto-generated method stub
 		System.out.println(mBeneficiary.toString());
-		mBeneficiary.setStatus(AttributeManager.MessageStatus.PENDING); 
+		mBeneficiary.setStatus(AttributeManager.MessageStatus.PENDING);
 		mReader.updateBeneficiary(mBeneficiary, this.mMessagesFileOrDbName);
 		int index = this.mMessageList.getSelectedIndex();
 		String msg = mReader.getMessageById(mBeneficiary.getId(),
@@ -535,12 +535,15 @@ public class DataEntryGUI extends JFrame implements WindowListener,
 			JLabel label = (JLabel) super.getListCellRendererComponent(list,
 					value, index, isSelected, hasFocus);
 			String entry = (String) value;
-			if (entry.contains("status="
-					+ AttributeManager.MessageStatus.PENDING)) {
-				label.setBackground(Color.RED);
-			} else if (entry.contains("status=1")) {
+			System.out.println("entry " + entry);
+			if (entry.contains("message_status="
+					+ AttributeManager.MessageStatus.PENDING.getCode())) {
+				
 				label.setBackground(Color.YELLOW);
-				label.setForeground(Color.RED);
+			} else if (entry.contains("message_status="
+					+ AttributeManager.MessageStatus.PROCESSED.getCode())) {
+				label.setBackground(Color.GREEN);
+
 			}
 			return (label);
 		}
