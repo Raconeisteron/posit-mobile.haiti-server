@@ -107,7 +107,23 @@ public class DataEntryGUI extends JFrame implements WindowListener,
 
 		setResizable(true);
 		pack();
-
+		String lookAndFeel ="com.sun.java.swing.plaf.windows.WindowsLookAndFeel";
+		try {
+			System.out.print(lookAndFeel);
+			UIManager.setLookAndFeel(lookAndFeel);
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InstantiationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (UnsupportedLookAndFeelException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		DataEntryGUI.centerWindow(this);
 		requestFocus();
 		this.setVisible(true);
@@ -170,9 +186,9 @@ public class DataEntryGUI extends JFrame implements WindowListener,
 		// this.mListScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
 
 		this.mListScrollPane.setMaximumSize(new Dimension(700, 300));
-		this.mListScrollPane.setSize(300, 200);
+		//this.mListScrollPane.setSize(300, 200);
 		this.mFormScrollPane = new JScrollPane(formPanel);
-		this.mFormScrollPane.setSize(300, 200);
+		//this.mFormScrollPane.setSize(300, 200);
 
 		// See
 		// http://download.oracle.com/javase/tutorial/uiswing/components/splitpane.html
@@ -181,7 +197,7 @@ public class DataEntryGUI extends JFrame implements WindowListener,
 				mFormScrollPane);
 		mSplitPane.setOneTouchExpandable(true);
 		mSplitPane.setDividerLocation(100);
-		this.mSplitPane.setSize(700, 300);
+		//this.mSplitPane.setSize(700, 300);
 		return mSplitPane;
 	}
 
@@ -297,7 +313,7 @@ public class DataEntryGUI extends JFrame implements WindowListener,
 			this.pack();
 			DataEntryGUI.centerWindow(this);
 			this.repaint();
-			this.setSize(1200, 800);
+			//this.setSize(1200, 800);
 			this.setLocation(0, 0);
 		} else if (type == MessageType.UPDATE) {
 			mFormPanel = new BeneficiaryUpdateFormStatic(this);
@@ -325,7 +341,7 @@ public class DataEntryGUI extends JFrame implements WindowListener,
 			this.pack();
 			DataEntryGUI.centerWindow(this);
 			this.repaint();
-			this.setSize(1200, 800);
+			//this.setSize(1200, 800);
 			this.setLocation(0, 0);
 		} else if (type == MessageType.ATTENDANCE) {
 			try {
@@ -358,7 +374,7 @@ public class DataEntryGUI extends JFrame implements WindowListener,
 			this.pack();
 			DataEntryGUI.centerWindow(this);
 			this.repaint();
-			this.setSize(1000, 650);
+			//this.setSize(1000, 650);
 		}
 	}
 
