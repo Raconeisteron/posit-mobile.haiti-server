@@ -250,6 +250,9 @@ public class DataEntryFormStatic extends FormPanel implements ActionListener,
 			radioShovel.setSelected(true);
 		if (beneficiary.getGetsBarreAMines() == YnQuestion.Y)
 			radioCrowbar.setSelected(true);
+		
+		land.setText(String.valueOf(beneficiary.getAmountOfLand()));
+		healthPerson.setText(beneficiary.getHealthPerson());
 		this.health.setText(beneficiary.getIsHealth().name());
 
 		// mGui.setSize(1200, 800);
@@ -344,7 +347,7 @@ public class DataEntryFormStatic extends FormPanel implements ActionListener,
 				.getString(AttributeManager.FORM_OTHER));
 
 		landLabel.setText(LocaleManager.resources
-				.getString(AttributeManager.FORM_LAND));
+				.getString(AttributeManager.FORM_LAND) + " ");
 
 
 		seedTypesPanel
@@ -382,9 +385,9 @@ public class DataEntryFormStatic extends FormPanel implements ActionListener,
 				.getString(AttributeManager.FORM_CROWBAR));
 
 		healthLabel.setText(LocaleManager.resources
-				.getString(AttributeManager.FORM_HEALTH));
+				.getString(AttributeManager.FORM_HEALTH) + " ");
 		giveNameLabel2.setText(LocaleManager.resources
-				.getString(AttributeManager.FORM_GIVE_NAME));
+				.getString(AttributeManager.FORM_GIVE_NAME) + " ");
 
 		organizationPanel
 		.setBorder(BorderFactory.createTitledBorder(LocaleManager.resources
