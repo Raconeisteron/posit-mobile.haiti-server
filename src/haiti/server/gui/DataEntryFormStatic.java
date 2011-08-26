@@ -193,8 +193,6 @@ public class DataEntryFormStatic extends FormPanel implements ActionListener,
 		this.dp.setText(beneficiary.getDistributionPost());
 		this.guardianChild.setText(beneficiary.getGuardianChild());
 		this.guardianWoman.setText(beneficiary.getGuardianWoman());
-		// this.husband.setText(beneficiary.getHusband());
-		// this.father.setText(beneficiary.getFather());
 		this.agriPersonLabel.setText(beneficiary.getAgriPerson());
 		this.motherLeader.setText(beneficiary.getIsMotherLeader().name());
 		this.motherVisit.setText(beneficiary.getVisitMotherLeader().name());
@@ -258,17 +256,6 @@ public class DataEntryFormStatic extends FormPanel implements ActionListener,
 		// mGui.setSize(1200, 800);
 
 	}
-
-	/**
-	 * Helper method to add an array of items ot a Combo Box.
-	 * 
-	 * @param combo
-	 * @param arr
-	 */
-	// private void addItemsToComboBox (JComboBox combo, String arr[]) {
-	// for (int k = 0; k < arr.length; k++)
-	// combo.addItem(arr[k]);
-	// }
 
 	/**
 	 * Called automatically whenever the Panel is repainted this method sets all

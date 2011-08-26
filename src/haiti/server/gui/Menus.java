@@ -51,7 +51,7 @@ import javax.swing.KeyStroke;
 public class Menus implements ActionListener {
 	
 	public static final String MENU_FILE = "File";
-	public static final String MENU_OPEN_FILE = "OpenFile";
+	//public static final String MENU_OPEN_FILE = "OpenFile"; // Removed for now.
 	public static final String MENU_OPEN_DB = "OpenDB";
 	public static final String MENU_FILTER = "Filter";
 
@@ -74,8 +74,8 @@ public class Menus implements ActionListener {
 	public static final String MENU_ENGLISH = "English";
 	public static final String MENU_FRENCH = "French";
 	public static final String MENU_HELP = "Help";
-	public static final String MENU_ADMIN = "Admin";
-	public static final String MENU_CREATE = "CreateNewUser";
+	//public static final String MENU_ADMIN = "Admin"; // Removed for now.
+	//public static final String MENU_CREATE = "CreateNewUser";
 	public static final String MENU_ARCHIVE_DB = "ArchiveDb";
 	public static final String MENU_OUTPUT_ARCHIVE = "OutputArchive";
 	public static final String MENU_MOBILE_DB = "MobileDb";
@@ -97,7 +97,7 @@ public class Menus implements ActionListener {
 		Menu fileMenu = new Menu(LocaleManager.resources.getString(MENU_FILE));
 		Menu openDbMenu = new Menu(LocaleManager.resources.getString(MENU_OPEN_DB));
 		Menu filterMenu = new Menu(LocaleManager.resources.getString(MENU_FILTER));
-		addMenuItem(fileMenu, LocaleManager.resources.getString(MENU_OPEN_FILE), KeyEvent.VK_N, false);
+		//addMenuItem(fileMenu, LocaleManager.resources.getString(MENU_OPEN_FILE), KeyEvent.VK_N, false);
 		addMenuItem(fileMenu, LocaleManager.resources.getString(MENU_OPEN_DB), KeyEvent.VK_D, false);
 		fileMenu.add(filterMenu);
 		addMenuItem(fileMenu, LocaleManager.resources.getString(MENU_ATTENDANCE), 0, false);
@@ -131,10 +131,10 @@ public class Menus implements ActionListener {
 			addMenuItem(updateMenu, LocaleManager.resources.getString(MENU_UPDATE_FILTER_ARCHIVED), 0, false);
 			addMenuItem(updateMenu, LocaleManager.resources.getString(MENU_UPDATE_FILTER_ALL), 0, false);
 
-			Menu adminMenu = new Menu(LocaleManager.resources.getString(MENU_ADMIN));
-			addMenuItem(adminMenu, LocaleManager.resources.getString(MENU_CREATE), KeyEvent.VK_C, false);
+			//Menu adminMenu = new Menu(LocaleManager.resources.getString(MENU_ADMIN));
+			//addMenuItem(adminMenu, LocaleManager.resources.getString(MENU_CREATE), KeyEvent.VK_C, false);
 
-			mbar.add(adminMenu);
+			//mbar.add(adminMenu);
 		//}
 		
 		Menu helpMenu = new Menu(LocaleManager.resources.getString(MENU_HELP));
@@ -191,9 +191,9 @@ public class Menus implements ActionListener {
 				gui.setMenuBar(Menus.getMenuBar());	
 				gui.repaint();				
 			}
-			else if (selectedMenuItemText.equals(LocaleManager.resources.getString(MENU_OPEN_FILE)))  {
-				gui.readMessagesIntoGUI(DbSource.FILE);
-			} 
+			//else if (selectedMenuItemText.equals(LocaleManager.resources.getString(MENU_OPEN_FILE)))  {
+			//	gui.readMessagesIntoGUI(DbSource.FILE);
+			//} 
 			else if (selectedMenuItemText.equals(LocaleManager.resources.getString(MENU_OPEN_DB))){
 				gui.chooseDb();
 			}
@@ -266,9 +266,9 @@ public class Menus implements ActionListener {
 				gui.setMenuBar(Menus.getMenuBar());	
 				gui.repaint();
 			}
-			else if (selectedMenuItemText.equals(LocaleManager.resources.getString(MENU_CREATE))) {
-				User newUser = new User(gui);
-			} 
+			//else if (selectedMenuItemText.equals(LocaleManager.resources.getString(MENU_CREATE))) {
+			//	User newUser = new User(gui);
+			//} 
 			else if (selectedMenuItemText.equals(LocaleManager.resources.getString(MENU_ARCHIVE_DB))) {
 			} 
 			else if (selectedMenuItemText.equals(LocaleManager.resources.getString(MENU_QUIT))) {
@@ -278,6 +278,7 @@ public class Menus implements ActionListener {
 				LocaleManager.currentLocale = Locale.ENGLISH;
 				LocaleManager.resources = ResourceBundle.getBundle("MenusBundle", LocaleManager.currentLocale);
 				System.out.println("Changing language to English "  + LocaleManager.currentLocale.toString());
+				gui.refreshLocale();
 				createMenuBar();
 				gui.setMenuBar(Menus.getMenuBar());	 
 				gui.repaint();
@@ -286,6 +287,7 @@ public class Menus implements ActionListener {
 				LocaleManager.currentLocale = Locale.FRENCH;
 				LocaleManager.resources = ResourceBundle.getBundle("MenusBundle", LocaleManager.currentLocale);
 				System.out.println("Changing language to French " + LocaleManager.currentLocale.toString());
+				gui.refreshLocale();
 				createMenuBar();
 				gui.setMenuBar(Menus.getMenuBar());	
 				gui.repaint();
