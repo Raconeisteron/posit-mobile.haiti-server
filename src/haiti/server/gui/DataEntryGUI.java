@@ -313,7 +313,7 @@ public class DataEntryGUI extends JFrame implements WindowListener,
 			this.pack();
 			DataEntryGUI.centerWindow(this);
 			this.repaint();
-			//this.setSize(1200, 800);
+			this.setSize(1200, 800);
 			this.setLocation(0, 0);
 		} else if (type == MessageType.UPDATE) {
 			mFormPanel = new BeneficiaryUpdateFormStatic(this);
@@ -341,7 +341,7 @@ public class DataEntryGUI extends JFrame implements WindowListener,
 			this.pack();
 			DataEntryGUI.centerWindow(this);
 			this.repaint();
-			//this.setSize(1200, 800);
+			this.setSize(1200, 800);
 			this.setLocation(0, 0);
 		} else if (type == MessageType.ATTENDANCE) {
 			try {
@@ -374,7 +374,7 @@ public class DataEntryGUI extends JFrame implements WindowListener,
 			this.pack();
 			DataEntryGUI.centerWindow(this);
 			this.repaint();
-			//this.setSize(1000, 650);
+			this.setSize(1000, 650);
 		}
 	}
 

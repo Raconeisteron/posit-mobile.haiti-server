@@ -136,6 +136,7 @@ public class DataEntryFormStatic extends FormPanel implements ActionListener,
 		radioCereal.setSelected(false);
 		radioTubers.setSelected(false);
 		radioTree.setSelected(false);
+		radioCoffee.setSelected(false);
 		radioGrafting.setSelected(false);
 		radioHoe.setSelected(false);
 		radioPickaxe.setSelected(false);
@@ -326,8 +327,9 @@ public class DataEntryFormStatic extends FormPanel implements ActionListener,
 		giveNameLabel.setText(LocaleManager.resources
 				.getString(AttributeManager.FORM_GIVE_NAME) + " ");
 
-		agriCategoryLabel.setText(LocaleManager.resources
-				.getString(AttributeManager.FORM_AGRICULTURE_CATEGORY));
+		agriCategoryPanel
+		.setBorder(BorderFactory.createTitledBorder(LocaleManager.resources
+				.getString(AttributeManager.FORM_AGRICULTURE_CATEGORY)));
 		radioFarmer.setText(LocaleManager.resources
 				.getString(AttributeManager.FORM_FARMER));
 		radioMuso.setText(LocaleManager.resources
@@ -344,8 +346,10 @@ public class DataEntryFormStatic extends FormPanel implements ActionListener,
 		landLabel.setText(LocaleManager.resources
 				.getString(AttributeManager.FORM_LAND));
 
-		seedTypesLabel.setText(LocaleManager.resources
-				.getString(AttributeManager.FORM_SEED_TYPE));
+
+		seedTypesPanel
+		.setBorder(BorderFactory.createTitledBorder(LocaleManager.resources
+				.getString(AttributeManager.FORM_SEED_TYPE)));
 		radioVegetables.setText(LocaleManager.resources
 				.getString(AttributeManager.FORM_VEGETABLES));
 		radioCereal.setText(LocaleManager.resources
@@ -358,10 +362,10 @@ public class DataEntryFormStatic extends FormPanel implements ActionListener,
 				.getString(AttributeManager.FORM_GRAFTING));
 		radioCoffee.setText(LocaleManager.resources
 				.getString(AttributeManager.FORM_COFFEE));
-		// seedQuantityLabel.setText(LocaleManager.resources.getString(AttributeManager.FORM_SEED_QUANTITY));
 
-		toolsLabel.setText(LocaleManager.resources
-				.getString(AttributeManager.FORM_TOOLS));
+		toolsPanel
+		.setBorder(BorderFactory.createTitledBorder(LocaleManager.resources
+				.getString(AttributeManager.FORM_TOOLS)));
 		radioHoe.setText(LocaleManager.resources
 				.getString(AttributeManager.FORM_HOE));
 		radioPickaxe.setText(LocaleManager.resources
@@ -382,8 +386,9 @@ public class DataEntryFormStatic extends FormPanel implements ActionListener,
 		giveNameLabel2.setText(LocaleManager.resources
 				.getString(AttributeManager.FORM_GIVE_NAME));
 
-		organizationLabel.setText(LocaleManager.resources
-				.getString(AttributeManager.FORM_ORGANIZATIONS));
+		organizationPanel
+		.setBorder(BorderFactory.createTitledBorder(LocaleManager.resources
+				.getString(AttributeManager.FORM_ORGANIZATIONS)));
 
 		dossierLabel.setText(LocaleManager.resources.getString(LABEL_DOSSIER));
 	}
@@ -490,8 +495,6 @@ public class DataEntryFormStatic extends FormPanel implements ActionListener,
 		dp = new JLabel();
 		guardianChild = new JLabel();
 		guardianWoman = new JLabel();
-		husband = new JLabel();
-		father = new JLabel();
 
 		JPanel healthCenterPanel = new JPanel();
 		healthCenterPanel.setLayout(new BoxLayout(healthCenterPanel,
@@ -600,8 +603,6 @@ public class DataEntryFormStatic extends FormPanel implements ActionListener,
 		radioButtonsPanel.setLayout(new BoxLayout(radioButtonsPanel,
 				BoxLayout.LINE_AXIS));
 
-		agriCategoryLabel = new JLabel();
-
 		agriCategoryPanel = new JPanel();
 		agriCategoryPanel.setLayout(new BoxLayout(agriCategoryPanel,
 				BoxLayout.PAGE_AXIS));
@@ -650,8 +651,6 @@ public class DataEntryFormStatic extends FormPanel implements ActionListener,
 		radioOther.setEnabled(false);
 		radioButtonsPanel.add(agriCategoryPanel);
 
-		seedTypesLabel = new JLabel();
-		seedTypes = new JLabel();
 
 		seedTypesPanel = new JPanel();
 		seedTypesPanel.setBorder(BorderFactory.createEmptyBorder());
@@ -694,9 +693,6 @@ public class DataEntryFormStatic extends FormPanel implements ActionListener,
 		radioGrafting.setEnabled(false);
 		radioCoffee.setEnabled(false);
 		radioButtonsPanel.add(seedTypesPanel);
-
-		toolsLabel = new JLabel();
-		tools = new JLabel();
 
 		toolsPanel = new JPanel();
 		toolsPanel.setBorder(BorderFactory.createEmptyBorder());
@@ -747,8 +743,6 @@ public class DataEntryFormStatic extends FormPanel implements ActionListener,
 		radioCrowbar.setEnabled(false);
 		radioButtonsPanel.add(toolsPanel);
 
-		organizationLabel = new JLabel();
-
 		organizationPanel = new JPanel();
 		organizationPanel.setBorder(BorderFactory
 				.createTitledBorder(LocaleManager.resources
@@ -795,10 +789,11 @@ public class DataEntryFormStatic extends FormPanel implements ActionListener,
 		JPanel otherAgriQuestionsPanel = new JPanel();
 		otherAgriQuestionsPanel.setLayout(new BoxLayout(
 				otherAgriQuestionsPanel, BoxLayout.PAGE_AXIS));
-		// otherAgriQuestionsPanel.setAlignmentX(Component.RIGHT_ALIGNMENT);
+		otherAgriQuestionsPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
 		JPanel landPanel = new JPanel();
 		landPanel.setLayout(new BoxLayout(landPanel, BoxLayout.LINE_AXIS));
+		landPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
 		landLabel = new JLabel(LocaleManager.resources.getString(AttributeManager.FORM_LAND),
 				JLabel.LEFT);
 		land = new JLabel();
@@ -809,7 +804,7 @@ public class DataEntryFormStatic extends FormPanel implements ActionListener,
 		JPanel healthProgramQuestionPanel = new JPanel();
 		healthProgramQuestionPanel.setLayout(new BoxLayout(
 				healthProgramQuestionPanel, BoxLayout.LINE_AXIS));
-		// healthProgramQuestionPanel.setAlignmentX(Component.RIGHT_ALIGNMENT);
+		healthProgramQuestionPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
 		healthLabel = new JLabel(
 				LocaleManager.resources.getString(AttributeManager.FORM_HEALTH),
 				JLabel.LEFT);
@@ -821,7 +816,7 @@ public class DataEntryFormStatic extends FormPanel implements ActionListener,
 		JPanel healthPersonPanel = new JPanel();
 		healthPersonPanel.setLayout(new BoxLayout(healthPersonPanel,
 				BoxLayout.LINE_AXIS));
-		// healthPersonPanel.setAlignmentX(Component.RIGHT_ALIGNMENT);
+		healthPersonPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
 		healthPerson = new JLabel();
 		giveNameLabel2 = new JLabel(
 				LocaleManager.resources
@@ -852,7 +847,6 @@ public class DataEntryFormStatic extends FormPanel implements ActionListener,
 
 		formPanel.add(mchnPanel);
 		formPanel.add(agriPanel);
-		// formPanel.add(otherAgriQuestionsPanel);
 
 		this.add(geninfoPanel, "North");
 		this.add(formPanel, "Center");
@@ -862,8 +856,6 @@ public class DataEntryFormStatic extends FormPanel implements ActionListener,
 		buttonPanel.add(dossier);
 		buttonPanel.add(toDbButton);
 		buttonPanel.add(toDbMgrButton);
-
-		// return formPanel;
 	}
 
 	public void actionPerformed(ActionEvent e) {
