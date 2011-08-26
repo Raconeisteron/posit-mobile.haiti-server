@@ -217,12 +217,32 @@ public class Beneficiary {
 						distributionPost = AttributeManager.mapToLong(true, val);
 					else if (attr.equalsIgnoreCase(AttributeManager.ABBREV_RELATIVE_1) && (beneficiaryCategory == BeneficiaryCategory.MALNOURISHED || beneficiaryCategory == BeneficiaryCategory.PREVENTION))
 						guardianChild = val;
-					else if (attr.equalsIgnoreCase(AttributeManager.ABBREV_RELATIVE_1) && beneficiaryCategory == BeneficiaryCategory.EXPECTING || beneficiaryCategory == BeneficiaryCategory.NURSING)
+					else if (attr.equalsIgnoreCase(AttributeManager.ABBREV_RELATIVE_1) && (beneficiaryCategory == BeneficiaryCategory.EXPECTING || beneficiaryCategory == BeneficiaryCategory.NURSING))
 						guardianWoman = val;
-					else if (attr.equalsIgnoreCase(AttributeManager.ABBREV_IS_MOTHERLEADER))
-						isMotherLeader = YnQuestion.valueOf(val.toUpperCase());
-					else if (attr.equalsIgnoreCase(AttributeManager.ABBREV_VISIT_MOTHERLEADER))
-						visitMotherLeader = YnQuestion.valueOf(val.toUpperCase());			
+					else if (attr.equalsIgnoreCase(AttributeManager.ABBREV_IS_MOTHERLEADER)){
+						if (val.equals(AttributeManager.ABBREV_TRUE))
+							isMotherLeader = YnQuestion.Y;
+						else if (val.equals(AttributeManager.ABBREV_FALSE))
+							isMotherLeader = YnQuestion.N;
+						else
+							isMotherLeader = YnQuestion.U;
+					}
+					else if (attr.equalsIgnoreCase(AttributeManager.ABBREV_VISIT_MOTHERLEADER)){
+						if (val.equals(AttributeManager.ABBREV_TRUE))
+							visitMotherLeader = YnQuestion.Y;
+						else if (val.equals(AttributeManager.ABBREV_FALSE))
+							visitMotherLeader = YnQuestion.N;
+						else
+							visitMotherLeader = YnQuestion.U;	
+					}
+					else if (attr.equalsIgnoreCase(AttributeManager.ABBREV_PARTICIPATING_BENE)){
+						if (val.equals(AttributeManager.ABBREV_TRUE))
+							isAgri = YnQuestion.Y;
+						else if (val.equals(AttributeManager.ABBREV_FALSE))
+							isAgri = YnQuestion.N;
+						else
+							isAgri = YnQuestion.U;	
+					}
 					else if (attr.equalsIgnoreCase(AttributeManager.ABBREV_RELATIVE_2)) {
 						agriPerson = val;					
 					}

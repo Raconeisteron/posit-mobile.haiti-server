@@ -140,24 +140,24 @@ public class DataEntryGUI extends JFrame implements WindowListener,
 		this.mMessageList.repaint();
 	}
 
+	public void refreshLocale() {
+		mWelcomeLabel.setText(LocaleManager.resources.getString("Instructions"));
+	}
 	/**
 	 * Manages the detailed operations of setting up the user interface.
 	 */
 	private void setupFrame() {
 		mWelcomePanel = new JPanel();
-		MultiLineLabel welcome = new MultiLineLabel("DataEntryGUI " + "v0.1"
+		mWelcomePanel.setLayout(new BoxLayout(mWelcomePanel, BoxLayout.PAGE_AXIS));
+		MultiLineLabel frontPageLabel = new MultiLineLabel("DataEntryGUI " + "v0.1"
 				+ "\n" + " \n" + "Humanitarian FOSS Project\n"
 				+ "Trinity College, Hartford, CT, USA\n\n"
 				+ "DataEntryGUI is free software");
-		mWelcomeLabel = new JLabel("Please choose a database or a file.");
-		mWelcomePanel.add(welcome);
+		mWelcomeLabel = new JLabel(LocaleManager.resources.getString("Instructions"));
 		mWelcomePanel.add(mWelcomeLabel);
+		mWelcomePanel.add(frontPageLabel);
 
 		this.getContentPane().add(mWelcomePanel);
-	}
-
-	private void updateWelcomePanelMessage(String message) {
-		mWelcomeLabel.setText(message);
 	}
 
 	/**
@@ -313,7 +313,7 @@ public class DataEntryGUI extends JFrame implements WindowListener,
 			this.pack();
 			DataEntryGUI.centerWindow(this);
 			this.repaint();
-			this.setSize(1200, 800);
+			this.setSize(800, 800);
 			this.setLocation(0, 0);
 		} else if (type == MessageType.UPDATE) {
 			mFormPanel = new BeneficiaryUpdateFormStatic(this);
@@ -341,7 +341,7 @@ public class DataEntryGUI extends JFrame implements WindowListener,
 			this.pack();
 			DataEntryGUI.centerWindow(this);
 			this.repaint();
-			this.setSize(1200, 800);
+			this.setSize(800, 800);
 			this.setLocation(0, 0);
 		} else if (type == MessageType.ATTENDANCE) {
 			try {
@@ -374,7 +374,7 @@ public class DataEntryGUI extends JFrame implements WindowListener,
 			this.pack();
 			DataEntryGUI.centerWindow(this);
 			this.repaint();
-			this.setSize(1000, 650);
+			this.setSize(800, 800);
 		}
 	}
 
@@ -398,7 +398,8 @@ public class DataEntryGUI extends JFrame implements WindowListener,
 			return;
 		String dbName = fd.getSelectedFile().toString();
 		setmMessagesFileOrDbName(dbName);
-		updateWelcomePanelMessage("You have chosen " + dbName + ".");
+		readMessagesIntoGUI(DbSource.DATA_BASE, AttributeManager.MessageStatus.NEW, AttributeManager.MessageType.REGISTRATION);
+		repaint();
 	}
 
 	/**
