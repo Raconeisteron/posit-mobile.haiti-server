@@ -429,8 +429,8 @@ public class DataEntryFormStatic extends FormPanel implements ActionListener,
 				LocaleManager.resources
 						.getString(AttributeManager.FORM_COMMUNE),
 				JLabel.RIGHT);
-		geninfoPanel.add(communeLabel);
-		geninfoPanel.add(communeBox);
+		//geninfoPanel.add(communeLabel);
+		//geninfoPanel.add(communeBox);
 
 		communeSectionLabel = new JLabel(
 				LocaleManager.resources
