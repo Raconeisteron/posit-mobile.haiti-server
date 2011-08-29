@@ -1,6 +1,7 @@
 package haiti.server.datamodel;
 
 
+import haiti.server.datamodel.AttributeManager.BeneficiaryCategory;
 import haiti.server.datamodel.AttributeManager.BeneficiaryType;
 
 import java.io.FileInputStream;
@@ -162,7 +163,7 @@ public class TbsManager {
 
 		if (bt == BeneficiaryType.MCHN || bt == BeneficiaryType.BOTH) {
 			requete = "Insert into Beneficiaire_1 values('" + info_MCHN + "','"
-					+ beneficiary.getBeneficiaryCategory().name() + "','"
+					+ convertBeneficiaryCategory(beneficiary.getBeneficiaryCategory()) + "','"
 					+ beneficiary.getNumberInHome() + "','"
 					+ beneficiary.getDistributionPost() + "','"
 					+ beneficiary.getGuardianChild() + "','"
@@ -353,6 +354,18 @@ public class TbsManager {
 		return organizations;
 	}
 
+	private String convertBeneficiaryCategory(BeneficiaryCategory category){
+		String convertedCategory = "";
+		if (category == AttributeManager.BeneficiaryCategory.EXPECTING)
+			convertedCategory = "Femme Enceinte";
+		else if (category == AttributeManager.BeneficiaryCategory.NURSING)
+			convertedCategory = "Femme Allaitante";
+		else if (category == AttributeManager.BeneficiaryCategory.PREVENTION)
+			convertedCategory = "Enfant Prevention";
+		else if (category == AttributeManager.BeneficiaryCategory.MALNOURISHED)
+			convertedCategory = "Enfant Mal Nouri";
+		return convertedCategory;
+	}
 	public static void main(String args[]) {
 		TbsManager tbs = new TbsManager();
 		tbs.readConfigFile();
