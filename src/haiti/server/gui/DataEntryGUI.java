@@ -286,8 +286,36 @@ public class DataEntryGUI extends JFrame implements WindowListener,
 			mMessagesArray = mReader.getMessageByStatusAndType(
 					mMessagesFileOrDbName, status, type);
 		}
+	if (type == MessageType.REGISTRATION && status == MessageStatus.UPDATED) {
+		mFormPanel = new BeneficiaryUpdateFormStatic(this);
+		if (mMessagesArray.length == 0) {
+			mMessagesArray = new String[1];
+			mMessagesArray[0] = "{Empty}";
+		} else {
+			mUpdate = new Update(mMessagesArray[0]);
+			// mBeneficiary = new Beneficiary(mMessagesArray[0],
+			// Abbreviated.TRUE);
+			mFormPanel.fillInForm(mUpdate, mReader);
 
-		if (type == MessageType.REGISTRATION) {
+			// mUpdatePanel = new BeneficiaryUpdateForm(this);
+			// mBeneficiary = new Beneficiary(mMessagesArray[0],
+			// Abbreviated.TRUE);
+			// mUpdatePanel.fillInForm(mBeneficiary,mReader);
+		}
+		this.getContentPane().removeAll(); // WIN!!!!! Yours Truly, Alex and
+											// Danny
+		// this.getContentPane().remove(mWelcomePanel);
+		// this.getContentPane().add(setUpSplitPane(mMessagesArray,
+		// mUpdatePanel));
+		this.getContentPane().add(
+				setUpSplitPane(mMessagesArray, mFormPanel));
+		this.pack();
+		DataEntryGUI.centerWindow(this);
+		this.repaint();
+		this.setSize(800, 800);
+		this.setLocation(0, 0);
+	} 
+		if (type == MessageType.REGISTRATION && status == MessageStatus.NEW) {
 			mFormPanel = new DataEntryFormStatic(this);
 			if (mMessagesArray.length == 0) {
 				mMessagesArray = new String[1];
@@ -297,34 +325,6 @@ public class DataEntryGUI extends JFrame implements WindowListener,
 				// mBeneficiary = new Beneficiary(mMessagesArray[0],
 				// Abbreviated.TRUE);
 				mFormPanel.fillInForm(mBeneficiary, mReader);
-
-				// mUpdatePanel = new BeneficiaryUpdateForm(this);
-				// mBeneficiary = new Beneficiary(mMessagesArray[0],
-				// Abbreviated.TRUE);
-				// mUpdatePanel.fillInForm(mBeneficiary,mReader);
-			}
-			this.getContentPane().removeAll(); // WIN!!!!! Yours Truly, Alex and
-												// Danny
-			// this.getContentPane().remove(mWelcomePanel);
-			// this.getContentPane().add(setUpSplitPane(mMessagesArray,
-			// mUpdatePanel));
-			this.getContentPane().add(
-					setUpSplitPane(mMessagesArray, mFormPanel));
-			this.pack();
-			DataEntryGUI.centerWindow(this);
-			this.repaint();
-			this.setSize(800, 800);
-			this.setLocation(0, 0);
-		} else if (type == MessageType.UPDATE) {
-			mFormPanel = new BeneficiaryUpdateFormStatic(this);
-			if (mMessagesArray.length == 0) {
-				mMessagesArray = new String[1];
-				mMessagesArray[0] = "{Empty}";
-			} else {
-				mUpdate = new Update(mMessagesArray[0]);
-				// mBeneficiary = new Beneficiary(mMessagesArray[0],
-				// Abbreviated.TRUE);
-				mFormPanel.fillInForm(mUpdate, mReader);
 
 				// mUpdatePanel = new BeneficiaryUpdateForm(this);
 				// mBeneficiary = new Beneficiary(mMessagesArray[0],

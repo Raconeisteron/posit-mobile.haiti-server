@@ -217,13 +217,13 @@ public class BeneficiaryUpdateFormStatic extends FormPanel implements ActionList
 		//formPanel = new JPanel();
 		this.setBorder(BorderFactory.createTitledBorder(LocaleManager.resources.getString(BORDER_BENEFICIARY_UPDATE)));
 		this.setLayout(new GridLayout(0,1));
-		this.setBackground(Color.WHITE); 
+		//this.setBackground(Color.WHITE); 
 		
 		//Beneficiary Information Panel
 		benifPanel = new JPanel();
 		benifPanel.setBorder(BorderFactory.createTitledBorder(LocaleManager.resources.getString(BORDER_BENEFICIARY_INFO)));
 		benifPanel.setLayout(new GridLayout(0,4));
-		benifPanel.setBackground(Color.WHITE); 
+		//benifPanel.setBackground(Color.WHITE); 
 //		GridBagConstraints c = new GridBagConstraints();
 		dossier = new JLabel();
 		firstName = new JLabel();
@@ -310,7 +310,7 @@ public class BeneficiaryUpdateFormStatic extends FormPanel implements ActionList
 		updatePanel = new JPanel();
 		updatePanel.setBorder(BorderFactory.createTitledBorder(LocaleManager.resources.getString(BORDER_UPDATE_INFO)));
 		updatePanel.setLayout(new GridLayout(0,4));
-		updatePanel.setBackground(Color.WHITE); 
+		//updatePanel.setBackground(Color.WHITE); 
 
 //		c.gridy=0;
 //		c.gridx=0;
@@ -426,7 +426,7 @@ public class BeneficiaryUpdateFormStatic extends FormPanel implements ActionList
 		//Control panel
 		buttonPanel = new JPanel();
 		buttonPanel.setBorder(BorderFactory.createTitledBorder(LocaleManager.resources.getString(BORDER_CONTROLS)));
-		buttonPanel.setBackground(Color.WHITE);
+		//buttonPanel.setBackground(Color.WHITE);
 		toDbButton = new JButton(LocaleManager.resources.getString(BUTTON_SAVE));
 		this.add(toDbButton);
 		toDbMgrButton = new JButton(LocaleManager.resources.getString(BUTTON_DB_MGR));
