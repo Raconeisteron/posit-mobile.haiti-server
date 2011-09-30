@@ -26,6 +26,8 @@ import haiti.server.datamodel.DAO;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -47,6 +49,7 @@ import java.sql.Statement;
 import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
 /**
  * @author cslab
@@ -55,12 +58,16 @@ import java.util.List;
 public class DbWriter {
 
 	// private static final String dbName = "D:\\SMS_Reception\\haiti.db";
-	// private static final String dbName = "/home3/rfoeckin/Desktop/databases/haiti.db";
+	// private static final String dbName =
+	// "/home3/rfoeckin/Desktop/databases/haiti.db";
 	// "C:\\Users\\Administrator\\Documents\\haiti.db";
-	//private static final String dbName = "C:\\Documents and Settings\\cslab\\Desktop\\haitidb\\haiti.db";
-	//private static final String dbName = "C:\\Documents and Settings\\cslab\\My Documents\\Dropbox\\Haiti-Docs\\haitidb\\haiti.db";
-	private static final String dbName = "C:\\Users\\Administrator\\Dropbox\\Haiti-Docs\\haitidb\\haiti.db";
-	
+	// private static final String dbName =
+	// "C:\\Documents and Settings\\cslab\\Desktop\\haitidb\\haiti.db";
+	// private static final String dbName =
+	// "C:\\Documents and Settings\\cslab\\My Documents\\Dropbox\\Haiti-Docs\\haitidb\\haiti.db";
+	//private static final String dbName = "C:\\Users\\Administrator\\Dropbox\\Haiti-Docs\\haitidb\\haiti.db";
+	private String dbName = "";
+
 	public enum MessageStatus {
 		NEW, PENDING, PROCESSED, DECLINED, ARCHIVED, ALL
 	};
@@ -103,6 +110,12 @@ public class DbWriter {
 	public static final int DB_STATUS_PENDING = 1;
 	public static final int DB_STATUS_PROCESSED = 2;
 
+	
+	public DbWriter() {
+		super();
+		readConfigFile();
+	}
+
 	/**
 	 * connectDb method to connect to database
 	 * 
@@ -123,6 +136,27 @@ public class DbWriter {
 			log(e.getMessage());
 			return connection;
 		}
+	}
+
+	/**
+	 * Reads the the location of the SQLite database from the config.txt file.
+	 */
+	public void readConfigFile() {
+		Properties prop = new Properties();
+		String fileName = "config.txt";
+		InputStream is;
+		try {
+			is = new FileInputStream(fileName);
+			prop.load(is);
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		dbName = prop.getProperty("sqlite_db_path");
+
 	}
 
 	/**
@@ -350,8 +384,8 @@ public class DbWriter {
 				statement.setQueryTimeout(60); // set timeout to 30 sec.
 				ResultSet result = statement.executeQuery("select * from "
 						+ DB_MESSAGE_TABLE + " where " + DB_MESSAGE_SENDER
-						+ "= '" + sender + "' and " + DB_MESSAGE_TYPE + "!=2 and "
-						+ DB_MESSAGE_ACKED + "=0");
+						+ "= '" + sender + "' and " + DB_MESSAGE_TYPE
+						+ "!=2 and " + DB_MESSAGE_ACKED + "=0");
 				while (result.next()) {
 					ids.add(result.getString(DB_MESSAGE_AV_NUM));
 				}
