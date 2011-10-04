@@ -339,7 +339,7 @@ public class AttributeManager {
 	public static final String ABBREV_PARTNER_OTHER = "pt";
 
 	
-	// For Update Messages
+	// For Update Messages -- WE WILL WANT TO REVERT BACK TO THIS
 	public static final String ABBREV_Q_CHANGE = "cq";   // Added to incorporated changes to beneficiary type
 	public static final String ABBREV_CHANGE_TYPE = "ch";
 	public static final String ABBREV_Q_PRESENT = "pr";
@@ -353,6 +353,29 @@ public class AttributeManager {
 	public static final String ABBREV_Q_FRAUD = "fr";
 	public static final String ABBREV_Q_COMPLETED_PROGRAM = "cp";
 	
+	// SERVER SIDE ABBREVATIONS FOR TRANSFER TYPES
+	// Very very bad, very quick fix here.  The mobile side sends the
+	// change type as a number 0-8--this number happens to be the index of the
+	// spinner that they're in.  We are in the middle of a distribution test, so its not
+	// possible to change the mobile app right now.  But, we need to fix the server
+	// side so that it can understand which change type is which.  So, the indexes of the
+	// transferTypes array are the indexes of the spinner that correspond to the different change types.
+
+	
+	public static final String TRANSFER_LACTATE= "TransferToLactating";
+	public static final String TRANSFER_PREVENTION= "TransferToPrevention";
+	public static final String TRANSFER_LOCATION= "TransferLocation";
+	public static final String TRANSFER_ABORTION= "TransferAbortion";
+	public static final String MODIFICATIONS = "ChangedBeneficiaryData";
+	public static final String DECEASED= "Deceased";
+	public static final String FRAUD = "Fraud";
+	public static final String COMPLETED_PROGRAM = "CompletedProgram";
+	public static final String OTHER = "Other";
+	
+	public static final String[] transferTypes = { TRANSFER_LACTATE,
+			TRANSFER_PREVENTION, TRANSFER_LOCATION, TRANSFER_ABORTION,
+			MODIFICATIONS, DECEASED, FRAUD, COMPLETED_PROGRAM, OTHER };
+
 	public static final String FORM_CHANGE = "Change";
 	public static final String FORM_CHANGE_TYPE = "ChangeType";
 	
@@ -506,6 +529,7 @@ public class AttributeManager {
 	public static final String FINDS_Q_FRAUD = "Fraud";
 	public static final String FINDS_Q_COMPLETED_PROGRAM = "Completed program";
 	public static final String FINDS_Q_OTHER = "Other"; //Added
+
 	
 	//NEEDS TO TRANSLATE
 //	public static final String FINDS_Q_TRANSFER_NEW_CATEGORY_HA = "Transfere nan yon lòt kategori";
@@ -942,6 +966,7 @@ public class AttributeManager {
 		mappings.put(FINDS_Q_DECEASED, ABBREV_Q_DECEASED);
 		mappings.put(FINDS_Q_FRAUD, ABBREV_Q_FRAUD);
 		mappings.put(FINDS_Q_COMPLETED_PROGRAM, ABBREV_Q_COMPLETED_PROGRAM);
+		
 //		mappings.put(FINDS_Q_TRANSFER_NEW_CATEGORY_HA, ABBREV_Q_TRANSFER);
 //		mappings.put(FINDS_Q_TRANSFER_LACTATE_HA, ABBREV_Q_TRANSFER_LACTATE);
 //		mappings.put(FINDS_Q_TRANSFER_PREVENTION_HA, ABBREV_Q_TRANSFER_PREVENTION);
@@ -951,7 +976,6 @@ public class AttributeManager {
 //		mappings.put(FINDS_Q_FRAUD_HA, ABBREV_Q_FRAUD);
 //		mappings.put(FINDS_Q_COMPLETED_PROGRAM_HA, ABBREV_Q_COMPLETED_PROGRAM);
 		
-
 		
 		// ---------- ACDIV/VOCA DATA -----------------
 		// There should be mappings for all fixed data

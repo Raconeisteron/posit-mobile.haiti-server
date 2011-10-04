@@ -107,7 +107,7 @@ public class DataEntryGUI extends JFrame implements WindowListener,
 
 		setResizable(true);
 		pack();
-		String lookAndFeel ="com.sun.java.swing.plaf.windows.WindowsLookAndFeel";
+		String lookAndFeel = "com.sun.java.swing.plaf.windows.WindowsLookAndFeel";
 		try {
 			System.out.print(lookAndFeel);
 			UIManager.setLookAndFeel(lookAndFeel);
@@ -141,19 +141,23 @@ public class DataEntryGUI extends JFrame implements WindowListener,
 	}
 
 	public void refreshLocale() {
-		mWelcomeLabel.setText(LocaleManager.resources.getString("Instructions"));
+		mWelcomeLabel
+				.setText(LocaleManager.resources.getString("Instructions"));
 	}
+
 	/**
 	 * Manages the detailed operations of setting up the user interface.
 	 */
 	private void setupFrame() {
 		mWelcomePanel = new JPanel();
-		mWelcomePanel.setLayout(new BoxLayout(mWelcomePanel, BoxLayout.PAGE_AXIS));
-		MultiLineLabel frontPageLabel = new MultiLineLabel("DataEntryGUI " + "v0.1"
-				+ "\n" + " \n" + "Humanitarian FOSS Project\n"
+		mWelcomePanel.setLayout(new BoxLayout(mWelcomePanel,
+				BoxLayout.PAGE_AXIS));
+		MultiLineLabel frontPageLabel = new MultiLineLabel("DataEntryGUI "
+				+ "v0.1" + "\n" + " \n" + "Humanitarian FOSS Project\n"
 				+ "Trinity College, Hartford, CT, USA\n\n"
 				+ "DataEntryGUI is free software");
-		mWelcomeLabel = new JLabel(LocaleManager.resources.getString("Instructions"));
+		mWelcomeLabel = new JLabel(
+				LocaleManager.resources.getString("Instructions"));
 		mWelcomePanel.add(mWelcomeLabel);
 		mWelcomePanel.add(frontPageLabel);
 
@@ -186,9 +190,9 @@ public class DataEntryGUI extends JFrame implements WindowListener,
 		// this.mListScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
 
 		this.mListScrollPane.setMaximumSize(new Dimension(700, 300));
-		//this.mListScrollPane.setSize(300, 200);
+		// this.mListScrollPane.setSize(300, 200);
 		this.mFormScrollPane = new JScrollPane(formPanel);
-		//this.mFormScrollPane.setSize(300, 200);
+		// this.mFormScrollPane.setSize(300, 200);
 
 		// See
 		// http://download.oracle.com/javase/tutorial/uiswing/components/splitpane.html
@@ -197,7 +201,7 @@ public class DataEntryGUI extends JFrame implements WindowListener,
 				mFormScrollPane);
 		mSplitPane.setOneTouchExpandable(true);
 		mSplitPane.setDividerLocation(100);
-		//this.mSplitPane.setSize(700, 300);
+		// this.mSplitPane.setSize(700, 300);
 		return mSplitPane;
 	}
 
@@ -286,35 +290,35 @@ public class DataEntryGUI extends JFrame implements WindowListener,
 			mMessagesArray = mReader.getMessageByStatusAndType(
 					mMessagesFileOrDbName, status, type);
 		}
-	if (type == MessageType.REGISTRATION && status == MessageStatus.UPDATED) {
-		mFormPanel = new BeneficiaryUpdateFormStatic(this);
-		if (mMessagesArray.length == 0) {
-			mMessagesArray = new String[1];
-			mMessagesArray[0] = "{Empty}";
-		} else {
-			mUpdate = new Update(mMessagesArray[0]);
-			// mBeneficiary = new Beneficiary(mMessagesArray[0],
-			// Abbreviated.TRUE);
-			mFormPanel.fillInForm(mUpdate, mReader);
+		if (type == MessageType.REGISTRATION && status == MessageStatus.UPDATED) {
+			mFormPanel = new BeneficiaryUpdateFormStatic(this);
+			if (mMessagesArray.length == 0) {
+				mMessagesArray = new String[1];
+				mMessagesArray[0] = "{Empty}";
+			} else {
+				mUpdate = new Update(mMessagesArray[0]);
+				// mBeneficiary = new Beneficiary(mMessagesArray[0],
+				// Abbreviated.TRUE);
+				mFormPanel.fillInForm(mUpdate, mReader);
 
-			// mUpdatePanel = new BeneficiaryUpdateForm(this);
-			// mBeneficiary = new Beneficiary(mMessagesArray[0],
-			// Abbreviated.TRUE);
-			// mUpdatePanel.fillInForm(mBeneficiary,mReader);
+				// mUpdatePanel = new BeneficiaryUpdateForm(this);
+				// mBeneficiary = new Beneficiary(mMessagesArray[0],
+				// Abbreviated.TRUE);
+				// mUpdatePanel.fillInForm(mBeneficiary,mReader);
+			}
+			this.getContentPane().removeAll(); // WIN!!!!! Yours Truly, Alex and
+												// Danny
+			// this.getContentPane().remove(mWelcomePanel);
+			// this.getContentPane().add(setUpSplitPane(mMessagesArray,
+			// mUpdatePanel));
+			this.getContentPane().add(
+					setUpSplitPane(mMessagesArray, mFormPanel));
+			this.pack();
+			DataEntryGUI.centerWindow(this);
+			this.repaint();
+			this.setSize(800, 800);
+			this.setLocation(0, 0);
 		}
-		this.getContentPane().removeAll(); // WIN!!!!! Yours Truly, Alex and
-											// Danny
-		// this.getContentPane().remove(mWelcomePanel);
-		// this.getContentPane().add(setUpSplitPane(mMessagesArray,
-		// mUpdatePanel));
-		this.getContentPane().add(
-				setUpSplitPane(mMessagesArray, mFormPanel));
-		this.pack();
-		DataEntryGUI.centerWindow(this);
-		this.repaint();
-		this.setSize(800, 800);
-		this.setLocation(0, 0);
-	} 
 		if (type == MessageType.REGISTRATION && status == MessageStatus.NEW) {
 			mFormPanel = new DataEntryFormStatic(this);
 			if (mMessagesArray.length == 0) {
@@ -398,7 +402,9 @@ public class DataEntryGUI extends JFrame implements WindowListener,
 			return;
 		String dbName = fd.getSelectedFile().toString();
 		setmMessagesFileOrDbName(dbName);
-		readMessagesIntoGUI(DbSource.DATA_BASE, AttributeManager.MessageStatus.NEW, AttributeManager.MessageType.REGISTRATION);
+		readMessagesIntoGUI(DbSource.DATA_BASE,
+				AttributeManager.MessageStatus.NEW,
+				AttributeManager.MessageType.REGISTRATION);
 		repaint();
 	}
 
@@ -409,12 +415,20 @@ public class DataEntryGUI extends JFrame implements WindowListener,
 	public void valueChanged(ListSelectionEvent e) {
 		JList list = (JList) e.getSource();
 		System.out.println("Clicked on  list item " + list.getSelectedValue());
-		mBeneficiary = new Beneficiary(list.getSelectedValue().toString());
+		// Begin dumb code
+		if (mFormPanel instanceof DataEntryFormStatic) {
+			mBeneficiary = new Beneficiary(list.getSelectedValue().toString());
+			mFormPanel.fillInForm(mBeneficiary, mReader); }
+		else if (mFormPanel instanceof BeneficiaryUpdateFormStatic) {
+			mUpdate = new Update(list.getSelectedValue().toString());
+			mFormPanel.fillInForm(mUpdate, mReader); 
+		}
 		// mBeneficiary = new Beneficiary(list.getSelectedValue().toString(),
 		// Abbreviated.TRUE);
 		// mBeneficiary = new Beneficiary(list.getSelectedValue().toString(),
 		// Abbreviated.TRUE);
-		mFormPanel.fillInForm(mBeneficiary, mReader);
+
+		//mFormPanel.fillInForm(beneficiary, mReader);
 		// mUpdatePanel.fillInForm(mBeneficiary, mReader);
 	}
 
@@ -524,6 +538,33 @@ public class DataEntryGUI extends JFrame implements WindowListener,
 		}
 	}
 
+	public void setUpdateStatus(String dossier) {
+		// TODO Auto-generated method stub
+		// System.out.println(mBeneficiary.toString());
+		mUpdate.setDossier(dossier);
+
+		mUpdate.setDossier(dossier);
+		mUpdate.setStatus(AttributeManager.MessageStatus.PROCESSED);
+		mReader.updateUpdate(mUpdate, this.mMessagesFileOrDbName);
+		int index = this.mMessageList.getSelectedIndex();
+		String msg = mReader.getMessageById(mUpdate.getId(),
+				this.mMessagesFileOrDbName);
+		// System.out.println(msg);
+		if (!msg.contains("NOT FOUND")) {
+			this.mListModel.set(index, msg);
+			this.mMessageList.setSelectedIndex(index++);
+			this.mMessageList.repaint();
+			// System.out.println("Posted message to TBS Db");
+			JOptionPane.showMessageDialog(this, "Message processed.",
+					"Success", -1);
+		} else {
+			System.out.println("ERROR in changing status of message");
+			JOptionPane.showMessageDialog(this,
+					"Error in changing status of message.", "ERROR", 0);
+		}
+
+	}
+
 	/**
 	 * Utility method to center windows used by the application.
 	 * 
@@ -555,7 +596,7 @@ public class DataEntryGUI extends JFrame implements WindowListener,
 			System.out.println("entry " + entry);
 			if (entry.contains("message_status="
 					+ AttributeManager.MessageStatus.PENDING.getCode())) {
-				
+
 				label.setBackground(Color.YELLOW);
 			} else if (entry.contains("message_status="
 					+ AttributeManager.MessageStatus.PROCESSED.getCode())) {
