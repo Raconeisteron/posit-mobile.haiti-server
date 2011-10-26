@@ -800,6 +800,9 @@ public class AttributeManager {
 
 	public static final String ET_SEPARATOR = "et";
 	
+	public static final String ABBREV_DIST_ID = "di";
+	public static final String DISTRIBUTION_ID = "Distribution ID";
+	
 	/**
 	 * Private constructor means it can't be instantiated.
 	 * @param activity
@@ -846,6 +849,9 @@ public class AttributeManager {
 		mappings.put(ABBREV_ID,LONG_ID);
 		mappings.put(ABBREV_AV, LONG_AV);
 		mappings.put(ABBREV_TYPE, LONG_TYPE);
+		
+		mappings.put(ABBREV_DIST_ID, DISTRIBUTION_ID);
+		mappings.put(DISTRIBUTION_ID, ABBREV_DIST_ID);
 		
 		
 		// ----------- DATA MAPPINGS -------------------------

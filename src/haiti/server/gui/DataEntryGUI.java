@@ -348,29 +348,30 @@ public class DataEntryGUI extends JFrame implements WindowListener,
 			this.setSize(800, 800);
 			this.setLocation(0, 0);
 		} else if (type == MessageType.ATTENDANCE) {
-			try {
-				FileWriter fstream = new FileWriter("out.txt", true);
-				BufferedWriter out = new BufferedWriter(fstream);
-				out.newLine();
-				out.newLine();
-				out.write("-------" + new Date() + "-------");
-				out.newLine();
-				mBulkPanel = new JPanel();
-				mBulkPanel.setLayout(new GridLayout(0, 1));
-				mBulkPanel.add(new JLabel("Dossier Numbers of Absentees:"));
-				for (int i = 0; i < mMessagesArray.length; i++) {
-					mBulk = new Bulk(mMessagesArray[i]);
-					mBulkPanel.add(new JLabel(mBulk.getAvNum()));
-					out.write("Dossier: " + mBulk.getAvNum());
-					out.newLine();
-					mBulk.setStatus(AttributeManager.MessageStatus.PROCESSED);
-					mReader.updateBulk(mBulk, this.mMessagesFileOrDbName);
-				}
-				out.close();
+//			try {
+//				FileWriter fstream = new FileWriter("out.txt", true);
+//				BufferedWriter out = new BufferedWriter(fstream);
+//				out.newLine();
+//				out.newLine();
+//				out.write("-------" + new Date() + "-------");
+//				out.newLine();
+//				mBulkPanel = new JPanel();
+//				mBulkPanel.setLayout(new GridLayout(0, 1));
+//				mBulkPanel.add(new JLabel("Dossier Numbers of Absentees:"));
+//				for (int i = 0; i < mMessagesArray.length; i++) {
+//					mBulk = new Bulk(mMessagesArray[i]);
+//					mBulkPanel.add(new JLabel(mBulk.getAvNum()));
+//					out.write("Dossier: " + mBulk.getAvNum());
+//					out.newLine();
+//					mBulk.setStatus(AttributeManager.MessageStatus.PROCESSED);
+//					mReader.updateBulk(mBulk, this.mMessagesFileOrDbName);
+//				}
+//				out.close();
+				mReader.getAbsentees(mMessagesFileOrDbName);
 
-			} catch (Exception e) {// Catch exception if any
-				System.err.println("Error: " + e.getMessage());
-			}
+//			} catch (Exception e) {// Catch exception if any
+//				System.err.println("Error: " + e.getMessage());
+//			}
 			this.getContentPane().removeAll(); // WIN!!!!! Yours Truly, Alex and
 												// Danny
 			this.getContentPane().add(
