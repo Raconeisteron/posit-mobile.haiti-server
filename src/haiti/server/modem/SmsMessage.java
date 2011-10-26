@@ -21,9 +21,9 @@ public class SmsMessage {
 	private AttributeManager.MessageType type = AttributeManager.MessageType.REGISTRATION;
 	private String message = "";
 	private String sender = "";
+	private String distributionId = "";
 
-	public SmsMessage(String aVnum, MessageStatus status, MessageType type,
-			String message, String sender) {
+	public SmsMessage(String aVnum, MessageStatus status, MessageType type, String message, String sender) {
 		super();
 		AVnum = aVnum;
 		this.status = status;
@@ -36,16 +36,15 @@ public class SmsMessage {
 		message = rawMsg;
 		sender = rawSender;
 
-//		try {
-//			message = URLDecoder.decode(message, "UTF-8");
-//			sender = URLDecoder.decode(sender, "UTF-8");
-//			sender = sender.replace("+", "");
-//		} catch (UnsupportedEncodingException e) {
-//			DbWriter.log(e.getMessage());
-//			e.printStackTrace();
-//		}
-		split(message, AttributeManager.OUTER_DELIM,
-				AttributeManager.INNER_DELIM, true);
+		// try {
+		// message = URLDecoder.decode(message, "UTF-8");
+		// sender = URLDecoder.decode(sender, "UTF-8");
+		// sender = sender.replace("+", "");
+		// } catch (UnsupportedEncodingException e) {
+		// DbWriter.log(e.getMessage());
+		// e.printStackTrace();
+		// }
+		split(message, AttributeManager.OUTER_DELIM, AttributeManager.INNER_DELIM, true);
 	}
 
 	public String getAVnum() {
@@ -55,7 +54,7 @@ public class SmsMessage {
 	public void setAVnum(String aVnum) {
 		AVnum = aVnum;
 	}
-	
+
 	public int getMsgNumber() {
 		return msgNumber;
 	}
@@ -72,8 +71,15 @@ public class SmsMessage {
 		this.msgTotal = msgTotal;
 	}
 
-	private void split(String s, String outerDelim, String innerDelim,
-			boolean abbreviated) {
+	public String getDistributionId() {
+		return distributionId;
+	}
+
+	public void setDistributionId(String distributionId) {
+		this.distributionId = distributionId;
+	}
+
+	private void split(String s, String outerDelim, String innerDelim, boolean abbreviated) {
 		try {
 			String attrvalPairs[] = s.split(outerDelim); // Pairs like
 															// attr1=val1
@@ -85,12 +91,11 @@ public class SmsMessage {
 
 				if (longAttr.equals(AttributeManager.LONG_AV))
 					AVnum = attrval[1];
-				else if (longAttr.equals(AttributeManager.LONG_MESSAGE_NUMBER)){
+				else if (longAttr.equals(AttributeManager.LONG_MESSAGE_NUMBER)) {
 					String parts[] = attrval[1].split(AttributeManager.MSG_NUMBER_SEPARATOR);
-					msgNumber=Integer.parseInt(parts[0]);
-					msgTotal=Integer.parseInt(parts[1]);
-				}
-				else if (longAttr.equals(AttributeManager.LONG_STATUS)) {
+					msgNumber = Integer.parseInt(parts[0]);
+					msgTotal = Integer.parseInt(parts[1]);
+				} else if (longAttr.equals(AttributeManager.LONG_STATUS)) {
 					int i = Integer.parseInt(attrval[1]);
 					switch (i) {
 					case 0:
@@ -109,23 +114,26 @@ public class SmsMessage {
 						status = AttributeManager.MessageStatus.ALL;
 						break;
 					}
-//				} else if (longAttr.equals(AttributeManager.LONG_TYPE)) {
-//					switch (Integer.parseInt(attrval[1])) {
-//					case 0:
-//						type = AttributeManager.MessageType.REGISTRATION;
-//						break;
-//					case 1:
-//						type = AttributeManager.MessageType.UPDATE;
-//						break;
-//					case 2:
-//						type = AttributeManager.MessageType.ATTENDANCE;
-//						break;
-//					case 3:
-//						type = AttributeManager.MessageType.ALL;
-//						break;
-//					}
+				} else if (longAttr.equals(AttributeManager.DISTRIBUTION_ID)) {
+					distributionId = attrval[1];
 				}
+				// } else if (longAttr.equals(AttributeManager.LONG_TYPE)) {
+				// switch (Integer.parseInt(attrval[1])) {
+				// case 0:
+				// type = AttributeManager.MessageType.REGISTRATION;
+				// break;
+				// case 1:
+				// type = AttributeManager.MessageType.UPDATE;
+				// break;
+				// case 2:
+				// type = AttributeManager.MessageType.ATTENDANCE;
+				// break;
+				// case 3:
+				// type = AttributeManager.MessageType.ALL;
+				// break;
+				// }
 			}
+
 		} catch (ArrayIndexOutOfBoundsException e) {
 			e.printStackTrace();
 			DbWriter.log("Invalid message format: " + s);
@@ -164,15 +172,16 @@ public class SmsMessage {
 		this.sender = sender;
 	}
 
+	@Override
 	public String toString() {
-		return "Message:\n" + message + "\nSender:\n" + sender + "\nStatus:\n"
-				+ status + "\nType:\n" + type + "\nAV Number: " + AVnum
-				+ "\nMessage " + msgNumber + " of " + msgTotal;
+		return "SmsMessage [AVnum=" + AVnum + ", msgNumber=" + msgNumber + ", msgTotal=" + msgTotal + ", status="
+				+ status + ", type=" + type + ", message=" + message + ", sender=" + sender + ", distributionId="
+				+ distributionId + "]";
 	}
-	
-	public static void main(String args[]){
-		SmsMessage sms = new SmsMessage("AV=4,mn=1:10,i=fafa,ms=0,t=0","111111");
+
+	public static void main(String args[]) {
+		SmsMessage sms = new SmsMessage("AV=4,mn=1:10,i=fafa,ms=0,t=0", "111111");
 		System.out.println(sms);
-		
+
 	}
 }

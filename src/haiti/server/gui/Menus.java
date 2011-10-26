@@ -30,6 +30,7 @@ import haiti.server.gui.DataEntryGUI.DbSource;
 import haiti.server.datamodel.AttributeManager;
 import haiti.server.datamodel.AttributeManager.MessageStatus;
 import haiti.server.datamodel.AttributeManager.MessageType;
+import haiti.server.datamodel.DAO;
 
 import java.awt.*;
 import java.awt.event.*;

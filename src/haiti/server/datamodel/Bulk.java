@@ -7,6 +7,7 @@ public class Bulk {
 	private int id = -1;
 	private MessageStatus status = MessageStatus.UNKNOWN;
 	private String avNum = "";
+	private String distributionId = "";
 
 	public Bulk (String smsString) {
 		System.out.println("Creating instance from SMS: " + smsString);
@@ -29,6 +30,8 @@ public class Bulk {
 					id = Integer.parseInt(val);
 				else if (attr.equalsIgnoreCase(AttributeManager.ABBREV_AV))
 					avNum = val;
+				else if (attr.equalsIgnoreCase(AttributeManager.ABBREV_DIST_ID))
+					distributionId = val;
 			} catch (NumberFormatException e) {
 				System.out.println("Number format exception");
 				e.printStackTrace();
@@ -69,4 +72,22 @@ public class Bulk {
 		this.status = status;
 	}
 
+	public String getDistributionId() {
+		return distributionId;
+	}
+
+	public void setDistributionId(String distributionId) {
+		this.distributionId = distributionId;
+	}
+
+	@Override
+	public String toString() {
+		return "Bulk [id=" + id + ", status=" + status + ", avNum=" + avNum + ", distributionId=" + distributionId
+				+ "]";
+	}
+
+	public static void main(String args[]){
+		Bulk bulk = new Bulk("AV=-19,mn=1:10,mi=19,di=HEGG-018.1011,001GG-FAT&001GG-FE&001GG-FEAT&002GG-FAT&002GG-FEAT&002GG-FET&003GG-FAT&003GG-FE&004GG-FAT&004GG-FEAT&");
+		System.out.println(bulk);
+	}
 }
