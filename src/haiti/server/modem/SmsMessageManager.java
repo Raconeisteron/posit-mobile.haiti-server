@@ -50,20 +50,18 @@ public class SmsMessageManager {
 	 * @param sender
 	 *            the phone number from which the message was sent
 	 */
-	public static List<SmsMessage> convertBulkAbsenteeMessage(String message,
-			String sender) {
+	public static List<SmsMessage> convertBulkAbsenteeMessage(String message, String sender) {
 		try {
 			String[] parts = message.split(AttributeManager.OUTER_DELIM);
-			String[] ids = parts[4].split(AttributeManager.LIST_SEPARATOR);
+			String distributionId = parts[SmsMessage.DISTRIBUTION_ID_POSITION].split(AttributeManager.ATTR_VAL_SEPARATOR)[1];
+			String[] ids = parts[SmsMessage.DOSSIER_LIST_POSITION].split(AttributeManager.LIST_SEPARATOR);
 			List<SmsMessage> messages = new ArrayList<SmsMessage>();
 			for (String id : ids) {
-				SmsMessage sms = new SmsMessage(id,
-						AttributeManager.MessageStatus.NEW,
-						AttributeManager.MessageType.ATTENDANCE,
-						AttributeManager.ABBREV_AV + "=" + id + ","
-								+ AttributeManager.ABBREV_DOSSIER + "=" + id
-								+ "," + AttributeManager.ABBREV_Q_PRESENT + "="
-								+ AttributeManager.ABBREV_TRUE, sender);
+				SmsMessage sms = new SmsMessage(id, AttributeManager.MessageStatus.NEW,
+						AttributeManager.MessageType.ATTENDANCE, AttributeManager.ABBREV_AV + "=" + id + ","
+								+ AttributeManager.ABBREV_DOSSIER + "=" + id + "," + AttributeManager.ABBREV_DIST_ID
+								+ "=" + distributionId + "," + AttributeManager.ABBREV_Q_PRESENT + "="
+								+ AttributeManager.ABBREV_TRUE, sender, distributionId);
 				messages.add(sms);
 			}
 			return messages;

@@ -35,7 +35,10 @@ import java.sql.SQLException;
 import java.sql.Statement;
 //import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 //import java.util.Calendar;
 import java.util.Scanner;
 
@@ -317,21 +320,20 @@ public class DAO {
 	}
 
 	/**
-	 * Gets absentees if there are two phones.
+	 * Gets absentees. Figures out if two phones were used at a distribution or not
+	 * and returns correct absentees.
 	 * @param dbName
+	 * @return list of absentees
 	 */
-	public void getAbsentees(String dbName) {
+	public List<SmsMessage> getAbsentees(String dbName) {
 		System.out.println("Getting absentees");
 		Connection connection = connectDb(dbName);
 		Statement statement;
+		List<SmsMessage> absentees = new ArrayList<SmsMessage>();
 		try {
 			statement = connection.createStatement();
 			statement.setQueryTimeout(30); // set timeout to 30 sec
 
-//			String query = "select c1." + DB_MESSAGE_ID + " AS " + ID_ALIAS_1 + ", c2." + DB_MESSAGE_ID + " AS "
-//					+ ID_ALIAS_2 + ", c1." + DB_AV_NUM + " from " + DB_MESSAGE_TABLE + " c1, " + DB_MESSAGE_TABLE
-//					+ " c2" + " where c1." + DB_MESSAGE_ID + " < c2." + DB_MESSAGE_ID + " and c1." + DB_AV_NUM
-//					+ "= c2." + DB_AV_NUM + " and c1." + DB_MESSAGE_TYPE + "=2 and c1." + DB_MESSAGE_TYPE + "=2";
 			
 			String query = "select * from " + DB_MESSAGE_TABLE + " where " + DB_MESSAGE_TYPE + " = "
 					+ AttributeManager.MessageType.ATTENDANCE.getCode() + " and " + DB_MESSAGE_STATUS + " = "
@@ -341,22 +343,59 @@ public class DAO {
 			List<SmsMessage> messages = new ArrayList<SmsMessage>();
 			SmsMessage currentMessage = null;
 			
-			while (!rs.isAfterLast()){
+			while (rs.next()){
 				currentMessage = new SmsMessage(rs.getString(DB_MESSAGE_COLUMN), rs.getString(DB_MESSAGE_SENDER));
 				messages.add(currentMessage);
 			}
 			
-			System.out.println(messages.toString());
-//			while (!rs.isAfterLast()) {
-//				System.out.println("rs.c1.id" + rs.getInt(ID_ALIAS_1));
-//				System.out.println("rs.c2.id" + rs.getInt(ID_ALIAS_2));
-//				System.out.println("rs.avnum" + rs.getString("av_num"));
-//				rs.next();
-//			}
+			// Map where the key is the distribution id and the value is
+			// a list of SmsMessages with the same distribution Id
+			Map<String,List<SmsMessage>> messageMap = new HashMap<String,List<SmsMessage>>();
+			List<SmsMessage> list = null;
+			for (SmsMessage message : messages){
+				list = messageMap.get(message.getDistributionId());
+				if (messageMap.get(message.getDistributionId()) == null) {
+					list = new ArrayList<SmsMessage>();
+					list.add(message);
+					messageMap.put(message.getDistributionId(), list);
+				}
+				else {
+					list = messageMap.get(message.getDistributionId());
+					list.add(message);
+				}
+			}
+			
+			boolean usesTwoPhones = false;
+			Set<String> keys = messageMap.keySet();
+			
+			int currentIndex = 0;
+			for (String key : keys){ // Goes through the different distributions
+				list = messageMap.get(key);
+				for (SmsMessage message : list){ // Each message in the list
+					String dossierNumber = message.getAVnum();
+					String senderNumber = message.getSender();
+					
+					List<SmsMessage> sublist = list.subList(currentIndex+1, list.size());
+					for (SmsMessage otherMessage : sublist) { // "Rest of the list" after current element
+						if (otherMessage.getAVnum().equals(dossierNumber) && !otherMessage.getSender().equals(senderNumber)){
+							absentees.add(otherMessage); // If the dossier number matches, and the phone number is different, its an absentee
+							usesTwoPhones=true;  // Tracks if there were two phones at a distribution
+						}
+					}
+					currentIndex++;
+				}
+				if (usesTwoPhones==false)  // If there weren't two phones used, then every absentee on the list is a real absentee
+					absentees.addAll(list);
+				
+				usesTwoPhones=false; // Reset stuff
+				currentIndex=0;
+			}
+			System.out.println("absentees:" + absentees);
+			return absentees;
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-
+		return absentees;
 	}
 
 	/**
