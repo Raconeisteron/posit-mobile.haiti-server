@@ -22,14 +22,24 @@ public class SmsMessage {
 	private String message = "";
 	private String sender = "";
 	private String distributionId = "";
+	
+	// Defines the order of fields in bulk acknowledgments
+	// AV=x,mn=x:x,mi=x,di=x,dossier&dossier&dossier..
+	public static final int AV_NUM_POSITION = 0;
+	public static final int MESSAGE_NUMBER_POSITION = 1;
+	public static final int MESSAGE_ID_POSITION = 2;
+	public static final int DISTRIBUTION_ID_POSITION = 3;
+	public static final int DOSSIER_LIST_POSITION = 4;
+	
 
-	public SmsMessage(String aVnum, MessageStatus status, MessageType type, String message, String sender) {
+	public SmsMessage(String aVnum, MessageStatus status, MessageType type, String message, String sender, String distributionId) {
 		super();
 		AVnum = aVnum;
 		this.status = status;
 		this.type = type;
 		this.message = message;
 		this.sender = sender;
+		this.distributionId = distributionId;
 	}
 
 	public SmsMessage(String rawMsg, String rawSender) {

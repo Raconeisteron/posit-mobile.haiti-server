@@ -143,7 +143,7 @@ public class DbWriter {
 	 */
 	public void readConfigFile() {
 		Properties prop = new Properties();
-		String fileName = "config.txt";
+		String fileName = "/home/rfoeckin/config.txt";
 		InputStream is;
 		try {
 			is = new FileInputStream(fileName);

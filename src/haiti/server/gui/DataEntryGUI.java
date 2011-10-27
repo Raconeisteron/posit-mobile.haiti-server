@@ -374,8 +374,8 @@ public class DataEntryGUI extends JFrame implements WindowListener,
 //			}
 			this.getContentPane().removeAll(); // WIN!!!!! Yours Truly, Alex and
 												// Danny
-			this.getContentPane().add(
-					setUpSplitPane(mMessagesArray, mBulkPanel));
+			//this.getContentPane().add(
+			//		setUpSplitPane(mMessagesArray, mBulkPanel));
 			this.pack();
 			DataEntryGUI.centerWindow(this);
 			this.repaint();
