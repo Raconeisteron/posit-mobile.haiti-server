@@ -325,11 +325,11 @@ public class DAO {
 	 * @param dbName
 	 * @return list of absentees
 	 */
-	public List<SmsMessage> getAbsentees(String dbName) {
+	public List<Bulk> getAbsentees(String dbName) {
 		System.out.println("Getting absentees");
 		Connection connection = connectDb(dbName);
 		Statement statement;
-		List<SmsMessage> absentees = new ArrayList<SmsMessage>();
+		List<Bulk> absentees = new ArrayList<Bulk>();
 		try {
 			statement = connection.createStatement();
 			statement.setQueryTimeout(30); // set timeout to 30 sec
@@ -340,22 +340,24 @@ public class DAO {
 					+ AttributeManager.MessageStatus.NEW.getCode();
 
 			ResultSet rs = statement.executeQuery(query);
-			List<SmsMessage> messages = new ArrayList<SmsMessage>();
-			SmsMessage currentMessage = null;
+			List<Bulk> messages = new ArrayList<Bulk>();
+			Bulk currentMessage = null;
 			
 			while (rs.next()){
-				currentMessage = new SmsMessage(rs.getString(DB_MESSAGE_COLUMN), rs.getString(DB_MESSAGE_SENDER));
+				currentMessage = new Bulk(rs.getString(DB_MESSAGE_COLUMN));
+				currentMessage.setId(rs.getInt(DB_MESSAGE_ID));
+				currentMessage.setSender(rs.getString(DB_MESSAGE_SENDER));
 				messages.add(currentMessage);
 			}
 			
 			// Map where the key is the distribution id and the value is
 			// a list of SmsMessages with the same distribution Id
-			Map<String,List<SmsMessage>> messageMap = new HashMap<String,List<SmsMessage>>();
-			List<SmsMessage> list = null;
-			for (SmsMessage message : messages){
+			Map<String,List<Bulk>> messageMap = new HashMap<String,List<Bulk>>();
+			List<Bulk> list = null;
+			for (Bulk message : messages){
 				list = messageMap.get(message.getDistributionId());
 				if (messageMap.get(message.getDistributionId()) == null) {
-					list = new ArrayList<SmsMessage>();
+					list = new ArrayList<Bulk>();
 					list.add(message);
 					messageMap.put(message.getDistributionId(), list);
 				}
@@ -371,13 +373,13 @@ public class DAO {
 			int currentIndex = 0;
 			for (String key : keys){ // Goes through the different distributions
 				list = messageMap.get(key);
-				for (SmsMessage message : list){ // Each message in the list
-					String dossierNumber = message.getAVnum();
+				for (Bulk message : list){ // Each message in the list
+					String dossierNumber = message.getAvNum();
 					String senderNumber = message.getSender();
 					
-					List<SmsMessage> sublist = list.subList(currentIndex+1, list.size());
-					for (SmsMessage otherMessage : sublist) { // "Rest of the list" after current element
-						if (otherMessage.getAVnum().equals(dossierNumber) && !otherMessage.getSender().equals(senderNumber)){
+					List<Bulk> sublist = list.subList(currentIndex+1, list.size());
+					for (Bulk otherMessage : sublist) { // "Rest of the list" after current element
+						if (otherMessage.getAvNum().equals(dossierNumber) && !otherMessage.getSender().equals(senderNumber)){
 							absentees.add(otherMessage); // If the dossier number matches, and the phone number is different, its an absentee
 							usesTwoPhones=true;  // Tracks if there were two phones at a distribution
 						}
@@ -390,7 +392,7 @@ public class DAO {
 				usesTwoPhones=false; // Reset stuff
 				currentIndex=0;
 			}
-			System.out.println("absentees:" + absentees);
+			System.out.println("absentees length: " +absentees.size() + " absentees: " + absentees);
 			return absentees;
 		} catch (SQLException e) {
 			e.printStackTrace();
