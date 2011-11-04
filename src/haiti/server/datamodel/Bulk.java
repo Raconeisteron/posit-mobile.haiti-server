@@ -8,9 +8,10 @@ public class Bulk {
 	private MessageStatus status = MessageStatus.UNKNOWN;
 	private String avNum = "";
 	private String distributionId = "";
+	private String sender = "";
 
 	public Bulk (String smsString) {
-		System.out.println("Creating instance from SMS: " + smsString);
+		//System.out.println("Creating instance from SMS: " + smsString);
 		String attrvalPairs[] = smsString.split(AttributeManager.PAIRS_SEPARATOR);
 		
 		for (int k = 0; k < attrvalPairs.length; k++) {
@@ -23,7 +24,7 @@ public class Bulk {
 				attr = attrval[0];
 			}
 			
-			System.out.println("Attr= " + attr + " val= " + val);
+			//System.out.println("Attr= " + attr + " val= " + val);
 			
 			try {
 				if (attr.equals(AttributeManager.ABBREV_ID)) 
@@ -47,6 +48,17 @@ public class Bulk {
 			}
 		}
 	}
+	
+
+	public String getSender() {
+		return sender;
+	}
+
+
+	public void setSender(String sender) {
+		this.sender = sender;
+	}
+
 
 	public String getAvNum() {
 		return avNum;
