@@ -1,0 +1,3 @@
+user=your_username_here
+password=your_password_here
+sqlite_db_path=your_path_to_sqlite_database_here
