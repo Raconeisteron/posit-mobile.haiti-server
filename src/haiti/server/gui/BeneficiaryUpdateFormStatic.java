@@ -65,7 +65,7 @@ public class BeneficiaryUpdateFormStatic extends FormPanel implements
 	private JLabel dossier, firstName, lastName, dob,
 			// months,
 			beneficiaryCategory, present, transferredWhy, modificationsWhy,
-			suspendWhy, change, changeType;
+			suspendWhy, change, changeType, other;
 
 	// private ButtonGroup
 	// infantGroup,
@@ -95,7 +95,7 @@ public class BeneficiaryUpdateFormStatic extends FormPanel implements
 			beneficiaryLabel, presentLabel, transferredLabel,
 			modificationsLabel, suspendLabel, transferredWhyLabel,
 			modificationsWhyLabel, suspendWhyLabel, changeLabel,
-			changeTypeLabel;
+			changeTypeLabel, otherLabel;
 
 	public BeneficiaryUpdateFormStatic(DataEntryGUI gui) {
 		mGui = gui;
@@ -122,6 +122,7 @@ public class BeneficiaryUpdateFormStatic extends FormPanel implements
 		changeType.setText(LocaleManager.resources
 				.getString(AttributeManager.transferTypes[Integer
 						.parseInt(update.getChangeType())]));
+		other.setText(update.getOther());
 
 		// if
 		// (update.getBeneficiaryCategory().equals(AttributeManager.BeneficiaryCategory.EXPECTING))
@@ -175,6 +176,7 @@ public class BeneficiaryUpdateFormStatic extends FormPanel implements
 				.getString(AttributeManager.FORM_DOB));
 		beneficiaryLabel.setText(LocaleManager.resources
 				.getString(AttributeManager.FORM_BENEFICIARY_CATEGORY));
+		otherLabel.setText(LocaleManager.resources.getString(AttributeManager.FORM_OTHER));
 		// radioInfantMal.setText(LocaleManager.resources.getString(AttributeManager.LONG_INFANT_MAL));
 		// radioInfantPrev.setText(LocaleManager.resources.getString(AttributeManager.LONG_INFANT_PREVENTION));
 		// radioMotherExp.setText(LocaleManager.resources.getString(AttributeManager.LONG_MOTHER_EXPECTING));
@@ -348,13 +350,17 @@ public class BeneficiaryUpdateFormStatic extends FormPanel implements
 		changeTypeLabel = new JLabel(
 				LocaleManager.resources
 						.getString(AttributeManager.FORM_CHANGE_TYPE));
+		otherLabel = new JLabel(LocaleManager.resources.getString(AttributeManager.FORM_OTHER));
 		change = new JLabel();
 		changeType = new JLabel();
+		other = new JLabel();
 
 		updatePanel.add(changeLabel);
 		updatePanel.add(change);
 		updatePanel.add(changeTypeLabel);
 		updatePanel.add(changeType);
+		//updatePanel.add(otherLabel);
+		updatePanel.add(other);
 
 		// presentGroup = new ButtonGroup();
 		// radioPresentYes = new

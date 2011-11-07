@@ -803,7 +803,7 @@ public class AttributeManager {
 	public static final String ABBREV_DIST_ID = "di";
 	public static final String DISTRIBUTION_ID = "Distribution ID";
 	
-	public static final Object ABBREV_OTHER = "o";
+	public static final String ABBREV_OTHER = "o";
 	public static final String FINDS_OTHER_TRANSFER = "other";
 	
 	/**

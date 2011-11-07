@@ -23,6 +23,7 @@ public class Update {
 	private YnQuestion present = YnQuestion.U;
 	private YnQuestion change = YnQuestion.U;
 	private String changeType = "";
+	private String other = ""; // "Other" transfer type custom reason
 	
 	// MCHN Information
 	public Update (String smsString) {
@@ -80,6 +81,9 @@ public class Update {
 				}
 				else if (attr.equalsIgnoreCase(AttributeManager.ABBREV_CHANGE_TYPE))
 					changeType = val;
+				else if (attr.equalsIgnoreCase(AttributeManager.ABBREV_OTHER)) {
+					setOther(val);
+				}
 			} catch (NumberFormatException e) {
 				System.out.println("Number format exception");
 				e.printStackTrace();
@@ -190,6 +194,14 @@ public class Update {
 
 	public void setChangeType(String changeType) {
 		this.changeType = changeType;
+	}
+
+	public void setOther(String other) {
+		this.other = other;
+	}
+
+	public String getOther() {
+		return other;
 	}
 	
 }
