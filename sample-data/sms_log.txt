@@ -1,0 +1,7 @@
+f=tom&l=jones&c=Belle Anse&cs=bl&s=MALE&a=2
+f=sarah&l=smith&c=12 Main Street&cs=Hartford&s=FEMALE&a=1
+f=bill&l=brown&c=100 Bank Street&cs=Wethersfield&s=MALE&a=3
+f=brenda&l=brown&c=100 Bank Street&cs=Wethersfield&s=FEMALE&a=1
+
+
+
