@@ -57,7 +57,7 @@ import java.util.Properties;
  */
 public class DbWriter {
 
-	// private static final String dbName = "D:\\SMS_Reception\\haiti.db";
+	private static final String dbName = "D:\\SMS_Reception\\haiti.db";
 	// private static final String dbName =
 	// "/home3/rfoeckin/Desktop/databases/haiti.db";
 	// "C:\\Users\\Administrator\\Documents\\haiti.db";
@@ -66,7 +66,7 @@ public class DbWriter {
 	// private static final String dbName =
 	// "C:\\Documents and Settings\\cslab\\My Documents\\Dropbox\\Haiti-Docs\\haitidb\\haiti.db";
 	//private static final String dbName = "C:\\Users\\Administrator\\Dropbox\\Haiti-Docs\\haitidb\\haiti.db";
-	private String dbName = "";
+	//private String dbName = "";
 
 	public enum MessageStatus {
 		NEW, PENDING, PROCESSED, DECLINED, ARCHIVED, ALL
@@ -113,7 +113,7 @@ public class DbWriter {
 	
 	public DbWriter() {
 		super();
-		readConfigFile();
+		//readConfigFile();
 	}
 
 	/**
@@ -138,26 +138,27 @@ public class DbWriter {
 		}
 	}
 
-	/**
-	 * Reads the the location of the SQLite database from the config.txt file.
-	 */
-	public void readConfigFile() {
-		Properties prop = new Properties();
-		String fileName = "/home/rfoeckin/config.txt";
-		InputStream is;
-		try {
-			is = new FileInputStream(fileName);
-			prop.load(is);
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		dbName = prop.getProperty("sqlite_db_path");
-
-	}
+//	/**
+//	 * Reads the the location of the SQLite database from the config.txt file.
+//	 * TODO:  This isn't used.  Not sure if we should use it or not.
+//	 */
+//	public void readConfigFile() {
+//		Properties prop = new Properties();
+//		String fileName = "";
+//		InputStream is;
+//		try {
+//			is = new FileInputStream(fileName);
+//			prop.load(is);
+//		} catch (FileNotFoundException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
+//
+//		dbName = prop.getProperty("sqlite_db_path");
+//
+//	}
 
 	/**
 	 * updateMessage method update the status and modified time for given
