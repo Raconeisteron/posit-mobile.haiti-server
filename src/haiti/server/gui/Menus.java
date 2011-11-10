@@ -27,6 +27,7 @@ import haiti.server.datamodel.User;
 
 import haiti.server.datamodel.LocaleManager;
 import haiti.server.gui.DataEntryGUI.DbSource;
+import haiti.server.gui.Menus.Task;
 import haiti.server.datamodel.AttributeManager;
 import haiti.server.datamodel.AttributeManager.MessageStatus;
 import haiti.server.datamodel.AttributeManager.MessageType;
@@ -36,20 +37,25 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
 import java.util.Locale;
+import java.util.Random;
 import java.util.ResourceBundle;
 import java.applet.Applet;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 import javax.swing.JFileChooser;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.KeyStroke;
+import javax.swing.ProgressMonitor;
+import javax.swing.SwingWorker;
 
 /**
  *  Implements a menu system for DataEntryGUI.
  */
 
-public class Menus implements ActionListener {
+public class Menus implements ActionListener, PropertyChangeListener {
 	
 	public static final String MENU_FILE = "File";
 	//public static final String MENU_OPEN_FILE = "OpenFile"; // Removed for now.
@@ -86,6 +92,8 @@ public class Menus implements ActionListener {
 	public static Locale[] supportedLocales = {Locale.FRENCH, Locale.ENGLISH};	
 	private static MenuBar mbar;	
 	private static DataEntryGUI gui;
+    private ProgressMonitor progressMonitor;
+	private Task task;	
 	
 	public Menus(DataEntryGUI gui) {
 		this.gui = gui;
@@ -178,6 +186,53 @@ public class Menus implements ActionListener {
 	}
 
 	/**
+	 * Class that gets/marks absentees as processed in a background thread.
+	 * TODO:  Doesn't properly show progress.  Do it!
+	 *
+	 *
+	 */
+	class Task extends SwingWorker<Void, Void> {
+		@Override
+		public Void doInBackground() {
+			setProgress(2);
+			gui.readMessagesIntoGUI(DbSource.DATA_BASE, AttributeManager.MessageStatus.NEW,
+					AttributeManager.MessageType.ATTENDANCE);
+			setProgress(100);
+			return null;
+		}
+		@Override
+		public void done() {
+			progressMonitor.setProgress(100);
+		}
+	}
+	
+	 /**
+     * Invoked when task's progress property changes.
+     */
+    public void propertyChange(PropertyChangeEvent evt) {
+        if ("progress" == evt.getPropertyName() ) {
+            int progress = (Integer) evt.getNewValue();
+            progressMonitor.setProgress(progress);
+            String message =
+                String.format("Completed %d%%.\n", progress);
+            progressMonitor.setNote(message);
+            //taskOutput.append(message);
+            if (progressMonitor.isCanceled() || task.isDone()) {
+                Toolkit.getDefaultToolkit().beep();
+                if (progressMonitor.isCanceled()) {
+                    task.cancel(true);
+                    //taskOutput.append("Task canceled.\n");
+                } else {
+                	progressMonitor.close();
+                    //taskOutput.append("Task completed.\n");
+                }
+                //startButton.setEnabled(true);
+            }
+        }
+ 
+    }
+ 
+	/**
 	 * Handles all Menu actions
 	 */
 	public void actionPerformed(ActionEvent e) {
@@ -199,7 +254,15 @@ public class Menus implements ActionListener {
 				gui.chooseDb();
 			}
 			else if (selectedMenuItemText.equals(LocaleManager.resources.getString(MENU_ATTENDANCE))) {
-				gui.readMessagesIntoGUI(DbSource.DATA_BASE, AttributeManager.MessageStatus.NEW, AttributeManager.MessageType.ATTENDANCE);
+				progressMonitor = new ProgressMonitor(gui, "Getting absentees", "", 0, 100);
+				progressMonitor.setMillisToPopup(0); // Pop up immediately
+				progressMonitor.setMillisToDecideToPopup(0);
+				progressMonitor.setProgress(0);
+				task = new Task();
+				task.addPropertyChangeListener(this);
+				task.execute();
+				//startButton.setEnabled(false);
+				//gui.readMessagesIntoGUI(DbSource.DATA_BASE, AttributeManager.MessageStatus.NEW, AttributeManager.MessageType.ATTENDANCE);
 			}
 			else if (selectedMenuItemText.equals(LocaleManager.resources.getString(MENU_BENEFICIARY_FILTER_NEW))) {
 				gui.readMessagesIntoGUI(DbSource.DATA_BASE, AttributeManager.MessageStatus.NEW, AttributeManager.MessageType.REGISTRATION);

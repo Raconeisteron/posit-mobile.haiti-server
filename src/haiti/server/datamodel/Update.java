@@ -23,6 +23,8 @@ public class Update {
 	private YnQuestion present = YnQuestion.U;
 	private YnQuestion change = YnQuestion.U;
 	private String changeType = "";
+	private String communeSection = "";
+	private String locality = "";
 	private String other = ""; // "Other" transfer type custom reason
 	
 	// MCHN Information
@@ -83,6 +85,12 @@ public class Update {
 					changeType = val;
 				else if (attr.equalsIgnoreCase(AttributeManager.ABBREV_OTHER)) {
 					setOther(val);
+				}
+				else if (attr.equalsIgnoreCase(AttributeManager.ABBREV_COMMUNE_SECTION)) {
+					communeSection = val;
+				}
+				else if (attr.equalsIgnoreCase(AttributeManager.ABBREV_LOCALITY)) {
+					locality = val;
 				}
 			} catch (NumberFormatException e) {
 				System.out.println("Number format exception");
@@ -202,6 +210,22 @@ public class Update {
 
 	public String getOther() {
 		return other;
+	}
+
+	public void setCommuneSection(String communeSection) {
+		this.communeSection = communeSection;
+	}
+
+	public String getCommuneSection() {
+		return communeSection;
+	}
+
+	public void setLocality(String locality) {
+		this.locality = locality;
+	}
+
+	public String getLocality() {
+		return locality;
 	}
 	
 }

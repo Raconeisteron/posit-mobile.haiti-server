@@ -372,6 +372,8 @@ public class AttributeManager {
 	public static final String COMPLETED_PROGRAM = "CompletedProgram";
 	public static final String OTHER = "Other";
 	
+	public static final String OTHER_REASON = "OtherReason";
+	
 	public static final String[] transferTypes = { TRANSFER_LACTATE,
 			TRANSFER_PREVENTION, TRANSFER_LOCATION, TRANSFER_ABORTION,
 			MODIFICATIONS, DECEASED, FRAUD, COMPLETED_PROGRAM, OTHER };

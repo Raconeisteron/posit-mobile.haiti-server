@@ -91,6 +91,7 @@ public class DataEntryGUI extends JFrame implements WindowListener,
 	private FormPanel mFormPanel;
 	private JPanel mBulkPanel;
 
+
 	// public TextArea display;// = new TextArea();
 
 	/**
@@ -136,6 +137,9 @@ public class DataEntryGUI extends JFrame implements WindowListener,
 		setMenuBar(Menus.getMenuBar());
 	}
 
+	
+	
+ 
 	public void setmMessagesFileOrDbName(String mMessagesFileOrDbName) {
 		this.mMessagesFileOrDbName = mMessagesFileOrDbName;
 	}
@@ -320,7 +324,7 @@ public class DataEntryGUI extends JFrame implements WindowListener,
 			this.pack();
 			DataEntryGUI.centerWindow(this);
 			this.repaint();
-			this.setSize(800, 800);
+			this.setSize(1500, 800);
 			this.setLocation(0, 0);
 		}
 		if (type == MessageType.REGISTRATION && status == MessageStatus.NEW) {
@@ -359,13 +363,14 @@ public class DataEntryGUI extends JFrame implements WindowListener,
 				mBulkPanel.setLayout(new GridLayout(0, 1));
 				mBulkPanel.add(new JLabel("Dossier Numbers of Absentees:"));
 				List<String> dossiers = new ArrayList<String>();
+				mReader.markAbsenteesProcessed(absentees, mMessagesFileOrDbName);
 				for (Bulk absentee : absentees) {
 					mBulkPanel.add(new JLabel(absentee.getAvNum())); // Show in the panel
 					
 					dossiers.add(absentee.getAvNum());
 					
-					absentee.setStatus(AttributeManager.MessageStatus.PROCESSED);
-					mReader.updateBulk(absentee, this.mMessagesFileOrDbName);
+					//absentee.setStatus(AttributeManager.MessageStatus.PROCESSED);
+					//mReader.updateBulk(absentee, this.mMessagesFileOrDbName);
 				}
 				
 				// Write them to a backup file
