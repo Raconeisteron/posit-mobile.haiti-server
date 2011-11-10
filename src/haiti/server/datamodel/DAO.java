@@ -22,6 +22,7 @@
 
 package haiti.server.datamodel;
 
+import haiti.server.datamodel.AttributeManager.MessageStatus;
 import haiti.server.gui.DataEntryGUI;
 import haiti.server.gui.LoginScreen;
 import haiti.server.modem.SmsMessage;
@@ -467,6 +468,25 @@ public class DAO {
 					+ AttributeManager.ATTR_VAL_SEPARATOR + AttributeManager.SINGLE_QUOTE + b.getStatus().getCode()
 					+ AttributeManager.SINGLE_QUOTE + AttributeManager.WHERE + DB_MESSAGE_ID
 					+ AttributeManager.ATTR_VAL_SEPARATOR + b.getId() + AttributeManager.LINE_ENDER);
+
+		} catch (SQLException e) {
+			// if the error message is "out of memory",
+			// it probably means no database file is found
+			e.printStackTrace();
+		}
+	}
+	
+	public void markAbsenteesProcessed(List<Bulk> bulks, String dbName){
+		Connection connection = connectDb(dbName);
+		try {
+			Statement statement = connection.createStatement();
+			statement.setQueryTimeout(30); // set timeout to 30 sec.
+			for (Bulk b : bulks) {
+				statement.execute(AttributeManager.UPDATE + DB_MESSAGE_TABLE + AttributeManager.SET + DB_MESSAGE_STATUS
+						+ AttributeManager.ATTR_VAL_SEPARATOR + AttributeManager.SINGLE_QUOTE + MessageStatus.PROCESSED.getCode() 
+						+ AttributeManager.SINGLE_QUOTE + AttributeManager.WHERE + DB_MESSAGE_ID
+						+ AttributeManager.ATTR_VAL_SEPARATOR + b.getId() + AttributeManager.LINE_ENDER);
+			}
 
 		} catch (SQLException e) {
 			// if the error message is "out of memory",
