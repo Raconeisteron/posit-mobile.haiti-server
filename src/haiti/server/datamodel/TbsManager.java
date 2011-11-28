@@ -17,6 +17,8 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
+import javax.swing.JOptionPane;
+
 //import com.sun.tools.javac.util.Log;
 
 public class TbsManager {
@@ -26,6 +28,12 @@ public class TbsManager {
 	private LocaleManager mLocaleManager;
 	private String user;
 	private String password;
+	
+	ResultSet result;
+	Connection con;
+	int resultInt = 0;
+	
+	
 
 	// public TbsManager() {}
 
@@ -77,9 +85,8 @@ public class TbsManager {
 	 */
 	public String ExecuterRequete(String chaine, String type) {
 		// chargement du Driver
-		ResultSet result;
-		int resultInt = 0;
-		Connection con;
+		
+		
 		try {
 			// if (true)
 			// throw new SQLException("bogus exception");
@@ -108,8 +115,7 @@ public class TbsManager {
 			System.out.println("SQL Exception");
 			f.printStackTrace();
 			return f.getMessage();
-			// JOptionPane.showMessageDialog(null,f,"Attention",JOptionPane.WARNING_MESSAGE);
-		} catch (Exception f) {
+			} catch (Exception f) {
 			System.out.println("Exception");
 			f.printStackTrace();
 			return f.getMessage();
@@ -141,6 +147,8 @@ public class TbsManager {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+		
 		String info_MCHN = beneficiary.getDossier() + "','"
 				+ beneficiary.getLastName() + "','"
 				+ beneficiary.getFirstName() + "','"
@@ -158,37 +166,102 @@ public class TbsManager {
 
 		System.out.println("livelihood: " + info_LIVELIHOOD);
 		String requete = "";
+		
 
 		BeneficiaryType bt = beneficiary.getBeneficiaryType();
-
+		/////////////////
+		 		
+		
 		if (bt == BeneficiaryType.MCHN || bt == BeneficiaryType.BOTH) {
-			requete = "Insert into Beneficiaire_1 values('" + info_MCHN + "','"
-					+ convertBeneficiaryCategory(beneficiary.getBeneficiaryCategory()) + "','"
-					+ beneficiary.getNumberInHome() + "','"
-					+ beneficiary.getDistributionPost() + "','"
-					+ beneficiary.getGuardianChild() + "','"
-					+ beneficiary.getGuardianWoman() + "','"
-					+ beneficiary.getIsMotherLeader().name() + "','"
-					+ beneficiary.getVisitMotherLeader().name() + "','"
-					+ beneficiary.getIsAgri().name() + "','"
-					+ beneficiary.getAgriPerson() + "','" + " " + "','" + " "
-					+ "','" + " " + "','" + " " + "','" + " " + "','" + " "
-					+ "','" + " " + "','" + " " + "','" + " " + "','" + " "
-					+ "','" + " " + "','" + " " + "','" + " " + "','" + " "
-					+ "','" + " " + "','" + " " + "','" + " " + "','" + " "
-					+ "','" + " " + "')";
+									
+			try{
+				   String requete121="Select * From Beneficiaire_1 where No_dossier='"+beneficiary.getDossier()+"' OR Nom='"+beneficiary.getLastName()+"' AND prenom='"+beneficiary.getFirstName()+"' AND Categorie='"+beneficiary.getBeneficiaryCategory()+"' AND Poste_distribution='"+beneficiary.getDistributionPost()+"' AND Localite_beneficiaire='"+beneficiary.getLocality()+"' OR Nom='"+beneficiary.getFirstName()+"' AND Prenom='"+beneficiary.getLastName()+"' ";
+				   ExecuterRequete(requete121,"Affiche");
+					 if(result.next()){
+							//JOptionPane.showMessageDialog(this, "Désolez\n2 cas peuvent se présenter.\n1-Soit Ce numéro de dossier existe déja\n2- Soit <<'"+beneficiary.getLastName()+"'   '"+beneficiary.getFirstName()+"'>>  existe déja dans la base.\nDans ce cas, c'est un cas suspect. Revérifier les informations", "Existence d'informations", JOptionPane.ERROR_MESSAGE);
+						 	System.out.println("This health Beneficiary already exist in tbs database ");
+						 	//Rachel i want to show a message dialog box here saying that beneficiaire already existe
+				            result.close();
+				            return "This health beneficiary already exists in the TBS database.";
+				     }
+					 else{
+							
+							System.out.println("Insertion possible for health sector");
+							
+							requete = "Insert into Beneficiaire_1 values('" + info_MCHN + "','"
+							+ convertBeneficiaryCategory(beneficiary.getBeneficiaryCategory()) + "','"
+							+ beneficiary.getNumberInHome() + "','"
+							+ beneficiary.getDistributionPost() + "','"
+							+ beneficiary.getGuardianChild() + "','"
+							+ beneficiary.getGuardianWoman() + "','"
+							+ beneficiary.getIsMotherLeader().name() + "','"
+							+ beneficiary.getVisitMotherLeader().name() + "','"
+							+ beneficiary.getIsAgri().name() + "','"
+							+ beneficiary.getAgriPerson() + "','" + " " + "','" + " "
+							+ "','" + " " + "','" + " " + "','" + " " + "','" + " "
+							+ "','" + " " + "','" + " " + "','" + " " + "','" + " "
+							+ "','" + " " + "','" + " " + "','" + " " + "','" + " "
+							+ "','" + " " + "','" + " " + "','" + " " + "','" + " "
+							+ "','" + " " + "')";
+														
+							System.out.println(requete);
+							String result = ExecuterRequete(requete, "Inserer");
+							System.out.println(TAG + " result = " + result);
+							return result;
+						}
+				   
+			   }
+			   catch (Exception f11) {
+					System.out.println("Exception");
+					//f11.printStackTrace();
+					//return f11.getMessage();
+				}
+			  	
 		}
 		if (bt == BeneficiaryType.AGRI || bt == BeneficiaryType.BOTH) {
-			requete = "Insert into MasterList_Livelihood values('"
-					+ info_LIVELIHOOD + "','"
-					+ convertProfessionAttributes(beneficiary) + "','"
-					+ beneficiary.getNumberInHome() + "','"
-					+ beneficiary.getAmountOfLand() + "','"
-					+ convertSeedAttributes(beneficiary)+ "','" 
-					+ convertToolAttributes(beneficiary) + "','"
-					+ convertOrganizationAttributes(beneficiary) + "','"
-					+ beneficiary.getIsHealth().name() + "','"
-					+ beneficiary.getHealthPerson() + "','" + " " + "')";
+						
+			   try{
+				   String requete12="Select * From MasterList_Livelihood where No_dossier='"+beneficiary.getDossier()+"' OR Nom='"+beneficiary.getLastName()+"' AND prenom='"+beneficiary.getFirstName()+"' AND Section_communale='"+beneficiary.getCommuneSection()+"' AND Localite='"+beneficiary.getLocality()+"' OR Nom='"+beneficiary.getFirstName()+"' AND Prenom='"+beneficiary.getLastName()+"' ";
+					 ExecuterRequete(requete12,"Affiche");
+					 if(result.next()){
+							//JOptionPane.showMessageDialog(this, "Désolez\n2 cas peuvent se présenter.\n1-Soit Ce numéro de dossier existe déja\n2- Soit <<'"+beneficiary.getLastName()+"'   '"+beneficiary.getFirstName()+"'>>  existe déja Pour:\nSection Communale et Localité/adresse mentionnés\nDans ce cas, c'est un cas suspect. Revérifier les informations", "Existence d'informations", JOptionPane.ERROR_MESSAGE);
+							System.out.println("this livelihood beneficiairy already existe in tbs deja ");
+							//Rachel i want to show a message dialog box here saying that beneficiaire already existe
+				            result.close();
+				            return "This health beneficiary already exists in the TBS database.";
+				            
+				     }
+					 else{
+							
+							System.out.println("Insertion possible ");
+							
+							requete = "Insert into MasterList_Livelihood values('"
+							+ info_LIVELIHOOD + "','"
+							+ convertProfessionAttributes(beneficiary) + "','"
+							+ beneficiary.getNumberInHome() + "','"
+							+ beneficiary.getAmountOfLand() + "','"
+							+ convertSeedAttributes(beneficiary)+ "','" 
+							+ convertToolAttributes(beneficiary) + "','"
+							+ convertOrganizationAttributes(beneficiary) + "','"
+							+ beneficiary.getIsHealth().name() + "','"
+							+ beneficiary.getHealthPerson() + "','" + " " + "')";
+											
+							
+							System.out.println(requete);
+							String result = ExecuterRequete(requete, "Inserer");
+							System.out.println(TAG + " result = " + result);
+							return result;
+						}
+				   
+			   }
+			   catch (Exception f1) {
+					System.out.println("Exception");
+					//f1.printStackTrace();
+					//return f1.getMessage();
+				}
+			
+			System.out.println("Insertion possible for livelihood");
+			
 		}
 		System.out.println(requete);
 		String result = ExecuterRequete(requete, "Inserer");
@@ -196,6 +269,8 @@ public class TbsManager {
 		return result;
 
 	}
+	
+
 
 	public String convertProfessionAttributes(Beneficiary beneficiary) {
 		String professions = "";

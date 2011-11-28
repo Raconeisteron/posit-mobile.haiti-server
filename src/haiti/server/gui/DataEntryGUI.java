@@ -513,6 +513,10 @@ public class DataEntryGUI extends JFrame implements WindowListener,
 				// System.out.println("Posted message to TBS Db");
 				JOptionPane.showMessageDialog(this, "Posted message to TBS Db",
 						"Success", -1);
+			} else if (result.contains("already exists")) {
+				System.out.println("ERROR: This health beneficiary already exists in the TBS database.");
+				JOptionPane.showMessageDialog(this,
+						"This health beneficiary already exists in the TBS database.", "ERROR", 0);
 			} else {
 				System.out.println("ERROR in Posting message to TBS Db");
 				JOptionPane.showMessageDialog(this,
