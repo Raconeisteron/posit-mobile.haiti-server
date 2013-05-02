@@ -67,6 +67,9 @@ public class DbWriter {
 	// "C:\\Documents and Settings\\cslab\\My Documents\\Dropbox\\Haiti-Docs\\haitidb\\haiti.db";
 	//private static final String dbName = "C:\\Users\\Administrator\\Dropbox\\Haiti-Docs\\haitidb\\haiti.db";
 	//private String dbName = "";
+	//private static final String dbName = "C:\\haiti.db";
+
+	protected static boolean smsFlag = true;
 
 	public enum MessageStatus {
 		NEW, PENDING, PROCESSED, DECLINED, ARCHIVED, ALL
@@ -110,7 +113,7 @@ public class DbWriter {
 	public static final int DB_STATUS_PENDING = 1;
 	public static final int DB_STATUS_PROCESSED = 2;
 
-	
+
 	public DbWriter() {
 		super();
 		//readConfigFile();
@@ -138,27 +141,27 @@ public class DbWriter {
 		}
 	}
 
-//	/**
-//	 * Reads the the location of the SQLite database from the config.txt file.
-//	 * TODO:  This isn't used.  Not sure if we should use it or not.
-//	 */
-//	public void readConfigFile() {
-//		Properties prop = new Properties();
-//		String fileName = "";
-//		InputStream is;
-//		try {
-//			is = new FileInputStream(fileName);
-//			prop.load(is);
-//		} catch (FileNotFoundException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
-//
-//		dbName = prop.getProperty("sqlite_db_path");
-//
-//	}
+	//	/**
+	//	 * Reads the the location of the SQLite database from the config.txt file.
+	//	 * TODO:  This isn't used.  Not sure if we should use it or not.
+	//	 */
+	//	public void readConfigFile() {
+	//		Properties prop = new Properties();
+	//		String fileName = "";
+	//		InputStream is;
+	//		try {
+	//			is = new FileInputStream(fileName);
+	//			prop.load(is);
+	//		} catch (FileNotFoundException e) {
+	//			// TODO Auto-generated catch block
+	//			e.printStackTrace();
+	//		} catch (IOException e) {
+	//			e.printStackTrace();
+	//		}
+	//
+	//		dbName = prop.getProperty("sqlite_db_path");
+	//
+	//	}
 
 	/**
 	 * updateMessage method update the status and modified time for given
@@ -401,6 +404,22 @@ public class DbWriter {
 		return null;
 	}
 
+	public void genBulkAck(int div, List<String> ids, SmsMessage sms){
+		int start = 0;
+		int end = 0;
+		for (int i=1; i<=div; i++){
+			if(i < div){
+				end = ((ids.size()*i)/div) + 1;
+			}
+			else{
+				end = ids.size();
+			}
+			BulkAck bulkAck = new BulkAck(ids.subList(start, end), sms.getSender());
+			start = end;
+			sendAck(bulkAck);			
+		}		
+	}
+	
 	/**
 	 * Queues ACK messages and when a certain number are collected, sends a bulk
 	 * acknowledgment.
@@ -415,17 +434,38 @@ public class DbWriter {
 			if (shouldPhoneSendAck(sms)) {
 				List<String> ids = getUnackedIdsByPhone(sms.getSender());
 				if (ids != null) {
-					if (ids.size() < 30) {
+					if (ids.size() <= 20) {
 						BulkAck bulkAck = new BulkAck(ids, sms.getSender());
 						sendAck(bulkAck);
-					} else { // Quick fix to prevent going over 160 characters
-						BulkAck bulkAck1 = new BulkAck(ids.subList(0,
-								ids.size() / 2 + 1), sms.getSender());
-						BulkAck bulkAck2 = new BulkAck(ids.subList(
-								ids.size() / 2 + 1, ids.size()),
-								sms.getSender());
-						sendAck(bulkAck1);
-						sendAck(bulkAck2);
+					}
+					else if(ids.size()>20 && ids.size() <= 40) { // Quick fix to prevent going over 160 characters
+//						BulkAck bulkAck1 = new BulkAck(ids.subList(0,
+//								ids.size() / 2 + 1), sms.getSender());
+//						BulkAck bulkAck2 = new BulkAck(ids.subList(
+//								ids.size() / 2 + 1, ids.size()),
+//								sms.getSender());
+//						sendAck(bulkAck1);
+//						sendAck(bulkAck2);
+						genBulkAck(2, ids, sms);
+					}
+					else if(ids.size() > 40 && ids.size() <= 60){
+						genBulkAck(3, ids, sms);
+						
+					}
+					else if(ids.size() > 60 && ids.size() <= 80){
+						genBulkAck(4, ids, sms);						
+					}
+					else if(ids.size() > 80 && ids.size() <= 100){
+						genBulkAck(5, ids, sms);						
+					}
+					else if(ids.size() > 100 && ids.size() <= 120){
+						genBulkAck(6, ids, sms);
+					}
+					else if(ids.size() > 120 && ids.size() <= 140){
+						genBulkAck(7, ids, sms);
+					}
+					else{
+						genBulkAck(8, ids, sms);
 					}
 					for (String id : ids) {
 						markAcked(id, sms.getSender());
@@ -569,9 +609,11 @@ public class DbWriter {
 					log("Unable to insert bulk SMS message: " + bulkSms);
 			} else { // Its a normal message, proceed as normal
 				SmsMessage sms = new SmsMessage(message, sender);
-
+				
 				dw.insertMessage(sms);
-				dw.queueAck(sms);
+				if (smsFlag){
+					dw.queueAck(sms);
+				}
 			}
 		} else {
 			log("Command line arguments were null.");
